@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jamdev.maven.aipam.PamSneUtils;
+import com.jamdev.maven.aipam.utils.PamSneUtils;
 
 
 /**

@@ -9,7 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class PamSneApplication extends Application {
+public class AIPamApp extends Application {
 	
 	
     public static void main(String[] args) {
@@ -21,7 +21,7 @@ public class PamSneApplication extends Application {
      
         StackPane root = new StackPane();
         
-        PamSneController pamSneControl = new PamSneController(); 
+        AiPamController pamSneControl = new AiPamController(); 
         PamSneView sensorView = new PamSneView(pamSneControl); 
 
         root.getChildren().add(sensorView);

@@ -1,6 +1,6 @@
 package com.jamdev.maven.aipam;
 
-public class PamSneParams {
+public class AiPamParams {
 	
 	/**
 	 * The maximum length of a clip in seconds.

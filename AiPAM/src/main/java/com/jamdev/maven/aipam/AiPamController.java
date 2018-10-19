@@ -6,7 +6,7 @@ package com.jamdev.maven.aipam;
  * @author Jamie Macaulay
  *
  */
-public class PamSneController {
+public class AiPamController {
 	
 	
 

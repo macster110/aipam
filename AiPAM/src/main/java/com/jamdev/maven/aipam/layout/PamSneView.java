@@ -1,6 +1,6 @@
 package com.jamdev.maven.aipam.layout;
 
-import com.jamdev.maven.aipam.PamSneController;
+import com.jamdev.maven.aipam.AiPamController;
 
 import javafx.scene.layout.BorderPane;
 import jfxtras.styles.jmetro8.JMetro;
@@ -24,7 +24,7 @@ public class PamSneView extends BorderPane {
 
 
 	
-	public PamSneView(PamSneController pamSneControl) {
+	public PamSneView(AiPamController pamSneControl) {
 		
 		//apply the JMetro them 
 		new JMetro(JMetro.Style.DARK).applyTheme(this);

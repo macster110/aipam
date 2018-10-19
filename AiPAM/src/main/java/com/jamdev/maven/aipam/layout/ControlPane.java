@@ -15,6 +15,14 @@ public class ControlPane extends BorderPane {
 		
 		
 		
+		
+	}
+	
+	/**
+	 * Create the control pane. 
+	 */
+	private void createControPane() {
+		
 	}
 
 }

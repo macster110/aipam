@@ -1,4 +1,4 @@
-package com.jamdev.maven.aipam;
+package com.jamdev.maven.aipam.utils;
 
 import java.io.File;
 import java.util.ArrayList;
