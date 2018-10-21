@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.datavec.audio.Wave;
+
 import com.jamdev.maven.aipam.utils.PamSneUtils;
 
 
@@ -14,15 +16,18 @@ import com.jamdev.maven.aipam.utils.PamSneUtils;
  * @author Jamie Macaulay
  *
  */
-public class PAMClipManager extends PAMClip {
+public class PAMClipManager {
 	
 	private ArrayList<PAMClip> currentClips; 
+	
+	private AudioImporter audioImporter; 
 	
 	/**
 	 * Create the clip manager.
 	 */
-	private PAMClipManager() {
+	public PAMClipManager() {
 		
+		audioImporter = new StandardAudioImporter(); 
 	}
 	
 	/**
@@ -36,16 +41,22 @@ public class PAMClipManager extends PAMClip {
 		
 		//now import each 
 		PAMClip pamClip; 
+		ArrayList<Wave> waveData; 
 		for (File file:files) {
-			pamClip = new PAMClip(); 
-			if (pamClip.importWav(file)==PAMClipError.NO_ERROR) {
-				pamClips.add(pamClip); 
-			} 
+			waveData = audioImporter.importAudio(file); 
+			if (waveData!=null) {
+				for (Wave wave:waveData) {
+					pamClip = new PAMClip(wave); 
+					pamClips.add(pamClip); 
+				}
+			}
 		}
 		
 		currentClips=pamClips; 
 		return pamClips; 
 	}
+	
+	
 	
 
 	

@@ -3,15 +3,19 @@ package com.jamdev.maven.aipam.layout;
 import com.jamdev.maven.aipam.AiPamController;
 
 import javafx.scene.layout.BorderPane;
-import jfxtras.styles.jmetro8.JMetro;
 
 /**
  * The main view for PamSne
  * @author Jamie Macaulay
  *
  */
-public class PamSneView extends BorderPane {
+public class AIPamView extends BorderPane {
 	
+	/**
+	 * The standard icon size. 
+	 */
+	public static int iconSize = 20;
+
 	/**
 	 * The control pane. 
 	 */
@@ -22,13 +26,10 @@ public class PamSneView extends BorderPane {
 	 */
 	private ClipPane clipPane; 
 
-
 	
-	public PamSneView(AiPamController pamSneControl) {
-		
-		//apply the JMetro them 
-		new JMetro(JMetro.Style.DARK).applyTheme(this);
-		
+	public AIPamView(AiPamController pamSneControl) {
+
+				
 		controlPane= new ControlPane(this); 
 		
 		clipPane= new ClipPane(this); 

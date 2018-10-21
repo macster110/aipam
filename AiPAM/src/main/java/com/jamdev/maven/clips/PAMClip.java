@@ -1,6 +1,7 @@
 package com.jamdev.maven.clips;
 
-import java.io.File;
+
+import org.datavec.audio.Wave;
 
 /**
  * A single clip for display on the clip pane. 
@@ -22,17 +23,13 @@ public class PAMClip {
 	 * The filename of the clip
 	 */
 	public String fileName;
-
-	/**
-	 * Import a .wav clip. 
-	 * @param file - the file to import
-	 * @return the 
-	 */
-	public int importWav(File file) {
-		// TODO Auto-generated method stub
-		return 1; 
-	}
 	
+	
+	public PAMClip(Wave wave){
+		
+	} 
+
+
 	
 
 }
