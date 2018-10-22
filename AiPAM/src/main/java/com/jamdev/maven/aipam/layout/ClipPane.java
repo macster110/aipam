@@ -9,7 +9,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 
-
+/**
+ * Pane which shows all the clips. 
+ * @author Jamie Macualay 
+ *
+ */
 public class ClipPane extends BorderPane {
 
 	private TilePane tilePane;
@@ -19,8 +23,8 @@ public class ClipPane extends BorderPane {
 	}
 	
 	/**
-	 * Create the 
-	 * @return
+	 * Create the clip pane.
+	 * @return the clip pane. 
 	 */
 	private Node createPane() {
 		tilePane = new TilePane();
@@ -34,6 +38,8 @@ public class ClipPane extends BorderPane {
         
   
         ZoomableScrollPane sp = new ZoomableScrollPane(tilePane);
+    
+        tilePane.setStyle("-fx-background-color: #1d1d1d; -fx-font: 12px Segoe; -fx-text-fill: white;");
 //        sp.setFitToHeight(true);
         sp.setFitToWidth(true);
         sp.setContent(tilePane);

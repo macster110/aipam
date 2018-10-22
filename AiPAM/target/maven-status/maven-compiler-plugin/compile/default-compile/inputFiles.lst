@@ -1,7 +1,9 @@
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\AIPamApp.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\clips\AudioImporter.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\clips\StandardAudioImporter.java
-C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\AiPamParams.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\AIPamParams.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\FFTSettingsPane.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\AiPamUtils.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\App.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\ClusteringAlgorithm.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\TSNEClipClusterer.java
@@ -13,8 +15,10 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\T
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\ControlPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\clips\ClipSpectrogram.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\TSNETrainingListener.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\LAPJV.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\ClipPane.java
-C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\PamSneUtils.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\SparseCostMatrix.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\AiPamController.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\ErrorReporter.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\AIPamView.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\SettingsPane.java

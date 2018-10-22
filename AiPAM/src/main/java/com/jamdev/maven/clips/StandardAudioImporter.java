@@ -15,8 +15,14 @@ public class StandardAudioImporter implements AudioImporter {
 
 	@Override
 	public ArrayList<Wave> importAudio(File audioFile) {
-		// TODO Auto-generated method stub
-		return null;
+		//a wave 
+		Wave wave = new Wave(audioFile.getAbsolutePath()); 
+		
+		//waves 
+		ArrayList<Wave> waves = new ArrayList<Wave>();
+		waves.add(wave); 
+		
+		return waves;
 	}
 
 }

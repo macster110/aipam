@@ -17,6 +17,9 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jamdev.maven.aipam.utils.SettingsPane;
+import com.jamdev.maven.clips.PAMClip;
+
 /**
  * Algorithm which clusters clips based on TSNE high dimesnionla clusterring algortihm. 
  * 
@@ -24,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * @author Jamie Macaulay
  *
  */
-public class TSNEClipClusterer {
+public class TSNEClipClusterer implements ClusteringAlgorithm{
 	
 	private int iterations = 500; 
 	
@@ -37,8 +40,8 @@ public class TSNEClipClusterer {
 	 * Cluster the fingerprints created from audio data using a TSNE algorithm. 
 	 * @param fingerprints
 	 */
-	public void cluster(ArrayList<byte[]> fingerprints) {
-		
+	public void clusterFingerprints(ArrayList<byte[]> fingerprints) {
+	
 //		 //create an n-dimensional array of doubles
 //        Nd4j.setDataType(DataBuffer.Type.DOUBLE);
 //        List<byte[]> cacheList = new ArrayList<>(); //cacheList is a dynamic array of strings used to hold all words
@@ -70,6 +73,18 @@ public class TSNEClipClusterer {
         // generate a 3d visualization of the word vectors:
         //    set datafile separator ","
 //    splot 'tsne-standard-coords.csv' using 1:2:3:4 with labels font "Times,8"
+	}
+
+	@Override
+	public void cluster(ArrayList<PAMClip> pamClips) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public SettingsPane getSettingsPane() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -6,7 +6,6 @@ import com.jamdev.maven.aipam.layout.AIPamView;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import jfxtras.styles.jmetro8.JMetro;
@@ -21,7 +20,7 @@ public class AIPamApp extends Application {
 	/**
 	 * Dark style theme for jmetro. 
 	 */
-	public String darkStyle="resources//jmetroDarkTheme.css";
+	
 	private Stage stage;
 
     public static void main(String[] args) {
@@ -32,14 +31,15 @@ public class AIPamApp extends Application {
     public void start(Stage primaryStage) throws IOException {
 
         StackPane root = new StackPane();
-        root.setStyle("-fx-background-color: #1d1d1d");
+        root.setStyle("-fx-background: #1d1d1d; -fx-font: 12px Segoe; -fx-text-fill: white;");
         
         AiPamController aiPamController = new AiPamController(); 
-        AIPamView sensorView = new AIPamView(aiPamController); 
         
+        AIPamView sensorView = new AIPamView(aiPamController, primaryStage); 
+                
 		//apply the JMetro them 
         new JMetro(JMetro.Style.DARK).applyTheme(root);
-
+        
         root.getChildren().add(sensorView);
 //        root.getStylesheets().add(darkStyle);
         primaryStage.setScene(new Scene(root, 750, 550));
