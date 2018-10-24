@@ -1,4 +1,4 @@
-package com.jamdev.maven.aipam.layout;
+package com.jamdev.maven.aipam.layout.utilsFX;
 
 /**
  * Default label format for range slider. Just shows current thumb value. 

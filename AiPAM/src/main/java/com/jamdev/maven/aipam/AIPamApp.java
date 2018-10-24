@@ -16,12 +16,7 @@ import jfxtras.styles.jmetro8.JMetro;
  *
  */
 public class AIPamApp extends Application {
-	
-	/**
-	 * Dark style theme for jmetro. 
-	 */
-	
-	private Stage stage;
+
 
     public static void main(String[] args) {
         launch(args);

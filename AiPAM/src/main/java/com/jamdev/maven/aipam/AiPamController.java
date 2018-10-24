@@ -18,6 +18,7 @@ import javafx.concurrent.Task;
  */
 public class AiPamController {
 	
+
 	public int verbose = 1; 
 	
 	/**
@@ -41,19 +42,25 @@ public class AiPamController {
 	public static final int END_IMAGE_LOAD =4;
 	
 	/**
+	 * Cancelled image load. 
+	 */
+	public static final int CANCELLED_IMAGE_LOAD =5;
+
+	
+	/**
 	 * Message for cancelled data loaded.
 	 */
-	public static final int CANCELLED_FILE_LOAD=5; 
+	public static final int CANCELLED_FILE_LOAD=6; 
 	
 	/**
 	 * Start the clustering algorithm 
 	 */
-	public static final int START_CLUSTERING_ALGORITHM =6;
+	public static final int START_CLUSTERING_ALGORITHM =7;
 
 	/**
 	 * End the clustering algorithm 
 	 */
-	public static final int END_CLUSTERING_ALGORITHM =7;
+	public static final int END_CLUSTERING_ALGORITHM =8;
 
 
 	
@@ -90,9 +97,6 @@ public class AiPamController {
 		this.pamClipManager = new PAMClipManager(); 
 	}
 	
-	public void importClips() {
-		
-	}
 	
 	/**
 	 * Add a sensor message listener 
@@ -119,7 +123,7 @@ public class AiPamController {
 	 */
 	public void loadAudioData(File selectedDirectory) {
 		
-		Task<Integer> task = pamClipManager.importClipsTask(selectedDirectory);
+		Task<Integer> task = pamClipManager.importClipsTask(selectedDirectory, this.aiPamParams);
 		updateMessageListeners(START_FILE_LOAD, task); 
 		
 		task.setOnCancelled((value)->{
@@ -134,6 +138,32 @@ public class AiPamController {
         th.setDaemon(true);
         th.start(); 
 	}
+	
+	/**
+	 * Start a thread clustering the data. 
+	 */
+	public void clusterData() {
+		
+	}
+
+	/**
+	 * Get the currently loaded clips. 
+	 * @return the currently loaded clips. 
+	 */
+	public ArrayList<PAMClip> getPAMClips() {
+		// TODO Auto-generated method stub
+		return pamClipManager.getCurrentClips();
+	}
+
+
+	/**
+	 * Get the parameters for AIPAM
+	 * @return the main parameters class. 
+	 */
+	public AIPamParams getParams() {
+		return this.aiPamParams;
+	}
+
 	
 	
 

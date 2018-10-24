@@ -16,7 +16,12 @@ public class AIPamParams {
 	/**
 	 * The maximum length of a clip in seconds.
 	 */
-	public double maximumClipLength = 3.0; 
+	public double maximumClipLength = 3; 
+	
+	/**
+	 * The channel of the audio file to use. 
+	 */
+	public int channel = 0; 
 	
 	/**
 	 * The a folder that contain audio files. 
@@ -29,12 +34,12 @@ public class AIPamParams {
 	/**
 	 * The fft length for clip spectrograms. 
 	 */
-	public int fttLength = 1024; 
+	public int fttLength = 512; 
 	
 	/**
 	 * The fft hop for clip spectrograms
 	 */
-	public int fftHop = 512;
+	public int fftHop = 256;
 
 	/**
 	 * The colour array type for the clip spectrograms. 
@@ -44,7 +49,9 @@ public class AIPamParams {
 	/**
 	 * The colour limits for the spectrogram. Closer limits usually increase contrast.
 	 */
-	public double[] colourLims = new double[]{0.3, 0.7};  
+	public double[] colourLims = new double[]{20, 100};  
+//	public double[] colourLims = new double[]{0, 100};  
+
 	
 	//Clustering algorithm 
 	

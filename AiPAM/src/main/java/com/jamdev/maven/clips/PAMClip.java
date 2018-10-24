@@ -1,9 +1,5 @@
 package com.jamdev.maven.clips;
 
-
-import org.datavec.audio.Wave;
-import org.datavec.audio.extension.Spectrogram;
-
 /**
  * A single clip for display on the clip pane. 
  * <p>
@@ -15,21 +11,14 @@ import org.datavec.audio.extension.Spectrogram;
  */
 public class PAMClip {
 	
-	/**
-	 * The default fft length
-	 */
-	private static int DEFAULT_FFT=1024; 
-	
-	/**
-	 * The default FFT hop; 
-	 */
-	private static int DEFAULT_FFT_HOP=512; 
+	private static int DEFAULT_FFT_LEN =1024; 
 
-	
+	private static int DEFUALT_FFT_HOP = 512; 
+
 	/**
 	 * Data for colours for spectrogram is stored as a short.
 	 */
-	private Spectrogram spectrogramClip; 
+	private double[][] spectrogramClip; 
 	
 	/**
 	 * The filename of the clip
@@ -41,14 +30,29 @@ public class PAMClip {
 	 */
 	private byte[] fingerprint;
 
+	/**
+	 * The audio play is stored so the clip can be played. 
+	 */
+	private AudioPlay audioPlay;
 
-
-	public PAMClip(Wave wave){
-		spectrogramClip=wave.getSpectrogram(); 
+	
+	public PAMClip(ClipWave wave){
+		this(wave , DEFAULT_FFT_LEN, DEFUALT_FFT_HOP); 
+	} 
+	
+	public PAMClip(ClipWave wave, int fftLength, int fftHop){
+		spectrogramClip=wave.getSpectrogram(fftLength, fftLength/fftHop).getAbsoluteSpectrogramData();
+	
 		fingerprint = wave.getFingerprint(); 
-		System.out.println("The spectorgram size is: " + 
-		spectrogramClip.getAbsoluteSpectrogramData().length + "x" +spectrogramClip.getAbsoluteSpectrogramData()); 
+//		System.out.println("The spectorgram size is: " + 
+//		spectrogramClip.getAbsoluteSpectrogramData().length + "x" +spectrogramClip.getAbsoluteSpectrogramData()); 
+		audioPlay=wave.getAudioPlay(); 
+		
+		fileName=wave.getFileName(); 
+		
 		//do not want the raw wave data in memory so wave is not saved
+		
+		wave = null; //garbage collector probably gets rid of this anyway but makes me feel better. 
 	} 
 
 	/**
@@ -57,6 +61,22 @@ public class PAMClip {
 	 */
 	public byte[] getFingerprint() {
 		return fingerprint;
+	}
+
+	/**
+	 * Get the spectrogram data for the clip. 
+	 * @return
+	 */
+	public double[][] getSpectrogram() {
+		return spectrogramClip;
+	}
+	
+	/**
+	 * Get the audio play. This plays the audio files.
+	 * @return the audio play
+	 */
+	public AudioPlay getAudioPlay() {
+		return audioPlay;
 	}
 
 	

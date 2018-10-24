@@ -1,4 +1,4 @@
-package com.jamdev.maven.aipam.layout;
+package com.jamdev.maven.aipam.layout.utilsFX;
 
 import org.controlsfx.control.RangeSlider;
 

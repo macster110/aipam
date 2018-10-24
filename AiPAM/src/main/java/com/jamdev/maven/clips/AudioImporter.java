@@ -17,9 +17,10 @@ public interface AudioImporter {
 	 * Imports clips from a file. The file may be one clip or it's possible files
 	 * which contain multiple clips could exist. Thus returns an array of audio clips. 
 	 * @param audioFile - the file to import a clip(s) from. 
+	 * @param maxLen - the maximum length of the file allowed. 
 	 * @return a list of clips contained in the file. 
 	 */
-	public ArrayList<Wave> importAudio(File audioFile);
+	public ArrayList<ClipWave> importAudio(File audioFile, int channel, double len);
 
 	
 

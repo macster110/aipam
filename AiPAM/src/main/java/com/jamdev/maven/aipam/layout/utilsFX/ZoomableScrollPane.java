@@ -1,4 +1,4 @@
-package com.jamdev.maven.aipam.layout;
+package com.jamdev.maven.aipam.layout.utilsFX;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -21,8 +21,8 @@ public class ZoomableScrollPane extends ScrollPane {
         setContent(outerNode(zoomNode));
 
         setPannable(true);
-        setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        //setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        //setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         setFitToHeight(true); //center
         setFitToWidth(true); //center
 

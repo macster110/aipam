@@ -4,8 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.datavec.audio.Wave;
-
+import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.utils.AiPamUtils;
 
 import javafx.concurrent.Task;
@@ -21,6 +20,7 @@ import javafx.concurrent.Task;
 public class PAMClipManager {
 
 	private ArrayList<PAMClip> currentClips; 
+
 
 	/**
 	 * Audio importer. 
@@ -39,7 +39,7 @@ public class PAMClipManager {
 	 * Creates a task for importing the clips from a folder. 
 	 * @return the task importing clips. 
 	 */
-	public Task<Integer> importClipsTask(File selectedDirectory) {
+	public Task<Integer> importClipsTask(File selectedDirectory, AIPamParams params) {
 
 		Task<Integer> task = new Task<Integer>() {
 			@Override protected Integer call() throws Exception {
@@ -59,22 +59,29 @@ public class PAMClipManager {
 					
 					//now import each 
 					PAMClip pamClip; 
-					ArrayList<Wave> waveData; 
+					ArrayList<ClipWave> waveData; 
 					int n=0; 
 					for (File file:files) {
-						if (this.isCancelled()) return n; //cancel stuff
-						waveData = audioImporter.importAudio(file); 
+						if (this.isCancelled()) {
+							currentClips=pamClips; 
+							return n; //cancel stuff
+						}
+						waveData = audioImporter.importAudio(file, params.channel, params.maximumClipLength); 
 						if (waveData!=null) {
-							for (Wave wave:waveData) {
-								if (this.isCancelled()) return n; //cancel stuff 
-								pamClip = new PAMClip(wave); 
+							for (ClipWave wave:waveData) {
+								if (this.isCancelled()) {
+									currentClips=pamClips; 
+									return n; //cancel stuff 
+								}
+								pamClip = new PAMClip(wave, params.fttLength, params.fttLength); 
 								pamClips.add(pamClip); 
 							}
 						}
 						n++;
-						System.out.println("Loaded " + n + " of " + files.size() + " wave: " + waveData.size());
+						double memoryMB = Runtime.getRuntime().totalMemory()/1000./1000.; 
+						//System.out.println("Loaded " + n + " of " + files.size() + " wave: " + waveData.size() + " Memory usage: " + memoryMB + "MB");
 						this.updateProgress(n, files.size());
-						this.updateMessage(String.format("Importing %s", file.getName()));
+						this.updateMessage(String.format("Importing %s | Memory usage: %.2f MB", file.getName(), memoryMB));
 					}
 					currentClips=pamClips; 
 
@@ -89,7 +96,13 @@ public class PAMClipManager {
 		return task; 
 	}
 
-
+	/**
+	 * Get the currently loaded clips. 
+	 * @return the currently loaded clips
+	 */
+	public ArrayList<PAMClip> getCurrentClips() {
+		return currentClips;
+	}
 
 
 

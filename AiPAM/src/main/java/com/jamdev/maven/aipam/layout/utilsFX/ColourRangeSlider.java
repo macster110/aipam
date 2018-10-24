@@ -1,5 +1,6 @@
-package com.jamdev.maven.aipam.layout;
+package com.jamdev.maven.aipam.layout.utilsFX;
 
+import com.jamdev.maven.aipam.layout.ColourArray;
 import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
 import com.jamdev.maven.aipam.utils.AiPamUtils;
 

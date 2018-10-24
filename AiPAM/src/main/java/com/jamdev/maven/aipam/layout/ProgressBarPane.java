@@ -62,6 +62,7 @@ public class ProgressBarPane extends BorderPane {
 		cancelButton = new Button("Cancel");
 		
 		HBox progressHolder = new HBox(progressBar, cancelButton);
+		progressHolder.setSpacing(5);
 		HBox.setHgrow(progressBar, Priority.ALWAYS);
 		progressHolder.setAlignment(Pos.CENTER);
 		

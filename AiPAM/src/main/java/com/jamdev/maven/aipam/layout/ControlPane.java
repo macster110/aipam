@@ -106,7 +106,7 @@ public class ControlPane extends BorderPane {
 		ObservableList<Double> defaultClipTimes = FXCollections.observableArrayList(); 
 		defaultClipTimes.addAll(0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0);
 		clipLengthBox = new ComboBox<Double>(defaultClipTimes); 
-		clipLengthBox.setEditable(true);
+		clipLengthBox.setEditable(false);
 		clipLengthBox.getSelectionModel().select(3.0);
 		clipLengthBox.setConverter(new ClipSizeConverter());
 		clipLengthBox.setTooltip(new Tooltip("Clips should be the same length. When imported \n"

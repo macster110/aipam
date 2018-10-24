@@ -2,6 +2,8 @@ package com.jamdev.maven.aipam.layout;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
+import com.jamdev.maven.aipam.layout.utilsFX.ColourRangeSlider;
+import com.jamdev.maven.aipam.layout.utilsFX.DefaultSliderLabel;
 import com.jamdev.maven.aipam.utils.SettingsPane;
 
 import javafx.collections.FXCollections;

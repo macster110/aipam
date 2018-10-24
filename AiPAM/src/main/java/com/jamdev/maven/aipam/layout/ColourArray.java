@@ -20,6 +20,11 @@ public class ColourArray implements Cloneable, Serializable{
 	private Color[] colours;
 	
 	private Color contrastingColor;
+
+	/**
+	 * The current colour array type for the color list. 
+	 */
+	private ColourArrayType type; 
 	
 	private ColourArray() {
 		
@@ -106,32 +111,61 @@ public class ColourArray implements Cloneable, Serializable{
 		if (type == null) {
 			type = ColourArrayType.GREY;
 		}
+		ColourArray array;
 		switch (type){
 		case GREY:
-			return createMergedArray(nPoints, Color.WHITE, Color.BLACK);
+			array = createMergedArray(nPoints, Color.WHITE, Color.BLACK);
+			break;
 		case REVERSEGREY:
-			return createMergedArray(nPoints, Color.BLACK, Color.WHITE);
+			array = createMergedArray(nPoints, Color.BLACK, Color.WHITE);
+			break;
 		case BLUE:
-			return createMergedArray(nPoints, Color.BLACK, Color.BLUE);
+			array = createMergedArray(nPoints, Color.BLACK, Color.BLUE);
+			break;
 		case GREEN:
-			return createMergedArray(nPoints, Color.BLACK, Color.GREEN);
+			array = createMergedArray(nPoints, Color.BLACK, Color.GREEN);
+			break;
 		case RED:
-			return createMergedArray(nPoints, Color.BLACK, Color.RED);
+			array = createMergedArray(nPoints, Color.BLACK, Color.RED);
+			break;
 		case HOT:
-			return createHotArray(nPoints);
+			array = createHotArray(nPoints);
+			break;
 		case FIRE:
-			return createFireArray(nPoints);
+			array = createFireArray(nPoints);
+			break;
 		case PATRIOTIC:
-			return createPatrioticArray(nPoints);
+			array = createPatrioticArray(nPoints);
+			break;
 		case PARULA:
-			return createParulaArray(nPoints);
+			array = createParulaArray(nPoints);
+			break;
 		case MATLAB:
-			return createMATLABArray(nPoints);
+			array = createMATLABArray(nPoints);
+			break;
 		default:
-			return createMergedArray(nPoints, Color.GREEN, Color.RED);
+			array = createMergedArray(nPoints, Color.GREEN, Color.RED);
+			break;
 		}
+		
+		array.setColorArrayType(type); 
+		
+		return array; 
 	}
 	
+
+	private void setColorArrayType(ColourArrayType type) {
+		this.type=type; 
+	}
+	
+	/**
+	 * Get the colour array type for the current colours. 
+	 * @return the colours array type. 
+	 */
+	public ColourArrayType getColorArrayType() {
+		return this.type;
+	}
+
 
 	/**
 	 * Get the CSS linear gradient for colouring Nodes by the selected colourmap/. 
