@@ -89,8 +89,9 @@ public class PamClipPane extends StackPane {
 //		});
 		
 		this.setOnMouseEntered((event)->{
+			System.out.println("Mouse enterred: " + event);
 			if (event.isPrimaryButtonDown()) {
-				
+				clipSelectionManager.selectMultiClip(PamClipPane.this); 
 			}
 		});
 		

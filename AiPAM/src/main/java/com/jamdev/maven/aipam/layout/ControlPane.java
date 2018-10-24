@@ -57,6 +57,8 @@ public class ControlPane extends BorderPane {
 	 * Selects possible clips sizes. 
 	 */
 	private ComboBox<Double> clipLengthBox;
+
+	private PlayBackPane playBackPane;
 	
 
 
@@ -116,9 +118,11 @@ public class ControlPane extends BorderPane {
 				+ "center of the clip. "));
 		
 		fftPane = new FFTSettingsPane(); 
+		
+		playBackPane = new PlayBackPane(aiPamView); 
 
 		//file vbox. 
-		holderPane.getChildren().addAll(label, fileImportHolder, clipLength, clipLengthBox, fftPane.getPane()); 
+		holderPane.getChildren().addAll(label, fileImportHolder, clipLength, clipLengthBox, fftPane.getPane(), playBackPane); 
 		
 		
 		return holderPane; 
