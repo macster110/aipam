@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.datavec.audio.properties.FingerprintProperties;
+
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.utils.AiPamUtils;
 
@@ -31,16 +33,15 @@ public class PAMClipManager {
 	 * Create the clip manager.
 	 */
 	public PAMClipManager() {
-		audioImporter = new StandardAudioImporter(); 
+		audioImporter = new StandardAudioImporter(); 		
 	}
-
 
 	/**
 	 * Creates a task for importing the clips from a folder. 
 	 * @return the task importing clips. 
 	 */
 	public Task<Integer> importClipsTask(File selectedDirectory, AIPamParams params) {
-
+		
 		Task<Integer> task = new Task<Integer>() {
 			@Override protected Integer call() throws Exception {
 				//progress is in intermediate mode. 
@@ -95,6 +96,9 @@ public class PAMClipManager {
 		};
 		return task; 
 	}
+
+
+
 
 	/**
 	 * Get the currently loaded clips. 

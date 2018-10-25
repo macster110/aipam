@@ -38,8 +38,11 @@ public class TSNEStandardExample {
         File wordFile = new File("C:\\Users\\macst\\Desktop\\words.txt"); 
         //Get the data of all unique word vectors
         Pair<InMemoryLookupTable,VocabCache> vectors = WordVectorSerializer.loadTxt(wordFile);
+
+        
         VocabCache cache = vectors.getSecond();
-        INDArray weights = vectors.getFirst().getSyn0();    //seperate weights of unique words into their own list
+        INDArray weights = vectors.getFirst().getSyn0();    //seperate weights of unique words into their own lis
+        
 
         for(int i = 0; i < cache.numWords(); i++)   //seperate strings of words into their own list
             cacheList.add(cache.wordAtIndex(i));
@@ -51,6 +54,7 @@ public class TSNEStandardExample {
                 .normalize(false)
                 .learningRate(500)
                 .useAdaGrad(false)
+                .numDimension(2)
 //                .usePca(false)
                 .build();
 
@@ -59,16 +63,22 @@ public class TSNEStandardExample {
         String outputFile = "C:\\Users\\macst\\Desktop\\tsne-standard-coords.csv";
         (new File(outputFile)).getParentFile().mkdirs();
 
+        //add a listener for updates on progress 
         TSNETrainingListener list = new TSNETrainingListener();
         tsne.setTrainingListener(list);
         long time0 = System.currentTimeMillis();
         System.out.println("Begin training: ");
+        
+        //run the actual algortihm
         tsne.fit(weights);
+        
+        //save the clusterred points to a file. 
         tsne.saveAsFile(cacheList, outputFile);
+        
         long time1 = System.currentTimeMillis();
         System.out.println("End training: " + (time1-time0) + " millis");
+      
         
-
         //This tsne will use the weights of the vectors as its matrix, have two dimensions, use the words strings as
         //labels, and be written to the outputFile created on the previous line
         // Plot Data with gnuplot

@@ -59,6 +59,11 @@ public class ControlPane extends BorderPane {
 	private ComboBox<Double> clipLengthBox;
 
 	private PlayBackPane playBackPane;
+
+	/**
+	 * Pane with clustering algorithm controls 
+	 */
+	private ClusterPane clusterPane;
 	
 
 
@@ -119,10 +124,15 @@ public class ControlPane extends BorderPane {
 		
 		fftPane = new FFTSettingsPane(); 
 		
+		//pane for data playback
 		playBackPane = new PlayBackPane(aiPamView); 
+		
+		//pane for clusterring algorithm. 
+		clusterPane = new ClusterPane(aiPamView); 
 
 		//file vbox. 
-		holderPane.getChildren().addAll(label, fileImportHolder, clipLength, clipLengthBox, fftPane.getPane(), playBackPane); 
+		holderPane.getChildren().addAll(label, fileImportHolder, clipLength, clipLengthBox, 
+				fftPane.getPane(), playBackPane, clusterPane.getPane()); 
 		
 		
 		return holderPane; 

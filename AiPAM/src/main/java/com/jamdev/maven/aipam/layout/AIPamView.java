@@ -238,4 +238,12 @@ public class AIPamView extends BorderPane {
 		return this.clipSelectionManager;
 	}
 
+	/**
+	 * Get the AiPamController
+	 * @return the AiPamController. 
+	 */
+	public AiPamController getAIControl() {
+		return aiPamContol; 
+	}
+
 }

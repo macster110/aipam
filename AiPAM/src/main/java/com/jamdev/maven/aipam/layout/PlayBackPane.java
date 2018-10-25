@@ -14,7 +14,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 
 /**
- * Pane ith controls for audio playback. 
+ * Pane with controls for  audio playback settings. 
+ * 
  * @author Jamie Macaulay 
  *
  */

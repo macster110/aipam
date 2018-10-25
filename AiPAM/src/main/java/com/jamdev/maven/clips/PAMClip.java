@@ -1,5 +1,9 @@
 package com.jamdev.maven.clips;
 
+import java.util.UUID;
+
+import com.jamdev.maven.aipam.utils.DownSampleImpl;
+
 /**
  * A single clip for display on the clip pane. 
  * <p>
@@ -35,6 +39,11 @@ public class PAMClip {
 	 */
 	private AudioPlay audioPlay;
 
+	/**
+	 * A unique ID for a clip. 
+	 */
+	private UUID iD;
+
 	
 	public PAMClip(ClipWave wave){
 		this(wave , DEFAULT_FFT_LEN, DEFUALT_FFT_HOP); 
@@ -42,6 +51,9 @@ public class PAMClip {
 	
 	public PAMClip(ClipWave wave, int fftLength, int fftHop){
 		spectrogramClip=wave.getSpectrogram(fftLength, fftLength/fftHop).getAbsoluteSpectrogramData();
+		
+//		spectrogramClip =  DownSampleImpl.largestTriangleThreeBuckets(spectrogramClip, 50);
+//		System.out.println("The spectrogram clip is: " +  spectrogramClip.length + " x " +  spectrogramClip[0].length);
 	
 		fingerprint = wave.getFingerprint(); 
 //		System.out.println("The spectorgram size is: " + 
@@ -49,6 +61,8 @@ public class PAMClip {
 		audioPlay=wave.getAudioPlay(); 
 		
 		fileName=wave.getFileName(); 
+		
+		this.iD=UUID.randomUUID(); 
 		
 		//do not want the raw wave data in memory so wave is not saved
 		
@@ -77,6 +91,15 @@ public class PAMClip {
 	 */
 	public AudioPlay getAudioPlay() {
 		return audioPlay;
+	}
+
+	/**
+	 * 
+	 * Get a unique ID number for the clip. 
+	 * @return the ID
+	 */
+	public UUID getID() {
+		return getID();
 	}
 
 	
