@@ -1,40 +1,45 @@
 package com.jamdev.maven.aipam.clustering;
 
 import java.util.ArrayList;
-import java.util.List;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.util.ArrayUtil;
-import org.deeplearning4j.optimize.api.TrainingListener;
 import org.deeplearning4j.plot.BarnesHutTsne;
 import org.nd4j.linalg.api.buffer.DataBuffer;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import com.jamdev.maven.aipam.utils.DownSampleImpl;
 import com.jamdev.maven.aipam.utils.SettingsPane;
 import com.jamdev.maven.clips.PAMClip;
 
 /**
- * Algorithm which clusters clips based on TSNE high dimesnionla clusterring algortihm. 
- * 
+ * Algorithm which clusters clips based on TSNE high dimensional clustering algorithm. 
  * 
  * @author Jamie Macaulay
  *
  */
 public class TSNEClipClusterer implements ClusteringAlgorithm{
+
 	
-	private int iterations = 500; 
-	
-    private TrainingListener listener; 
+	/**
+	 * The training listener
+	 */
+    private StandardTrainingListener listener; 
+    
+    /**
+     * The TSNE params
+     */
+    public TSNEParams params = new TSNEParams(); 
     
     
 	public TSNEClipClusterer() {
-		
+		listener = new StandardTrainingListener(this); 
 	}
 	
 
 	@Override
 	public void cluster(ArrayList<PAMClip> pamClips) {
 		try {
-		clusterFingerprints(pamClips); 
+			double[][] clusterResults = clusterFingerprints(pamClips); 
+			for (int i=0; i<pamClips.size(); i++) {
+				pamClips.get(i).setClusterPoint(clusterResults[i]);
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -68,15 +73,13 @@ public class TSNEClipClusterer implements ClusteringAlgorithm{
 	 * Cluster the fingerprints created from audio data using a TSNE algorithm. 
 	 * @param fingerprints
 	 */
-	public void clusterFingerprints(ArrayList<PAMClip> pamClips) {
+	public double[][] clusterFingerprints(ArrayList<PAMClip> pamClips) {
 	
+    	System.err.println("Cluster fingerprints: ");
 
         //create an n-dimensional array of doubles
         Nd4j.setDataType(DataBuffer.Type.DOUBLE);
-        
-        
-        List<String> cacheList = new ArrayList<>(); //cacheList is a dynamic array of ID's used to hold all words
-        
+                
         System.out.println("Creating the   INDArray: ");
 
         INDArray weights = createDataArray(pamClips);    //seperate weights of unique words into their own list
@@ -84,7 +87,7 @@ public class TSNEClipClusterer implements ClusteringAlgorithm{
 
         if (weights==null) {
         	System.err.println("The weights is null: " + weights);
-        	return; 
+        	return null; 
         }
         
         System.out.println("Creating the  cache list: ");
@@ -99,11 +102,10 @@ public class TSNEClipClusterer implements ClusteringAlgorithm{
 
         //STEP 3: build a dual-tree tsne to use later
         BarnesHutTsne tsne = new BarnesHutTsne.Builder()
-                .setMaxIter(iterations).theta(0.5)
+                .setMaxIter(params.iterations).theta(0.5)
                 .normalize(false)
-                .learningRate(500)
-                .useAdaGrad(false)
-                .numDimension(2)
+                .learningRate(params.learningRate)
+                .perplexity(30)
 //                .usePca(false)
                 .build();
 
@@ -120,20 +122,27 @@ public class TSNEClipClusterer implements ClusteringAlgorithm{
         //save the clusterred points to a file. 
         INDArray tsnResult  = tsne.getData(); 
         
+        long time1 = System.currentTimeMillis();
+        System.out.println("End training: " + (time1-time0) + " millis");
+        
+       //now output data.  
+       double[][] clusterPoints = new double[tsnResult.rows()][2]; 
+       
        System.out.println("Rows is " + tsnResult.rows());
        INDArray rows; 
         for (int i=0; i<tsnResult.rows(); i++) {
         	rows = tsnResult.getRow(i); 
-        	double[] clusterPoint = rows.toDoubleVector(); 
+          	clusterPoints[i] = rows.toDoubleVector(); 
         	System.out.print(i + ":  ");  
-        	for (int j=0; j<clusterPoint.length; j++) {
-        		System.out.print("  " +clusterPoint[j]);
+        	for (int j=0; j<clusterPoints[i].length; j++) {
+        		System.out.print("  " +clusterPoints[i][j]);
         	}
+      
         	System.out.println(); 
         }
+
         
-        long time1 = System.currentTimeMillis();
-        System.out.println("End training: " + (time1-time0) + " millis");
+        return clusterPoints; 
       
         
         //This tsne will use the weights of the vectors as its matrix, have two dimensions, use the words strings as
@@ -150,8 +159,8 @@ public class TSNEClipClusterer implements ClusteringAlgorithm{
 
 	}
 
-
-	public TrainingListener getTrainingListener() {
+	@Override
+	public StandardTrainingListener getTrainingListener() {
 		return listener;
 	}
 
@@ -159,8 +168,7 @@ public class TSNEClipClusterer implements ClusteringAlgorithm{
 	 * Set the training listener
 	 * @param listener - the training listener. 
 	 */
-	@Override
-	public void setTrainingListener(TrainingListener listener) {
+	public void setTrainingListener(StandardTrainingListener listener) {
 		this.listener = listener;
 	}
 
@@ -169,6 +177,11 @@ public class TSNEClipClusterer implements ClusteringAlgorithm{
 	public SettingsPane getSettingsPane() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public double getMaxIterations() {
+		return 100;
 	}
 
 }

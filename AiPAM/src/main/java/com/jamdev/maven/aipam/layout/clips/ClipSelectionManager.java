@@ -24,7 +24,8 @@ public class ClipSelectionManager {
 	/**
 	 * The border used to select the clip 
 	 */
-	private  Border border = new Border(new BorderStroke(Color.LIMEGREEN, BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(3)));
+	private  Border border = new Border(new BorderStroke(Color.LIMEGREEN, BorderStrokeStyle.SOLID, 
+			new CornerRadii(0), new BorderWidths(3)));
 
 	/**
 	 * The AIPamView

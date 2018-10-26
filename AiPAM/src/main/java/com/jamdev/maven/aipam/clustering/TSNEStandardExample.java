@@ -51,7 +51,7 @@ public class TSNEStandardExample {
         log.info("Build model....");
         BarnesHutTsne tsne = new BarnesHutTsne.Builder()
                 .setMaxIter(iterations).theta(0.5)
-                .normalize(false)
+                .normalize(true)
                 .learningRate(500)
                 .useAdaGrad(false)
                 .numDimension(2)
@@ -64,7 +64,7 @@ public class TSNEStandardExample {
         (new File(outputFile)).getParentFile().mkdirs();
 
         //add a listener for updates on progress 
-        TSNETrainingListener list = new TSNETrainingListener();
+        StandardTrainingListener list = new StandardTrainingListener();
         tsne.setTrainingListener(list);
         long time0 = System.currentTimeMillis();
         System.out.println("Begin training: ");

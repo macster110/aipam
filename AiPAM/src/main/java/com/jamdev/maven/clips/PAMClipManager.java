@@ -36,6 +36,7 @@ public class PAMClipManager {
 		audioImporter = new StandardAudioImporter(); 		
 	}
 
+
 	/**
 	 * Creates a task for importing the clips from a folder. 
 	 * @return the task importing clips. 
@@ -47,6 +48,8 @@ public class PAMClipManager {
 				//progress is in intermediate mode. 
 				try {
 					this.updateTitle("Importing Audio Data");
+					
+					//first run checks. 
 
 					System.out.println("Starting the audio import");
 
@@ -56,6 +59,16 @@ public class PAMClipManager {
 					for (File file:files) {
 						System.out.println(file.getAbsolutePath());
 					}
+					
+					this.updateProgress(-1, files.size());
+					this.updateMessage(String.format("Running checks on %d files: ", files.size()));
+
+					//run checks to make sure all sample rates are the same and there are no duplicate file names
+					if (!runFileChecks(files)) {
+						//Send error to error reporter. 
+						//TODO.
+						return -1; 
+					} 
 
 					
 					//now import each 
@@ -93,8 +106,20 @@ public class PAMClipManager {
 					return -1; 
 				}
 			}
+
+		
 		};
 		return task; 
+	}
+	
+	/**
+	 * 
+	 * @param task
+	 */
+	private boolean runFileChecks(List<File> files ) {	
+		//TODO Check files are the same sample rate and the 
+		//have unique names
+		return true;
 	}
 
 

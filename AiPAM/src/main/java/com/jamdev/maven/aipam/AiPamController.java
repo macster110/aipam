@@ -3,9 +3,7 @@ package com.jamdev.maven.aipam;
 import java.io.File;
 import java.util.ArrayList;
 
-import com.jamdev.maven.aipam.clustering.ClusteringAlgorithm;
 import com.jamdev.maven.aipam.clustering.PamClusterManager;
-import com.jamdev.maven.aipam.clustering.TSNEClipClusterer;
 import com.jamdev.maven.clips.PAMClip;
 import com.jamdev.maven.clips.PAMClipManager;
 
@@ -165,12 +163,11 @@ public class AiPamController {
 		return this.aiPamParams;
 	}
 
-
 	/**
 	 * Cluster the clips. 
 	 */
 	public void clusterClips() {
-		Task<Integer> task = pamClusterManager.clusterDatyaTask(pamClipManager.getCurrentClips(), this.aiPamParams); 
+		Task<Integer> task = pamClusterManager.clusterDataTask(pamClipManager.getCurrentClips(), this.aiPamParams); 
 		updateMessageListeners(START_CLUSTERING_ALGORITHM, task); 
 		
 		task.setOnCancelled((value)->{
@@ -178,6 +175,7 @@ public class AiPamController {
 			updateMessageListeners(CANCEL_CLUSTERING_ALGORITHM, task); 
 		});
 		task.setOnSucceeded((value)->{
+			//
 			updateMessageListeners(END_CLUSTERING_ALGORITHM, task); 
 		});
 	

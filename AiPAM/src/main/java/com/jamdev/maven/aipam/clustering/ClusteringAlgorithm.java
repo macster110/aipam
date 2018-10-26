@@ -27,9 +27,10 @@ public interface ClusteringAlgorithm {
 	public SettingsPane getSettingsPane();
 
 	/**
-	 * Set the training listener. 
-	 * @param listener - the training listener; 
+	 * Get the training listener. 
+	 * @return listener - the training listener; 
 	 */
-	public void setTrainingListener(TrainingListener listener);
+	public StandardTrainingListener getTrainingListener();
+
 
 }

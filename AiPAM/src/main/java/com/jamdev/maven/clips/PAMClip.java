@@ -1,8 +1,7 @@
 package com.jamdev.maven.clips;
 
-import java.util.UUID;
+import java.io.File;
 
-import com.jamdev.maven.aipam.utils.DownSampleImpl;
 
 /**
  * A single clip for display on the clip pane. 
@@ -40,18 +39,23 @@ public class PAMClip {
 	private AudioPlay audioPlay;
 
 	/**
-	 * A unique ID for a clip. 
+	 * The file ID
 	 */
-	private UUID iD;
-
+	private String iD;
 	
+	/**
+	 * The position defined by the cluster algorithm
+	 */
+	private double[] clusterPoint; 
+		
 	public PAMClip(ClipWave wave){
 		this(wave , DEFAULT_FFT_LEN, DEFUALT_FFT_HOP); 
 	} 
 	
 	public PAMClip(ClipWave wave, int fftLength, int fftHop){
 		spectrogramClip=wave.getSpectrogram(fftLength, fftLength/fftHop).getAbsoluteSpectrogramData();
-		
+		spectrogramClip = clipSpectrogram(spectrogramClip, 64); 
+			
 //		spectrogramClip =  DownSampleImpl.largestTriangleThreeBuckets(spectrogramClip, 50);
 //		System.out.println("The spectrogram clip is: " +  spectrogramClip.length + " x " +  spectrogramClip[0].length);
 	
@@ -62,12 +66,27 @@ public class PAMClip {
 		
 		fileName=wave.getFileName(); 
 		
-		this.iD=UUID.randomUUID(); 
+		//use the file name as the ID because this allows easy exporting of data and alos allows for 
+		//clustering algorithm to be reoloaded. Condition of program is therefore that no two file names 
+		//can be equal. 
+		iD=new File(wave.getFileName()).getName(); 
 		
 		//do not want the raw wave data in memory so wave is not saved
 		
 		wave = null; //garbage collector probably gets rid of this anyway but makes me feel better. 
 	} 
+	
+	private double[][] clipSpectrogram(double[][] clip, int binsFreq) {
+		double[][] newSpec = new double[clip.length][]; 
+		for (int i=0; i<clip.length; i++) {
+			double[] newSpecLine= new double[binsFreq]; 
+			for (int j=0; j<binsFreq; j++) {
+				newSpecLine[j]=clip[i][j]; 
+			}
+			newSpec[i]=newSpecLine; 
+		}
+		return newSpec; 
+	}
 
 	/**
 	 * Get the fingerprint for classification
@@ -98,8 +117,24 @@ public class PAMClip {
 	 * Get a unique ID number for the clip. 
 	 * @return the ID
 	 */
-	public UUID getID() {
-		return getID();
+	public String getID() {
+		return iD; 
+	}
+	
+	/**
+	 * Get the cluster point for the clip after having been 
+	 * @return the cluster point in x,y and maybe z or even more. Can be null if no clustering. 
+	 */
+	public double[] getClusterPoint() {
+		return clusterPoint; 
+	}
+
+	/**
+	 * Set the cluster point.
+	 * @param clusterPoint - the cluster point. 
+	 */
+	public void setClusterPoint(double[] clusterPoints) {
+		this.clusterPoint=clusterPoints; 
 	}
 
 	

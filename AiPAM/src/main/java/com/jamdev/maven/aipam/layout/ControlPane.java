@@ -32,31 +32,13 @@ public class ControlPane extends BorderPane {
 	 * Reference to the view. 
 	 */
 	private AIPamView aiPamView;
-	
-	/**
-	 * Text field for the file. 
-	 */
-	private TextField textField;
-	
-	/**
-	 * The import button 
-	 */
-	private Button importButton;
 
-	/**
-	 * Diurectory chooser for audio files 
-	 */
-	private DirectoryChooser chooser;
 
 	/**
 	 * The FFT Settings Pane. 
 	 */
 	private FFTSettingsPane fftPane;
 
-	/**
-	 * Selects possible clips sizes. 
-	 */
-	private ComboBox<Double> clipLengthBox;
 
 	private PlayBackPane playBackPane;
 
@@ -64,6 +46,11 @@ public class ControlPane extends BorderPane {
 	 * Pane with clustering algorithm controls 
 	 */
 	private ClusterPane clusterPane;
+
+	/**
+	 * The audio import pane. 
+	 */
+	private AudioImportPane audioImportPane;
 	
 
 
@@ -81,47 +68,10 @@ public class ControlPane extends BorderPane {
 		VBox holderPane = new VBox(); 
 		holderPane.setSpacing(5);
 		
-		//create
-		HBox fileImportHolder = new HBox();
-		fileImportHolder.setSpacing(5);
+		//pane for importing audio clips. 
+		audioImportPane = new AudioImportPane(aiPamView); 
 		
-		Label label = new Label("Import Audio Files"); 
-		label.setFont(AIPamView.defaultLabelTitle1);
-		label.setTextFill(AIPamView.defaultTitleColour);
-		
-		importButton = new Button("Import"); 
-//		Text iconText = new MaterialDesignIconView(MaterialDesignIcon.FOLDER_DOWNLOAD);
-//		iconText.setStyle(String.format("-fx-font-size: %dpt", AIPamView.iconSize));
-//		importButton.setGraphic(iconText);
-		importButton.setOnAction((action)->{
-			aiPamView.openAudioFolder(); 
-		});
-		
-		textField = new TextField(); 
-		textField.setEditable(false);
-		textField.prefHeightProperty().bind(importButton.heightProperty());
-		textField.setText("Open an audio folder");
-		
-		fileImportHolder.getChildren().addAll(textField, importButton);
-		
-		
-		//clip length 
-		Label clipLength = new Label("Max. Clip Length"); 
-		clipLength.setFont(AIPamView.defaultLabelTitle2);
-		clipLength.setTextFill(AIPamView.defaultTitleColour);
-		
-		ObservableList<Double> defaultClipTimes = FXCollections.observableArrayList(); 
-		defaultClipTimes.addAll(0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0);
-		clipLengthBox = new ComboBox<Double>(defaultClipTimes); 
-		clipLengthBox.setEditable(false);
-		clipLengthBox.getSelectionModel().select(3.0);
-		clipLengthBox.setConverter(new ClipSizeConverter());
-		clipLengthBox.setTooltip(new Tooltip("Clips should be the same length. When imported \n"
-				+ " the AIPAM will automatically trim clips which are longer than the max. clip \n"
-				+ "length value. The trim take place from the center of the clip such i.e \n. "
-				+ "max. clip length/2 before center of clip and max. clip length/2 after the \n "
-				+ "center of the clip. "));
-		
+		//pane for the fft settings. 
 		fftPane = new FFTSettingsPane(); 
 		
 		//pane for data playback
@@ -131,30 +81,13 @@ public class ControlPane extends BorderPane {
 		clusterPane = new ClusterPane(aiPamView); 
 
 		//file vbox. 
-		holderPane.getChildren().addAll(label, fileImportHolder, clipLength, clipLengthBox, 
+		holderPane.getChildren().addAll(audioImportPane.getPane(), 
 				fftPane.getPane(), playBackPane, clusterPane.getPane()); 
 		
 		
 		return holderPane; 
 	}
 	
-	public class ClipSizeConverter extends StringConverter<Double>
-	{
-
-		@Override
-		public String toString(Double object) {
-			//add a seconds value
-			return String.format("%.1f s", object);
-		}
-
-		@Override
-		public Double fromString(String string) {
-			//remove all letters from value and try to parse the double
-			String str = string.replaceAll("[^\\d.]", "");
-			return Double.parseDouble(str); 
-		}
-
-	}
 
 
 

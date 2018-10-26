@@ -34,12 +34,12 @@ public class AIPamParams {
 	/**
 	 * The fft length for clip spectrograms. 
 	 */
-	public int fttLength = 512; 
+	public int fttLength = 1024; 
 	
 	/**
 	 * The fft hop for clip spectrograms
 	 */
-	public int fftHop = 256;
+	public int fftHop = 512;
 
 	/**
 	 * The colour array type for the clip spectrograms. 

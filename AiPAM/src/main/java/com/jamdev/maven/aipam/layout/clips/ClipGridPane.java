@@ -1,7 +1,6 @@
 package com.jamdev.maven.aipam.layout.clips;
 
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
 
 import com.jamdev.maven.aipam.layout.AIPamView;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
@@ -22,14 +21,13 @@ import javafx.scene.layout.TilePane;
 /**
  * Pane which shows all the clips.
  * 
- *  
  * @author Jamie Macualay 
  *
  */
 public class ClipGridPane extends BorderPane {
 
 	/**
-	 * The tile pnae which holds the tiles. 
+	 * The tile pane which holds the tiles. 
 	 */
 	private TilePane tilePane;
 
@@ -39,7 +37,7 @@ public class ClipGridPane extends BorderPane {
 	public ArrayList<PamClipPane> currentPamClips;
 
 	/**
-	 * Reference to the view 
+	 * Reference to the view.
 	 */
 	private AIPamView aiPamView;
 
@@ -113,7 +111,7 @@ public class ClipGridPane extends BorderPane {
 			@Override protected Integer call() throws Exception {
 				//progress is in intermediate mode. 
 				try {
-					this.updateTitle("Generating CLip Images");
+					this.updateTitle("Generating Clip Images");
 
 					int[] clipSize = getClipsSize(pamClips.size()); 
 
@@ -137,14 +135,13 @@ public class ClipGridPane extends BorderPane {
 						this.updateMessage(String.format("Generating image %d of %d | Memory usage: %.2f MB",i,  pamClips.size(), memoryMB));
 					}
 					
-					
-					this.updateProgress(-1, pamClips.size());
+					updateProgress(-1, pamClips.size());
 					memoryMB = Runtime.getRuntime().totalMemory()/1000./1000.; 
-					this.updateMessage(String.format("Drawing %d  images | Memory usage: %.2f MB",  pamClips.size(), memoryMB));
+					updateMessage(String.format("Drawing %d  images | Memory usage: %.2f MB",  pamClips.size(), memoryMB));
 					//need to do this all in a oner or get this classic NGCnvas null pointer. 
 					Platform.runLater(()->layoutClips()); 
 
-					Thread.sleep(3000); // give the FX thread some time to load the images with scroll bar still showing 
+					//Thread.sleep(3000); // give the FX thread some time to load the images with scroll bar still showing 
 					return pamClips.size();
 
 				}
@@ -158,7 +155,7 @@ public class ClipGridPane extends BorderPane {
 	}
 
 	/**
-	 * Layoutout all the clips. 
+	 * Layout all the clips. 
 	 */
 	public void layoutClips(){
 		for (PamClipPane clip: currentPamClips) {

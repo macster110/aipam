@@ -2,10 +2,8 @@ package com.jamdev.maven.aipam.layout;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.utils.SettingsPane;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -22,8 +20,10 @@ import javafx.scene.layout.VBox;
  */
 public class ClusterPane implements SettingsPane<AIPamParams> {
 	
+	/**
+	 * The default 
+	 */
 	public TSNEClusterPane clusterPane;
-	
 	
 	private AIPamView aiPamView; 
 	
@@ -75,5 +75,6 @@ public class ClusterPane implements SettingsPane<AIPamParams> {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

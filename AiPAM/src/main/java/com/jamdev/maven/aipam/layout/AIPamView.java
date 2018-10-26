@@ -2,12 +2,16 @@ package com.jamdev.maven.aipam.layout;
 
 import java.io.File;
 
+import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.layout.clips.ClipGridPane;
 import com.jamdev.maven.aipam.layout.clips.ClipSelectionManager;
+import com.jamdev.maven.aipam.layout.clustering.ClusterGraphPane;
 
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -74,7 +78,12 @@ public class AIPamView extends BorderPane {
 	/**
 	 * The clip selection manager handles clip selection. 
 	 */
-	private ClipSelectionManager clipSelectionManager;  
+	private ClipSelectionManager clipSelectionManager;
+
+	/**
+	 * The cluster graph pane. 
+	 */	
+	private ClusterGraphPane clusterGraphPane;  
 
 	/**
 	 * Default font for main label title
@@ -106,6 +115,8 @@ public class AIPamView extends BorderPane {
 		clipPane= new ClipGridPane(this); 
 		
 		clipSelectionManager = new ClipSelectionManager(this); 
+		
+		clusterGraphPane = new ClusterGraphPane(this); 
 
 		setLeft(controlPane);
 
@@ -113,7 +124,8 @@ public class AIPamView extends BorderPane {
 		progressPane = new ProgressBarPane(this);
 		progressPane.setPadding(new Insets(5,5,5,5));
 		centerPane.setCenter(clipPane);
-
+		centerPane.setRight(clusterGraphPane);
+		
 		this.setCenter(centerPane);
 
 	}
@@ -162,6 +174,7 @@ public class AIPamView extends BorderPane {
 	 * @param updateType - the update type. 
 	 */
 	public void notifyUpdate(int updateType, Object data) {
+		System.out.println("AIPamView: notifyUpdate: " +updateType + " " + data);
 		switch (updateType) {
 		case AiPamController.START_FILE_LOAD:
 			showProgressPane(true); 
@@ -180,7 +193,15 @@ public class AIPamView extends BorderPane {
 			break; 
 		case AiPamController.END_IMAGE_LOAD:
 			showProgressPane(false); 
-			System.out.println("Tile pane: " + clipPane.getTilePane().getChildren().size());
+			//System.out.println("Tile pane: " + clipPane.getTilePane().getChildren().size());
+			break; 
+		case AiPamController.START_CLUSTERING_ALGORITHM:			
+			showProgressPane(true); 
+			progressPane.setTask((Task) data);
+			break; 
+		case AiPamController.END_CLUSTERING_ALGORITHM:
+			showProgressPane(false); 
+			clusterGraphPane.update(aiPamContol.getPAMClips()); 
 			break; 
 		} 
 	}
@@ -197,6 +218,7 @@ public class AIPamView extends BorderPane {
 			notifyUpdate(AiPamController.CANCELLED_IMAGE_LOAD, null); 
 		});
 		task.setOnSucceeded((value)->{
+			//
 			notifyUpdate(AiPamController.END_IMAGE_LOAD, null); 
 		});
 		
@@ -244,6 +266,10 @@ public class AIPamView extends BorderPane {
 	 */
 	public AiPamController getAIControl() {
 		return aiPamContol; 
+	}
+
+	public AIPamParams getAIParams() {
+		return getAIControl() .getParams();
 	}
 
 }
