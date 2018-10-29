@@ -11,12 +11,44 @@
 	<name>MavenJTest</name>
 	<url>http://maven.apache.org</url>
 
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>bintray-jerady-maven</id>
+			<name>bintray</name>
+			<url>https://dl.bintray.com/jerady/maven</url>
+		</repository>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>bintray-dukke-maven</id>
+			<name>bintray</name>
+			<url>https://dl.bintray.com/dukke/maven</url>
+		</repository>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>bintray-diffplug-opensource</id>
+			<name>bintray</name>
+			<url>https://dl.bintray.com/diffplug/opensource</url>
+		</repository>
+	</repositories>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<dl4j.version>1.0.0-beta2</dl4j.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+
 
 	<dependencies>
 		<dependency>
@@ -58,10 +90,62 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.21</version>
 		</dependency>
+		<!-- Controls FX library -->
 		<dependency>
 			<groupId>org.controlsfx</groupId>
 			<artifactId>controlsfx</artifactId>
 			<version>8.40.14</version>
+		</dependency>
+		<!-- TSNE library -->
+		<dependency>
+			<groupId>com.github.lejon.T-SNE-Java</groupId>
+			<artifactId>tsne</artifactId>
+			<version>v2.5.0</version>
+		</dependency>
+		<!-- Font awesome for some icons -->
+		<dependency>
+			<groupId>de.jensd</groupId>
+			<artifactId>fontawesomefx-commons</artifactId>
+			<version>8.15</version>
+		</dependency>
+		<dependency>
+			<groupId>de.jensd</groupId>
+			<artifactId>fontawesomefx-controls</artifactId>
+			<version>8.15</version>
+		</dependency>
+		<dependency>
+			<groupId>de.jensd</groupId>
+			<artifactId>fontawesomefx-materialdesignfont</artifactId>
+			<version>1.7.22-4</version>
+		</dependency>
+		<dependency>
+			<groupId>de.jensd</groupId>
+			<artifactId>fontawesomefx-materialicons</artifactId>
+			<version>2.2.0-5</version>
+		</dependency>
+		<dependency>
+			<groupId>de.jensd</groupId>
+			<artifactId>fontawesomefx-fontawesome</artifactId>
+			<version>4.7.0-5</version>
+		</dependency>
+		<!-- MATL RW for writing .mat files for settings files -->
+		<dependency>
+			<groupId>com.diffplug.matsim</groupId>
+			<artifactId>matfilerw</artifactId>
+			<version>3.0.1</version>
+			<type>pom</type>
+		</dependency>
+		<!-- The main UI them JMetro -->
+		<dependency>
+			<groupId>org.jfxtras</groupId>
+			<artifactId>jmetro</artifactId>
+			<version>4.6</version>
+		</dependency>
+		<!-- Allows the importing of SVG files for icons. -->
+		<dependency>
+			<groupId>de.codecentric.centerdevice</groupId>
+			<artifactId>javafxsvg</artifactId>
+			<version>1.3.0</version>
 		</dependency>
 	</dependencies>
 	<build>

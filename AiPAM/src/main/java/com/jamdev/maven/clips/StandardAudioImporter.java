@@ -2,12 +2,18 @@ package com.jamdev.maven.clips;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.datavec.audio.WaveHeader;
+
+import com.jamdev.maven.aipam.utils.AiPamUtils;
 /**
  * Standard audio importer for single .wav clips
  * @author Jamie Macaulay 
@@ -77,8 +83,6 @@ public class StandardAudioImporter implements AudioImporter {
 			//extract single channel data 
 			byte[] singleChan = getSingleChannelByte(waveHeader, data,  channel); 
 			singleChan=trim( waveHeader, singleChan,  maxSamples); 
-
-
 
 			//System.out.println("singleChan: " + singleChan.length + " all bytes: " + data.length );
 
@@ -169,6 +173,67 @@ public class StandardAudioImporter implements AudioImporter {
 
 
 		return singleByteChan;		
+	}
+
+	@Override
+	public AudioInfo getAudioInfo(File audioFileDirectory) {
+		
+		List<File> files  = AiPamUtils.listFiles(audioFileDirectory.getAbsolutePath(), "wav");
+		
+		int unopenablefiles = 0; 
+		Integer[] channels = new Integer[files.size()];
+		Float[] sampleRate = new Float[files.size()];
+
+		for (int j=0; j<files.size(); j++) {
+			InputStream inputStream;
+			try {
+				inputStream = new FileInputStream(files.get(j));
+				WaveHeader waveHeader = new WaveHeader(inputStream);
+				
+				channels[j]=waveHeader.getChannels();
+				sampleRate[j] = (float) waveHeader.getSampleRate(); 
+				
+			} catch (FileNotFoundException e) {
+				unopenablefiles++;; 
+				channels[j] = -1; 
+				sampleRate[j] = (float) -1.0; 
+				e.printStackTrace();
+			}
+		}
+		
+		//convert to list
+		Collection<Integer> chnnlList = Arrays.asList(channels); 
+		Collection<Float> srList = Arrays.asList(sampleRate); 
+
+		// Get collection without duplicate i.e. distinct only
+		List<Integer> chnnlListElements = chnnlList.stream().distinct().collect(Collectors.toList());
+		List<Float> srListElements = srList.stream().distinct().collect(Collectors.toList());
+		
+		chnnlListElements.remove(new Integer(-1));
+		srListElements.remove(new Float(-1.0));
+		
+
+		AudioInfo audioInfo = new AudioInfo();
+		
+		System.out.println(chnnlListElements);
+		System.out.println(srListElements);
+
+		if (chnnlListElements.size()==1) audioInfo.isSameChannels=true;
+		if (srListElements.size()==1) audioInfo.isSameSampleRate=true;
+		
+		audioInfo.channels=chnnlListElements.get(0); 
+		audioInfo.sampleRate=chnnlListElements.get(0);
+		audioInfo.nFiles=files.size();
+		audioInfo.nFilesCorrupt = unopenablefiles; 
+		audioInfo.file = audioFileDirectory.getAbsolutePath();
+
+		return audioInfo;
+	}
+
+	@Override
+	public List<File> listAudioFiles(File audioFileDirectory) {
+		List<File> files  = AiPamUtils.listFiles(audioFileDirectory.getAbsolutePath(), "wav");		
+		return files;
 	}
 
 

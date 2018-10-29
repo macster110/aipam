@@ -1,5 +1,6 @@
 package com.jamdev.maven.aipam.utils;
 
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
 /**
@@ -26,5 +27,24 @@ public interface SettingsPane<T> {
 	 * Set the controls in the pane to parameter settings
 	 */
 	public void setParams(T params); 
+	
+	/**
+	 * Get the icon
+	 * @return - the icon
+	 */
+	public Node getIcon();
+	
+	/**
+	 * Get the title of the pane. 
+	 * @return the title of the pane. 
+	 */
+	public String getTitle();
+	
+	/**
+	 * Notify an update from the controller. 
+	 * @param flag - the update type
+	 * @param stuff - a potential object, can be null.
+	 */
+	public void notifyUpdate(int flag, Object stuff);
 
 }

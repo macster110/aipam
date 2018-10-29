@@ -40,7 +40,7 @@ public class StandardTrainingListener implements TrainingListener {
 
 	public StandardTrainingListener() {}
 
-	public StandardTrainingListener(TSNEClipClusterer tsneClipClusterer) {
+	public StandardTrainingListener(TSNEClipClustererDL4J tsneClipClusterer) {
 		this.maxIterations = tsneClipClusterer.getMaxIterations(); 
 		progressProperty= new SimpleDoubleProperty(); 
 	}

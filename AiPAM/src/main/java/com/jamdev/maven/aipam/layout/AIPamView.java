@@ -1,25 +1,37 @@
 package com.jamdev.maven.aipam.layout;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.layout.clips.ClipGridPane;
 import com.jamdev.maven.aipam.layout.clips.ClipSelectionManager;
 import com.jamdev.maven.aipam.layout.clustering.ClusterGraphPane;
+import com.jamdev.maven.aipam.layout.utilsFX.HidingPane;
+import com.jamdev.maven.aipam.utils.SettingsPane;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
+import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 /**
  * The main view for PamSne
+ * 
  * @author Jamie Macaulay
  *
  */
@@ -28,7 +40,7 @@ public class AIPamView extends BorderPane {
 	/**
 	 * The standard icon size. 
 	 */
-	public static int iconSize = 20;
+	public static int iconSize = 16;
 
 	/**
 	 * The control pane. 
@@ -86,21 +98,19 @@ public class AIPamView extends BorderPane {
 	private ClusterGraphPane clusterGraphPane;  
 
 	/**
-	 * Default font for main label title
-	 */
-	public static Font defaultLabelTitle1 = new Font ("Segeo", 20); 
-
-	/**
-	 * Default font for sub title. 
-	 */
-	public static Font defaultLabelTitle2 = new Font("Segeo", 16);
-
-	/**
 	 * The default colour for title fonts. 
 	 */
 	public static Color defaultTitleColour = Color.WHITE;
 
+	/**
+	 * The hiding pane for settings. 
+	 */
+	private HidingPane hidingPane;
 
+	/**
+	 * The pane which holds the settings panes inside the hide pane
+	 */
+	private BorderPane settingsHolder; 
 
 	public AIPamView(AiPamController aiPamControl, Stage primaryStage) {
 
@@ -109,27 +119,51 @@ public class AIPamView extends BorderPane {
 		this.aiPamContol.addSensorMessageListener((flag, dataObject)->{
 			notifyUpdate(flag, dataObject); 
 		});
-
 		controlPane= new ControlPane(this); 
 
-		clipPane= new ClipGridPane(this); 
-		
-		clipSelectionManager = new ClipSelectionManager(this); 
-		
-		clusterGraphPane = new ClusterGraphPane(this); 
+		BorderPane controlPaneHolder = new BorderPane();
+		controlPaneHolder.setLeft(controlPane);
+		controlPaneHolder.setStyle("-fx-background-color: BACKGROUND_MENU");
 
-		setLeft(controlPane);
+		clipPane= new ClipGridPane(this); 
+
+		clipSelectionManager = new ClipSelectionManager(this); 
+
+		clusterGraphPane = new ClusterGraphPane(this); 
 
 		centerPane = new BorderPane(); 
 		progressPane = new ProgressBarPane(this);
 		progressPane.setPadding(new Insets(5,5,5,5));
-		centerPane.setCenter(clipPane);
-		centerPane.setRight(clusterGraphPane);
-		
-		this.setCenter(centerPane);
 
+		//create a cluster pane
+		TabPane tabPane = new TabPane(); 
+		Tab tabClip = new Tab("Clips", clipPane); 
+		Tab tabCluster = new Tab("ClusterGraph", clusterGraphPane);
+		tabClip.setClosable(false);
+		tabCluster.setClosable(false);
+		tabPane.getTabs().addAll(tabClip, tabCluster); 
+
+		settingsHolder = new BorderPane();
+		settingsHolder.setCenter(new Label("hello"));
+		settingsHolder.setPrefWidth(300);
+		settingsHolder.setStyle("-fx-background-color: BACKGROUND;"); 
+		settingsHolder.setPadding(new Insets(5,5,5,10));
+
+		StackPane pane = new StackPane(); 
+		hidingPane=new HidingPane(Side.LEFT, settingsHolder,  pane, true);
+		hidingPane.setPrefWidth(100);
+		hidingPane.setStyle("-fx-background-color: blue;");
+		pane.getChildren().add(tabPane);
+		pane.getChildren().add(hidingPane); 
+		StackPane.setAlignment(hidingPane, Pos.TOP_LEFT);
+
+		centerPane.setCenter(pane);
+
+		setCenter(centerPane);
+		setLeft(controlPaneHolder);
 	}
-	
+
+
 	/**
 	 * Show the progress pane. 
 	 * @param show - true to show the pane. 
@@ -147,7 +181,7 @@ public class AIPamView extends BorderPane {
 
 	public void openAudioFolder() {
 		chooser = new DirectoryChooser();
-		chooser.setTitle("JavaFX Projects");
+		chooser.setTitle("Select the Directory with Clips");
 		//		File defaultDirectory = new File("c:/dev/javafx");
 		//		chooser.setInitialDirectory(defaultDirectory);
 		File selectedDirectory = chooser.showDialog(getPrimaryStage());
@@ -156,8 +190,8 @@ public class AIPamView extends BorderPane {
 			//do nothing
 			return;
 		}
-
-		this.aiPamContol.loadAudioData(selectedDirectory);
+		
+		aiPamContol.loadAudioData(selectedDirectory, false);
 	}
 
 
@@ -203,6 +237,14 @@ public class AIPamView extends BorderPane {
 			showProgressPane(false); 
 			clusterGraphPane.update(aiPamContol.getPAMClips()); 
 			break; 
+		case AiPamController.END_FILE_HEADER_LOAD:
+			showProgressPane(false); 
+			controlPane.getAudioImportPane().notifyUpdate(AiPamController.END_FILE_HEADER_LOAD, null);
+			break;
+		case AiPamController.NO_AUDIO_DIRECTORY:
+			showProgressPane(false); 
+			this.showSettingsPane(controlPane.getAudioImportPane());
+			break;
 		} 
 	}
 
@@ -221,7 +263,7 @@ public class AIPamView extends BorderPane {
 			//
 			notifyUpdate(AiPamController.END_IMAGE_LOAD, null); 
 		});
-		
+
 		showProgressPane(true); 
 		this.progressPane.setTask((Task) task);
 
@@ -271,5 +313,75 @@ public class AIPamView extends BorderPane {
 	public AIPamParams getAIParams() {
 		return getAIControl() .getParams();
 	}
+
+	/**
+	 * Show a settings pane. 
+	 * @param settingsPane
+	 */
+	public void showSettingsPane(SettingsPane<AIPamParams> settingsPane) {
+		settingsHolder.setCenter(settingsPane.getPane());
+		settingsPane.setParams(this.aiPamContol.getParams());
+		hidingPane.showHidePane(true); 
+
+
+	}
+
+	/**
+	 * Set an icon on a button
+	 * @param button - the button to set icon on. 
+	 * @param icon - the icon type
+	 */
+	public static void setButtonIcon(Labeled button, FontAwesomeIcon icon) {
+		FontAwesomeIconView iconViewSettings = new FontAwesomeIconView(icon); 
+		iconViewSettings.setGlyphSize(AIPamView.iconSize);
+		iconViewSettings.setFill(AIPamView.defaultTitleColour);
+		button.setAlignment(Pos.BASELINE_LEFT);
+		button.setGraphicTextGap(15);
+		button.setGraphic(iconViewSettings);
+	}
+
+
+	public Image getClusterIcon() {
+		return getIcon("Cluster.svg"); 
+	}
+
+
+	public Image getSpectrogramIcon() {
+		return getIcon("Audio.svg"); 
+	}
+
+	/**
+	 * Get the cluster image. 
+	 * @return the cluster image. 
+	 */
+	public Image getIcon(String relPath) {
+		Image icon;
+		try {
+			icon = new Image(getClass().getResource(relPath).toURI().toURL().toExternalForm());
+			return icon;
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null; 
+		}
+	}
+
+	/**
+	 * Import the clips. 
+	 */
+	public void importAcoustic() {
+		controlPane.getParams(this.aiPamContol.getParams()); 
+		aiPamContol.importClips(); 
+	}
+
+	public void cluster() {
+		// TODO Auto-generated method stub
+
+	}
+
 
 }

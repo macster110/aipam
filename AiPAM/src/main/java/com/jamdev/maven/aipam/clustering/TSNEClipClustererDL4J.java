@@ -11,10 +11,12 @@ import com.jamdev.maven.clips.PAMClip;
 /**
  * Algorithm which clusters clips based on TSNE high dimensional clustering algorithm. 
  * 
+ * Based on code form the DeepLearning4j library.
+ * 
  * @author Jamie Macaulay
  *
  */
-public class TSNEClipClusterer implements ClusteringAlgorithm{
+public class TSNEClipClustererDL4J implements ClusteringAlgorithm{
 
 	
 	/**
@@ -28,7 +30,7 @@ public class TSNEClipClusterer implements ClusteringAlgorithm{
     public TSNEParams params = new TSNEParams(); 
     
     
-	public TSNEClipClusterer() {
+	public TSNEClipClustererDL4J() {
 		listener = new StandardTrainingListener(this); 
 	}
 	
@@ -106,7 +108,6 @@ public class TSNEClipClusterer implements ClusteringAlgorithm{
                 .normalize(false)
                 .learningRate(params.learningRate)
                 .perplexity(30)
-//                .usePca(false)
                 .build();
 
         //add a listener for updates on progress 

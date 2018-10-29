@@ -7,6 +7,7 @@ import org.controlsfx.control.PopOver;
 import com.jamdev.maven.aipam.layout.AIPamView;
 import com.jamdev.maven.aipam.layout.clips.SpectrogramImage;
 import com.jamdev.maven.clips.PAMClip;
+import com.sun.javafx.geom.Rectangle;
 
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -82,10 +83,22 @@ public class ClusterGraphPane extends BorderPane {
 		scatterChart.getData().clear();
 		
         XYChart.Series series = new XYChart.Series();
+        SpectrogramImage image;
 		for (int i=0; i<pamClips.size(); i++) {
 			
 			XYChart.Data dataPoint = new XYChart.Data(pamClips.get(i).getClusterPoint()[0],
 					 pamClips.get(i).getClusterPoint()[1]);
+			
+			image = new SpectrogramImage(pamClips.get(i).getSpectrogram(), 
+        			aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
+        	//toolTip.setGraphic(new ImageView(image.getSpecImage(100, 100)));
+			
+			ImageView imageView = new ImageView(image.getSpecImage(25, 25));
+			imageView.setOnMouseClicked((event)->{
+				imageView.toFront();
+			});
+        	
+			dataPoint.setNode(imageView);
 						
 			series.getData().add(dataPoint); 
 			
@@ -96,24 +109,29 @@ public class ClusterGraphPane extends BorderPane {
 		}
         scatterChart.getData().add(series);
         
-        Tooltip toolTip; 
-        SpectrogramImage image;
-        for (XYChart.Series<Number, Number> s : scatterChart.getData()) {
-            int n=0;
-            for (XYChart.Data<Number, Number> d : s.getData()) {
-     
-            	toolTip = new Tooltip(
-                        String.format("%2.1f = %2.1f", 
-                                d.getXValue().doubleValue(), 
-                                d.getYValue().doubleValue()));
-            	image = new SpectrogramImage(pamClips.get(n).getSpectrogram(), 
-            			aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
-            	toolTip.setGraphic(new ImageView(image.getSpecImage(100, 100)));
-            	
-            	n++;
-                Tooltip.install(d.getNode(), toolTip);
-            }
-        }
+//        Tooltip toolTip; 
+//        SpectrogramImage image;
+//        for (XYChart.Series<Number, Number> s : scatterChart.getData()) {
+//            int n=0;
+//            for (XYChart.Data<Number, Number> d : s.getData()) {
+//     
+//            	toolTip = new Tooltip(
+//                        String.format("%2.1f = %2.1f", 
+//                                d.getXValue().doubleValue(), 
+//                                d.getYValue().doubleValue()));
+//            	image = new SpectrogramImage(pamClips.get(n).getSpectrogram(), 
+//            			aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
+//            	//toolTip.setGraphic(new ImageView(image.getSpecImage(100, 100)));
+//            	
+//            	d.setNode(new ImageView(image.getSpecImage(40, 40)));
+//            	
+//            	d.setNode(); 
+//
+//            	
+//            	n++;
+//                //Tooltip.install(d.getNode(), toolTip);
+//            }
+//        }
 
 	}
 	

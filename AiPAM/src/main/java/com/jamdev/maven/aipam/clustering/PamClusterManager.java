@@ -21,7 +21,7 @@ public class PamClusterManager {
 	/**
 	 * The current clustering algorithm
 	 */
-	private ClusteringAlgorithm clusterAlgorithm = new TSNEClipClusterer(); 
+	private ClusteringAlgorithm clusterAlgorithm = new TSNEClipClustererYK(); 
 
 	/**
 	 * Construct the cluster data task. 
@@ -33,7 +33,7 @@ public class PamClusterManager {
 		return new ClusterTask(pamClips, params); 
 	}
 
-	
+
 	public class ClusterTask extends Task<Integer> {
 
 		private ArrayList<PAMClip> pamClips;
@@ -50,16 +50,21 @@ public class PamClusterManager {
 
 				updateTitle("Clustering");
 				updateMessage("Initialising..."); 
+				updateProgress(0, 1);
 				updateProgress(ProgressBar.INDETERMINATE_PROGRESS, 1);
-				
-				clusterAlgorithm.getTrainingListener().progressProperty().addListener((obsval, oldval, newval)->{
-					updateProgress(newval.doubleValue(), 1);
-					updateMessage("Processing..."); 
-				});
+
+				if (clusterAlgorithm.getTrainingListener()!=null) {
+					clusterAlgorithm.getTrainingListener().progressProperty().addListener((obsval, oldval, newval)->{
+						updateProgress(newval.doubleValue(), 1);
+						updateMessage("Processing..."); 
+					});
+				}
 
 				//start the algorithm 
 				clusterAlgorithm.cluster(pamClips);
-				
+				updateMessage("Clustering Clips..."); 
+
+
 				System.out.println("Hello: Finished!!!!");
 				return -1; 
 			}

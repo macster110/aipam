@@ -8,11 +8,15 @@ import com.jamdev.maven.aipam.utils.SettingsPane;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 	
@@ -39,12 +43,15 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 	/**
 	 * The colour range sliders allowing contrast of spectrogram to be changed.
 	 */
-	private ColourRangeSlider colourRangleSlider; 
+	private ColourRangeSlider colourRangleSlider;
+
+	private AIPamView aiPamView; 
 
 	/**
 	 * The FFT settings pane. 
 	 */
-	public FFTSettingsPane() {
+	public FFTSettingsPane(AIPamView aiPamView) {
+		this.aiPamView=aiPamView; 
 	}
 
 	/**
@@ -53,13 +60,10 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 	private Pane createPane() {
 		
 		Label titleLabel = new Label("Spectrogram Settings");
-		titleLabel.setFont(AIPamView.defaultLabelTitle1);
-		titleLabel.setTextFill(AIPamView.defaultTitleColour);
+		titleLabel.getStyleClass().add("label-title1");
 
-		
 		Label fftLabel = new Label("FFT Length");
-		fftLabel.setFont(AIPamView.defaultLabelTitle2);
-		fftLabel.setTextFill(AIPamView.defaultTitleColour);
+		fftLabel.getStyleClass().add("label-title2");
 
 		ObservableList<Integer> fftLenList  = FXCollections.observableArrayList();
 		int len=32; 
@@ -77,8 +81,8 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 				+ "passive acoustic monitoring chunk sizes are usually 512 ->2048 "));
 
 		Label fftHopLabel = new Label("FFT Hop");
-		fftHopLabel.setFont(AIPamView.defaultLabelTitle2);
-		fftHopLabel.setTextFill(AIPamView.defaultTitleColour);
+		fftHopLabel.getStyleClass().add("label-title2");
+
 		
 		hopComboBox  = new ComboBox<Integer>(FXCollections.observableArrayList(fftLenList)); 
 		hopComboBox.getSelectionModel().select(4);
@@ -86,8 +90,8 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 				+ "the samples before a new FFT chunk is calculated. Often the hop is half the FFT length \n"));  
 		
 		Label colourScale = new Label("Colour Scales");
-		colourScale.setFont(AIPamView.defaultLabelTitle2);
-		colourScale.setTextFill(AIPamView.defaultTitleColour);
+		colourScale.getStyleClass().add("label-title2");
+
 		
 		final ColourArrayType[] colourTypes = ColourArrayType.values(); 
 		ObservableList<String> colorTypeList  = FXCollections.observableArrayList();
@@ -102,6 +106,9 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 		colorType.getSelectionModel().select(3);
 
 		colourRangleSlider = new ColourRangeSlider(); 	
+		colourRangleSlider.setMin(0);
+		colourRangleSlider.setMax(150);
+
 		//add moving labels
 		colourRangleSlider.setHighLabelFormat(new DefaultSliderLabel());
 		colourRangleSlider.setLowLabelFormat(new DefaultSliderLabel());
@@ -117,8 +124,6 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 
 	}
 	
-	
-	
 	@Override
 	public Pane getPane() {
 		if (mainPane==null) {
@@ -129,12 +134,40 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 
 	@Override
 	public AIPamParams getParams(AIPamParams paramsIn) {
-		// TODO Auto-generated method stub
-		return null;
+		paramsIn.fttLength	=fftComboBox.getValue();
+		paramsIn.fftHop		=hopComboBox.getValue();
+		paramsIn.colourLims = new double[] {colourRangleSlider.getLowValue(), 
+				colourRangleSlider.getHighValue()}; 
+		paramsIn.spectrogramColour = ColourArray.getColorArrayType(colorType.getValue()); 
+		return paramsIn;
 	}
 
 	@Override
 	public void setParams(AIPamParams params) {
+		fftComboBox.getSelectionModel().select(params.fttLength);
+		hopComboBox.getSelectionModel().select(params.fftHop);
+		colourRangleSlider.setLowValue(params.colourLims[0]);
+		colourRangleSlider.setHighValue(params.colourLims[1]);
+		colorType.getSelectionModel().select(ColourArray.getName(params.spectrogramColour));
+		colourRangleSlider.setColourArrayType(ColourArray.getColorArrayType(colorType.getValue())); 
+	}
+
+	@Override
+	public Node getIcon() {
+		ImageView icon = new ImageView(aiPamView.getSpectrogramIcon()); 
+		ColorAdjust colorAdjust = new ColorAdjust();
+		colorAdjust.setBrightness(1);
+		icon.setEffect(colorAdjust);
+		return icon;
+	}
+
+	@Override
+	public String getTitle() {
+		return "Spectrogram";
+	}
+
+	@Override
+	public void notifyUpdate(int flag, Object stuff) {
 		// TODO Auto-generated method stub
 		
 	}

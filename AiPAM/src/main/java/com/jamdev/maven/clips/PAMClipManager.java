@@ -21,8 +21,15 @@ import javafx.concurrent.Task;
  */
 public class PAMClipManager {
 
+	/**
+	 * The current imported audio clips. 
+	 */
 	private ArrayList<PAMClip> currentClips; 
 
+	/**
+	 * The current audio info file. 
+	 */
+	private AudioInfo currentAudioInfo; 
 
 	/**
 	 * Audio importer. 
@@ -39,9 +46,10 @@ public class PAMClipManager {
 
 	/**
 	 * Creates a task for importing the clips from a folder. 
+	 * @param load - true to load clips. False checks the clips. 
 	 * @return the task importing clips. 
 	 */
-	public Task<Integer> importClipsTask(File selectedDirectory, AIPamParams params) {
+	public Task<Integer> importClipsTask(File selectedDirectory, AIPamParams params, boolean load) {
 		
 		Task<Integer> task = new Task<Integer>() {
 			@Override protected Integer call() throws Exception {
@@ -50,12 +58,11 @@ public class PAMClipManager {
 					this.updateTitle("Importing Audio Data");
 					
 					//first run checks. 
-
 					System.out.println("Starting the audio import");
 
 					ArrayList<PAMClip> pamClips = new ArrayList<PAMClip>();
 
-					List<File> files  = AiPamUtils.listFiles(selectedDirectory.getAbsolutePath(), "wav");
+					List<File> files = audioImporter.listAudioFiles(selectedDirectory); 
 					for (File file:files) {
 						System.out.println(file.getAbsolutePath());
 					}
@@ -64,13 +71,14 @@ public class PAMClipManager {
 					this.updateMessage(String.format("Running checks on %d files: ", files.size()));
 
 					//run checks to make sure all sample rates are the same and there are no duplicate file names
-					if (!runFileChecks(files)) {
+					currentAudioInfo = audioImporter.getAudioInfo(selectedDirectory); 
+					if (!checkAudio(audioImporter.getAudioInfo(selectedDirectory))) {
 						//Send error to error reporter. 
-						//TODO.
 						return -1; 
 					} 
-
 					
+					if (!load) return files.size(); 
+
 					//now import each 
 					PAMClip pamClip; 
 					ArrayList<ClipWave> waveData; 
@@ -106,24 +114,20 @@ public class PAMClipManager {
 					return -1; 
 				}
 			}
-
 		
 		};
 		return task; 
 	}
 	
 	/**
-	 * 
-	 * @param task
+	 * Check audio. 
+	 * @param audioInfo - the audio information 
+	 * @return audio info. 
 	 */
-	private boolean runFileChecks(List<File> files ) {	
-		//TODO Check files are the same sample rate and the 
-		//have unique names
-		return true;
+	private boolean checkAudio(AudioInfo audioInfo) {
+		if (audioInfo.isSameChannels && audioInfo.isSameSampleRate) return true; 
+		return false;
 	}
-
-
-
 
 	/**
 	 * Get the currently loaded clips. 
@@ -132,6 +136,15 @@ public class PAMClipManager {
 	public ArrayList<PAMClip> getCurrentClips() {
 		return currentClips;
 	}
+	
+	/**
+	 * Get the current audio info.
+	 * @return the audio info. 
+	 */
+	public AudioInfo getCurrentAudioInfo() {
+		return currentAudioInfo;
+	}
+
 
 
 

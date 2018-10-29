@@ -2,10 +2,20 @@ package com.jamdev.maven.aipam.layout;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.utils.SettingsPane;
+
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 /**
  * Pane for clustering algorithms.
@@ -36,21 +46,14 @@ public class ClusterPane implements SettingsPane<AIPamParams> {
 	private Pane createPane() {
 		
 		Label  titleLabel = new Label("Cluster"); 
-		titleLabel.setFont(AIPamView.defaultLabelTitle1);
-		titleLabel.setTextFill(AIPamView.defaultTitleColour);
-		
-		Button button = new Button("Cluster"); 
-		button.setOnAction((action)->	{
-			aiPamView.getAIControl().clusterClips(); 
-		});
-		
+		titleLabel.getStyleClass().add("label-title1");
 		
 		clusterPane= new TSNEClusterPane(); 
 		
 		VBox holder = new VBox(); 
 		holder.setSpacing(5);
 		
-		holder.getChildren().addAll(titleLabel, button); 
+		holder.getChildren().addAll(titleLabel); 
 		
 		return holder; 
 	}
@@ -72,6 +75,37 @@ public class ClusterPane implements SettingsPane<AIPamParams> {
 
 	@Override
 	public void setParams(AIPamParams params) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Node getIcon() {
+		//get the cluster image 
+		ImageView icon = new ImageView(aiPamView.getClusterIcon()); 
+		ColorAdjust colorAdjust = new ColorAdjust();
+		colorAdjust.setBrightness(1);
+		icon.setEffect(colorAdjust);
+		
+		FontAwesomeIconView iconView = new FontAwesomeIconView(FontAwesomeIcon.GEARS); 
+		iconView.setGlyphSize(8);
+		iconView.setFill(Color.WHITE);
+		
+		StackPane stackPane = new StackPane(); 
+		
+		stackPane.getChildren().addAll(icon, iconView); 
+		StackPane.setAlignment(iconView, Pos.TOP_RIGHT);
+		
+		return stackPane;
+	}
+
+	@Override
+	public String getTitle() {
+		return "Cluster Algorithm";
+	}
+
+	@Override
+	public void notifyUpdate(int flag, Object stuff) {
 		// TODO Auto-generated method stub
 		
 	}

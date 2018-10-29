@@ -1,10 +1,16 @@
 package com.jamdev.maven.aipam.layout;
 
+import org.controlsfx.glyphfont.FontAwesome;
+
+import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.utils.SettingsPane;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
@@ -12,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 /**
  * Pane with controls for  audio playback settings. 
@@ -19,14 +26,19 @@ import javafx.scene.paint.Color;
  * @author Jamie Macaulay 
  *
  */
-public class PlayBackPane extends BorderPane implements SettingsPane<PLayBackParams> {
+public class PlayBackPane extends BorderPane implements SettingsPane<AIPamParams> {
 	
 	private Slider volume;
 	
 	
 	private Label volumeIconLabel; 
 	
-	private Label volumePercLabel; 
+	private Label volumePercLabel;
+
+	/**
+	 * Reference to AIPamView
+	 */
+	private AIPamView aiPamView; 
 
 	
 	/**
@@ -34,14 +46,15 @@ public class PlayBackPane extends BorderPane implements SettingsPane<PLayBackPar
 	 * @param aiPamView
 	 */
 	public PlayBackPane(AIPamView aiPamView){
+		this.aiPamView = aiPamView;
 		
 		volumeIconLabel = new Label();
-		volumeIconLabel.setTextFill(AIPamView.defaultTitleColour);
-		volumeIconLabel.setFont(AIPamView.defaultLabelTitle2);
+		volumeIconLabel.getStyleClass().add("label-title2");
+
 
 		volumePercLabel = new Label(); 
-		volumePercLabel.setTextFill(AIPamView.defaultTitleColour);
-		volumePercLabel.setFont(AIPamView.defaultLabelTitle2);
+		volumePercLabel.getStyleClass().add("label-title2");
+
 		
 		volume= new Slider(0.,1.,0.5); 
 		volume.setValue(0.5);
@@ -60,8 +73,8 @@ public class PlayBackPane extends BorderPane implements SettingsPane<PLayBackPar
 		HBox.setHgrow(volume, Priority.ALWAYS);
 		
 		Label volumeTitle = new Label("Volume");
-		volumeTitle.setTextFill(AIPamView.defaultTitleColour);
-		volumeTitle.setFont(AIPamView.defaultLabelTitle1);
+		volumeTitle.getStyleClass().add("label-title1");
+
 
 		this.setTop(volumeTitle);
 		this.setCenter(holder);
@@ -105,13 +118,32 @@ public class PlayBackPane extends BorderPane implements SettingsPane<PLayBackPar
 	}
 
 	@Override
-	public PLayBackParams getParams(PLayBackParams paramsIn) {
+	public AIPamParams getParams(AIPamParams paramsIn) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setParams(PLayBackParams params) {
+	public void setParams(AIPamParams params) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Node getIcon() {
+		FontAwesomeIconView iconView = new FontAwesomeIconView(FontAwesomeIcon.PLAY); 
+		iconView.setGlyphSize(AIPamView.iconSize);
+		iconView.setFill(Color.WHITE);
+		return iconView;
+	}
+
+	@Override
+	public String getTitle() {
+		return "Playback";
+	}
+
+	@Override
+	public void notifyUpdate(int flag, Object stuff) {
 		// TODO Auto-generated method stub
 		
 	}

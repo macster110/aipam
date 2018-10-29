@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.clustering.PamClusterManager;
+import com.jamdev.maven.clips.AudioInfo;
 import com.jamdev.maven.clips.PAMClip;
 import com.jamdev.maven.clips.PAMClipManager;
 
@@ -62,9 +63,20 @@ public class AiPamController {
 	public static final int END_CLUSTERING_ALGORITHM =8;
 
 	/**
-	 * The clusterring algorithm has been cancelled. 
+	 * The clustering algorithm has been cancelled. 
 	 */
-	private static final int CANCEL_CLUSTERING_ALGORITHM = 9;
+	public static final int CANCEL_CLUSTERING_ALGORITHM = 9;
+	
+	/**
+	 * There is no audio directory does not exist. 
+	 */
+	public static final int NO_AUDIO_DIRECTORY = 10;
+
+	/**
+	 * End the file header load. 
+	 */
+	public static final int END_FILE_HEADER_LOAD = 11;
+
 
 	/**
 	 * The cluster manager
@@ -75,7 +87,6 @@ public class AiPamController {
 	 * Manages importing audio clips. 
 	 */
 	private PAMClipManager pamClipManager;
-
 
 	/**
 	 * The current parameters for the program. 
@@ -115,14 +126,25 @@ public class AiPamController {
 			listener.newMessage(flag, data);
 		}
 	}
+	
 
 	/**
 	 * Load the audio data. 
-	 * @param selectedDirectory
+	 * @param selectedDirectory - the directory for the clips
 	 */
 	public void loadAudioData(File selectedDirectory) {
+		 loadAudioData( selectedDirectory, true); 
+	}
+
+
+	/**
+	 * Load the audio data. 
+	 * @param selectedDirectory - the directory for the clips
+	 * @param loadClips - true to load the clips. False checks the files. 
+	 */
+	public void loadAudioData(File selectedDirectory, boolean loadClips) {
 		
-		Task<Integer> task = pamClipManager.importClipsTask(selectedDirectory, this.aiPamParams);
+		Task<Integer> task = pamClipManager.importClipsTask(selectedDirectory, this.aiPamParams, loadClips);
 		updateMessageListeners(START_FILE_LOAD, task); 
 		
 		task.setOnCancelled((value)->{
@@ -130,7 +152,11 @@ public class AiPamController {
 			updateMessageListeners(CANCELLED_FILE_LOAD, task); 
 		});
 		task.setOnSucceeded((value)->{
-			updateMessageListeners(END_FILE_LOAD, task); 
+			if (loadClips)
+				updateMessageListeners(END_FILE_LOAD, task); 
+			else 
+				updateMessageListeners(END_FILE_HEADER_LOAD, task); 
+
 		});
 	
         Thread th = new Thread(task);
@@ -150,8 +176,15 @@ public class AiPamController {
 	 * @return the currently loaded clips. 
 	 */
 	public ArrayList<PAMClip> getPAMClips() {
-		// TODO Auto-generated method stub
 		return pamClipManager.getCurrentClips();
+	}
+	
+	/**
+	 * Get the audio info. This gets information. 
+	 * @return the audio info.
+	 */
+	public AudioInfo getAudioInfo() {
+		return pamClipManager.getCurrentAudioInfo();
 	}
 
 
@@ -183,6 +216,22 @@ public class AiPamController {
         th.setDaemon(true);
         th.start(); 
 	}
+
+	/**
+	 * Import clips. 
+	 */
+	public void importClips() {
+		File file =new File(aiPamParams.audioFolder);
+		if (file.exists()) {
+			loadAudioData(new File(aiPamParams.audioFolder)); 
+		}
+		else {
+			System.err.println("The file does not exist: " + aiPamParams.audioFolder);
+			updateMessageListeners(NO_AUDIO_DIRECTORY, null); 
+		}
+	}
+
+
 
 	
 	

@@ -54,8 +54,8 @@ public class ProgressBarPane extends BorderPane {
 	private Pane createProgressPane() {
 		
 		progressTitle = new Label(); 
-		progressTitle.setFont(AIPamView.defaultLabelTitle2);
-		progressTitle.setTextFill(AIPamView.defaultTitleColour);
+		progressTitle.getStyleClass().add("label-title1");
+
 		
 		progressBar = new ProgressBar(); 
 		cancelButton = new Button("Cancel");
@@ -66,6 +66,7 @@ public class ProgressBarPane extends BorderPane {
 		progressHolder.setAlignment(Pos.CENTER);
 		
 		progressLabel = new Label();  
+		
 
 		VBox holder = new VBox(); 
 		holder.setSpacing(5);
@@ -82,6 +83,8 @@ public class ProgressBarPane extends BorderPane {
 		//unbind the progress bar from previous task property
 		progressBar.progressProperty().unbind();
 		progressLabel.textProperty().unbind();
+		
+		progressBar.setProgress(0);
 	
 		//bind the progress bar to the task progress. 
 		progressBar.progressProperty().bind(task.progressProperty());
@@ -92,8 +95,8 @@ public class ProgressBarPane extends BorderPane {
 		
 		//set the title of the task 
 		progressTitle.textProperty().bind(task.titleProperty());
-		progressTitle.setFont(AIPamView.defaultLabelTitle2);
-		progressTitle.setTextFill(AIPamView.defaultTitleColour);
+		//progressTitle.getStyleClass().add("label-title1");
+
 		
 		//bind the label to the task update message. 
 		progressLabel.textProperty().bind(task.messageProperty());
