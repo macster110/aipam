@@ -3,6 +3,7 @@ package com.jamdev.maven.aipam.layout;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
@@ -120,6 +121,8 @@ public class AIPamView extends BorderPane {
 			notifyUpdate(flag, dataObject); 
 		});
 		controlPane= new ControlPane(this); 
+		//set the current params here. Otherwise on getParams default values on controls will be returned...
+		controlPane.setParams(aiPamContol.getParams()); 
 
 		BorderPane controlPaneHolder = new BorderPane();
 		controlPaneHolder.setLeft(controlPane);
@@ -161,6 +164,7 @@ public class AIPamView extends BorderPane {
 
 		setCenter(centerPane);
 		setLeft(controlPaneHolder);
+		
 	}
 
 
@@ -170,7 +174,7 @@ public class AIPamView extends BorderPane {
 	 */
 	private void showProgressPane(boolean show) {
 		if (show) {
-			centerPane.setTop(progressPane);
+			centerPane.setTop(progressPane= new ProgressBarPane(this));
 		}
 		else {
 			centerPane.setTop(null);
@@ -332,10 +336,20 @@ public class AIPamView extends BorderPane {
 	 * @param icon - the icon type
 	 */
 	public static void setButtonIcon(Labeled button, FontAwesomeIcon icon) {
+		setButtonIcon(button, icon, Pos.BASELINE_LEFT); 
+	}
+	
+	/**
+	 * Set an icon on a button
+	 * @param button - the button to set icon on. 
+	 * @param icon - the icon type
+	 * @param pos - the position of the icon and text. 
+	 */
+	public static void setButtonIcon(Labeled button, FontAwesomeIcon icon, Pos pos) {
 		FontAwesomeIconView iconViewSettings = new FontAwesomeIconView(icon); 
 		iconViewSettings.setGlyphSize(AIPamView.iconSize);
 		iconViewSettings.setFill(AIPamView.defaultTitleColour);
-		button.setAlignment(Pos.BASELINE_LEFT);
+		button.setAlignment(pos);
 		button.setGraphicTextGap(15);
 		button.setGraphic(iconViewSettings);
 	}
@@ -371,16 +385,49 @@ public class AIPamView extends BorderPane {
 	}
 
 	/**
-	 * Import the clips. 
+	 * Makes sure all settings are up to data and imports clips. 
 	 */
 	public void importAcoustic() {
 		controlPane.getParams(this.aiPamContol.getParams()); 
 		aiPamContol.importClips(); 
 	}
 
+	/**
+	 * makes sure all settings are up to date and clusters. 
+	 */
 	public void cluster() {
-		// TODO Auto-generated method stub
+		controlPane.getParams(this.aiPamContol.getParams()); 
+		aiPamContol.clusterClips();
+	}
 
+
+	/**
+	 * Figure what has changed since lad audio load. 
+	 * @return a list of flags indicating what needs re run. 
+	 */
+	private ArrayList<Integer> checkLastSettings() {
+		
+		if (this.aiPamContol.getLastAiParams().fftHop!=this.aiPamContol.getParams().fftHop);
+		if (this.aiPamContol.getLastAiParams().fttLength!=this.aiPamContol.getParams().fttLength); 
+		
+		if (this.aiPamContol.getLastAiParams().decimatorSR!=this.aiPamContol.getParams().decimatorSR);
+		if (this.aiPamContol.getLastAiParams().channel!=this.aiPamContol.getParams().channel); 
+		if (!this.aiPamContol.getLastAiParams().audioFolder.equals(aiPamContol.getParams().audioFolder)); 
+		
+		if (!this.aiPamContol.getLastAiParams().audioFolder.equals(aiPamContol.getParams().audioFolder)); 
+
+		//TODO 
+		return null; 
+	}
+	
+	
+	/**
+	 * Check that the last settings used to import clips and/or cluster are the same
+	 * If not then presents a message to the user indicating that files need re imported etc. 
+	 */
+	public void checkSettings() {
+		//TODO
+		
 	}
 
 

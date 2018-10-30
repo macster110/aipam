@@ -21,5 +21,18 @@ public class TSNEParams implements ClusterParams {
 	public int epsilon = 5;
 
 	public int iterations =100; 
+	
+	@Override
+	public ClusterParams clone() {
+		
+		try {
+			return (ClusterParams) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null; 
+		}
+		
+	}
 
 }

@@ -4,6 +4,7 @@ import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
 import com.jamdev.maven.aipam.layout.utilsFX.ColourRangeSlider;
 import com.jamdev.maven.aipam.layout.utilsFX.DefaultSliderLabel;
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.utils.SettingsPane;
 
 import javafx.collections.FXCollections;
@@ -16,9 +17,14 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
-public class FFTSettingsPane implements SettingsPane<AIPamParams> {
+/**
+ * Pane with controls for changing the FFT settings
+ * 
+ * @author Jamie Macaulay 
+ *
+ */
+public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 	
 	/**
 	 * Combo box for FFT Lengths
@@ -52,6 +58,7 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 	 */
 	public FFTSettingsPane(AIPamView aiPamView) {
 		this.aiPamView=aiPamView; 
+		this.mainPane= createPane(); 
 	}
 
 	/**
@@ -73,6 +80,10 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 		}
 		fftComboBox = new ComboBox<Integer>(fftLenList); 
 		fftComboBox.getSelectionModel().select(5);
+		fftComboBox.setOnAction((action)->{
+			notifySettingsListeners();
+		});
+
 		fftComboBox.setTooltip(new Tooltip("The FFT length is the length of each chunk used to calculate a \n"
 				+ " spectrogram. The chunk lengths are in sample bins. The way the FFT calculation works means \n"
 				+ " that larger chunks allow for better frequency resolution, however because they require \n"
@@ -82,12 +93,17 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 
 		Label fftHopLabel = new Label("FFT Hop");
 		fftHopLabel.getStyleClass().add("label-title2");
+		
+
 
 		
 		hopComboBox  = new ComboBox<Integer>(FXCollections.observableArrayList(fftLenList)); 
 		hopComboBox.getSelectionModel().select(4);
 		hopComboBox.setTooltip(new Tooltip("The FFT hop is the amount the FFT Lengbth window slides along \n"
 				+ "the samples before a new FFT chunk is calculated. Often the hop is half the FFT length \n"));  
+		hopComboBox.setOnAction((action)->{
+			notifySettingsListeners();
+		});
 		
 		Label colourScale = new Label("Colour Scales");
 		colourScale.getStyleClass().add("label-title2");
@@ -102,6 +118,7 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 		colorType.setOnAction((action)->{
 			//change the colour of the colour slider. 
 			colourRangleSlider.setColourArrayType(colourTypes[colorType.getSelectionModel().getSelectedIndex()]);
+			notifySettingsListeners();
 		});
 		colorType.getSelectionModel().select(3);
 
@@ -112,9 +129,13 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 		//add moving labels
 		colourRangleSlider.setHighLabelFormat(new DefaultSliderLabel());
 		colourRangleSlider.setLowLabelFormat(new DefaultSliderLabel());
+		colourRangleSlider.lowValueProperty().addListener((obsval, oldval, newval)->{
+			notifySettingsListeners();
+		});
+		colourRangleSlider.lowValueProperty().addListener((obsval, oldval, newval)->{
+			notifySettingsListeners();
+		});
 		
-		
-
 		VBox vBox = new VBox(); 
 		vBox.setSpacing(5);
 		vBox.getChildren().addAll(titleLabel, fftLabel, fftComboBox, fftHopLabel,
@@ -126,18 +147,18 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 	
 	@Override
 	public Pane getPane() {
-		if (mainPane==null) {
-			this.mainPane= createPane(); 
-		}
 		return mainPane;
 	}
 
 	@Override
-	public AIPamParams getParams(AIPamParams paramsIn) {
+	public AIPamParams getParams(AIPamParams paramsIn) {	
 		paramsIn.fttLength	=fftComboBox.getValue();
 		paramsIn.fftHop		=hopComboBox.getValue();
 		paramsIn.colourLims = new double[] {colourRangleSlider.getLowValue(), 
 				colourRangleSlider.getHighValue()}; 
+		
+		
+		System.out.println("ColourLimits: " + paramsIn.colourLims[0] + "   " + paramsIn.colourLims[1]); 
 		paramsIn.spectrogramColour = ColourArray.getColorArrayType(colorType.getValue()); 
 		return paramsIn;
 	}
@@ -148,9 +169,14 @@ public class FFTSettingsPane implements SettingsPane<AIPamParams> {
 		hopComboBox.getSelectionModel().select(params.fftHop);
 		colourRangleSlider.setLowValue(params.colourLims[0]);
 		colourRangleSlider.setHighValue(params.colourLims[1]);
+		
+//		System.out.println("Set colour lims: " + params.colourLims[0] + "   " + 
+//		params.colourLims[1] + "  " + colourRangleSlider.getMax()); 		
+		
 		colorType.getSelectionModel().select(ColourArray.getName(params.spectrogramColour));
 		colourRangleSlider.setColourArrayType(ColourArray.getColorArrayType(colorType.getValue())); 
 	}
+	
 
 	@Override
 	public Node getIcon() {

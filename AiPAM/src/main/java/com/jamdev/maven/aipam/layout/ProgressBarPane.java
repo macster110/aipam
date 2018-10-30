@@ -1,6 +1,7 @@
 package com.jamdev.maven.aipam.layout;
 
 import javafx.concurrent.Task;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -45,6 +46,7 @@ public class ProgressBarPane extends BorderPane {
 	 */
 	public ProgressBarPane(AIPamView aiPamView) {
 		this.setCenter(createProgressPane()); 
+		this.setPadding(new Insets(5,5,5,5));
 	}
 
 	/**
@@ -56,7 +58,6 @@ public class ProgressBarPane extends BorderPane {
 		progressTitle = new Label(); 
 		progressTitle.getStyleClass().add("label-title1");
 
-		
 		progressBar = new ProgressBar(); 
 		cancelButton = new Button("Cancel");
 		

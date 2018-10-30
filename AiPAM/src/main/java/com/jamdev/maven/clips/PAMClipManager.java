@@ -88,7 +88,7 @@ public class PAMClipManager {
 							currentClips=pamClips; 
 							return n; //cancel stuff
 						}
-						waveData = audioImporter.importAudio(file, params.channel, params.maximumClipLength); 
+						waveData = audioImporter.importAudio(file, params); 
 						if (waveData!=null) {
 							for (ClipWave wave:waveData) {
 								if (this.isCancelled()) {

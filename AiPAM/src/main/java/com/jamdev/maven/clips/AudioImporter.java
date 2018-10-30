@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.datavec.audio.Wave;
 
+import com.jamdev.maven.aipam.AIPamParams;
+
 /**
  * Handles importing of files to clips. Clips could be .wav, .mp3 etc. or even
  * bespoke file types e.g. binary files. 
@@ -29,7 +31,7 @@ public interface AudioImporter {
 	 * @param maxLen - the maximum length of the file allowed. 
 	 * @return a list of clips contained in the file. 
 	 */
-	public ArrayList<ClipWave> importAudio(File audioFile, int channel, double len);
+	public ArrayList<ClipWave> importAudio(File audioFile,  AIPamParams aiPamParams);
 	
 	/**
 	 * Get the audio information on a directory of files. This is a first run which does not import the

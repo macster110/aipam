@@ -31,7 +31,8 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 			double[][] fingerprints = new double[pamClips.size()][]; 	
 			
 			for (int i=0; i<pamClips.size(); i++) {
-				fingerprints[i] =ArrayUtil.flatten(pamClips.get(i).getSpectrogram()); //FingerPrintManager.simpleSpectrogramFingerPrint(pamClips.get(i).getSpectrogram(), 100); 
+				//fingerprints[i] =ArrayUtil.flatten(pamClips.get(i).getSpectrogram());
+				fingerprints[i] = FingerPrintManager.simpleSpectrogramFingerPrint(pamClips.get(i).getSpectrogram(), 100); 
 				//System.out.println("The size of fingerprint is: " + fingerprints[i].length);
 			}
 			
@@ -42,6 +43,7 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 			for (int i=0; i<pamClips.size(); i++) {
 				pamClips.get(i).setClusterPoint(clusterResults[i]);
 			}
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -53,13 +55,12 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 		double perplexity = 30.0;
 
 		BarnesHutTSne tsne;
-		boolean parallel = false;
+		boolean parallel = true;
 		if(parallel) {			
 			tsne = new ParallelBHTsne();
 		} else {
 			tsne = new BHTSne();
 		}
-		
 		
 		TSneConfiguration config = TSneUtils.buildConfig(X, 2, initial_dims, perplexity, 1000);
 		config.setTheta(0.5);
@@ -68,7 +69,6 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 		double[][] Y = tsne.tsne(config); 
 
 		return Y;
-
 	}
 
 	@Override

@@ -98,6 +98,8 @@ public class AiPamController {
 	 */
 	ArrayList<AIMessageListener> aiMessageListeners = new ArrayList<AIMessageListener>();
 
+	private AIPamParams lastAiParams;
+
 	/**
 	 * The main controller. 
 	 */
@@ -143,6 +145,8 @@ public class AiPamController {
 	 * @param loadClips - true to load the clips. False checks the files. 
 	 */
 	public void loadAudioData(File selectedDirectory, boolean loadClips) {
+		
+		this.lastAiParams = aiPamParams.clone(); 
 		
 		Task<Integer> task = pamClipManager.importClipsTask(selectedDirectory, this.aiPamParams, loadClips);
 		updateMessageListeners(START_FILE_LOAD, task); 
@@ -200,6 +204,10 @@ public class AiPamController {
 	 * Cluster the clips. 
 	 */
 	public void clusterClips() {
+		
+		//keep a copy of the last settings
+		this.lastAiParams.clusterParams = aiPamParams.clusterParams.clone();
+
 		Task<Integer> task = pamClusterManager.clusterDataTask(pamClipManager.getCurrentClips(), this.aiPamParams); 
 		updateMessageListeners(START_CLUSTERING_ALGORITHM, task); 
 		
@@ -216,6 +224,15 @@ public class AiPamController {
         th.setDaemon(true);
         th.start(); 
 	}
+
+	/**
+	 * Get the last params during audio load or clustering. 
+	 * @return the last AIPamParams used during audio load and/or clustering. 
+	 */
+	public AIPamParams getLastAiParams() {
+		return lastAiParams;
+	}
+
 
 	/**
 	 * Import clips. 

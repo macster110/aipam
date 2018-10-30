@@ -1,13 +1,11 @@
 package com.jamdev.maven.aipam.layout;
 
 import com.jamdev.maven.aipam.AIPamParams;
-import com.jamdev.maven.aipam.utils.SettingsPane;
-
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
@@ -15,7 +13,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 /**
  * Pane for clustering algorithms.
@@ -28,7 +25,7 @@ import javafx.scene.text.Text;
  * @author Jamie Macaulay 
  *
  */
-public class ClusterPane implements SettingsPane<AIPamParams> {
+public class ClusterPane extends DynamicSettingsPane<AIPamParams> {
 	
 	/**
 	 * The default 
@@ -41,6 +38,8 @@ public class ClusterPane implements SettingsPane<AIPamParams> {
 	
 	public ClusterPane(AIPamView aiPamView) {
 		this.aiPamView = aiPamView;
+		mainPane= createPane(); 
+
 	}
 	
 	private Pane createPane() {
@@ -61,16 +60,13 @@ public class ClusterPane implements SettingsPane<AIPamParams> {
 	
 	@Override
 	public Pane getPane() {
-		if (mainPane==null) {
-			mainPane= createPane(); 
-		}
 		return mainPane;
 	}
 
 	@Override
 	public AIPamParams getParams(AIPamParams paramsIn) {
 		// TODO Auto-generated method stub
-		return null;
+		return paramsIn;
 	}
 
 	@Override

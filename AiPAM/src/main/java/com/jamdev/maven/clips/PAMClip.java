@@ -2,12 +2,11 @@ package com.jamdev.maven.clips;
 
 import java.io.File;
 
-
 /**
  * A single clip for display on the clip pane. 
  * <p>
  * The clip stores a spectogram image but no raw wav data. 
- * Can be dealing with Gigabyte of clips so cannot store these in memory
+ * Can be dealing with Gigabytes of clips so cannot store these in memory
  * 
  * @author Jamie Macaulay 
  *
@@ -29,11 +28,6 @@ public class PAMClip {
 	public String fileName;
 
 	/**
-	 * The fingerprint of the wave used in classification
-	 */
-	private byte[] fingerprint;
-
-	/**
 	 * The audio play is stored so the clip can be played. 
 	 */
 	private AudioPlay audioPlay;
@@ -53,13 +47,11 @@ public class PAMClip {
 	} 
 	
 	public PAMClip(ClipWave wave, int fftLength, int fftHop){
-		spectrogramClip=wave.getSpectrogram(fftLength, fftLength/fftHop).getAbsoluteSpectrogramData();
-		spectrogramClip = clipSpectrogram(spectrogramClip, 64); 
+		spectrogramClip=wave.getSpectrogram(fftLength, fftLength/fftHop).getAbsoluteSpectrogram();
 			
-//		spectrogramClip =  DownSampleImpl.largestTriangleThreeBuckets(spectrogramClip, 50);
+		//spectrogramClip =  DownSampleImpl.largestTriangleThreeBuckets(spectrogramClip, 50);
 //		System.out.println("The spectrogram clip is: " +  spectrogramClip.length + " x " +  spectrogramClip[0].length);
 	
-		fingerprint = wave.getFingerprint(); 
 //		System.out.println("The spectorgram size is: " + 
 //		spectrogramClip.getAbsoluteSpectrogramData().length + "x" +spectrogramClip.getAbsoluteSpectrogramData()); 
 		audioPlay=wave.getAudioPlay(); 
@@ -76,6 +68,8 @@ public class PAMClip {
 		wave = null; //garbage collector probably gets rid of this anyway but makes me feel better. 
 	} 
 	
+	
+	@SuppressWarnings("unused")
 	private double[][] clipSpectrogram(double[][] clip, int binsFreq) {
 		double[][] newSpec = new double[clip.length][]; 
 		for (int i=0; i<clip.length; i++) {
@@ -87,15 +81,8 @@ public class PAMClip {
 		}
 		return newSpec; 
 	}
-
-	/**
-	 * Get the fingerprint for classification
-	 * @return the fingerprint classifcation. 
-	 */
-	public byte[] getFingerprint() {
-		return fingerprint;
-	}
-
+	
+	
 	/**
 	 * Get the spectrogram data for the clip. 
 	 * @return

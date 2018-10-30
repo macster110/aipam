@@ -1,6 +1,7 @@
 package com.jamdev.maven.aipam.layout;
 
 import com.jamdev.maven.aipam.AIPamParams;
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.utils.SettingsPane;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -15,7 +16,7 @@ import javafx.scene.paint.Color;
  * @author Jamie Macaulay
  *
  */
-public class GeneralSettingsPane implements SettingsPane<AIPamParams> {
+public class GeneralSettingsPane extends DynamicSettingsPane<AIPamParams> {
 
 	private AIPamView aiPamView;
 
@@ -32,7 +33,7 @@ public class GeneralSettingsPane implements SettingsPane<AIPamParams> {
 	@Override
 	public AIPamParams getParams(AIPamParams paramsIn) {
 		// TODO Auto-generated method stub
-		return null;
+		return paramsIn;
 	}
 
 	@Override

@@ -12,15 +12,17 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
  * 
- * Pane with the some of the main controls e.g. import data, cluster, 
+ * Pane with the some of the main controls e.g. import data and cluster data
  * 
  * @author Jamie Macaulay
  *
@@ -69,54 +71,60 @@ public class MasterControlPane {
 		AIPamView.setButtonIcon(labelHome, FontAwesomeIcon.HOME); 
 
 		
-		importAcoustic = new Button("Generate Clips"); 
+		importAcoustic = new Button(""); 
 		importAcoustic.getStyleClass().add("fluent-menu-button");
-		AIPamView.setButtonIcon(importAcoustic, FontAwesomeIcon.TH); 
+		AIPamView.setButtonIcon(importAcoustic, FontAwesomeIcon.TH, Pos.CENTER); 
 		importAcoustic.prefWidthProperty().bind(holder.widthProperty());
+		importAcoustic.setTooltip(new Tooltip(
+				"Start importing clips"));
 		
 		importAcoustic.setOnAction((action)->{
 			aiPamView.importAcoustic(); 
 		});
 
 		
-		cluster = new Button("Cluster"); 
+		cluster = new Button(""); 
 		cluster.getStyleClass().add("fluent-menu-button");
 		ImageView icon = new ImageView(aiPamView.getClusterIcon()); 
 		ColorAdjust colorAdjust = new ColorAdjust();
 		colorAdjust.setBrightness(1);
 		icon.setEffect(colorAdjust);
 		cluster.setGraphic(icon);
-		cluster.setAlignment(Pos.BASELINE_LEFT);
+		cluster.setAlignment(Pos.CENTER);
 		cluster.setGraphicTextGap(15);
 		cluster.prefWidthProperty().bind(holder.widthProperty());
+		cluster.setTooltip(new Tooltip(
+				"Start the clusterring algorithm"));
 		
 		cluster.setOnAction((action)->{
 			aiPamView.cluster();
 		});
-
-		//importing and exporting files. 		
-		Label labelSettings = new Label("Settings");
-		labelSettings.setPadding(new Insets(5,5,5,5));
-		labelSettings.getStyleClass().add("label-title1");
-		AIPamView.setButtonIcon(labelSettings, FontAwesomeIcon.GEAR); 
-		labelSettings.prefWidthProperty().bind(holder.widthProperty());
-
-
-		saveSettings = new Button("Save Settings"); 
-		saveSettings.getStyleClass().add("fluent-menu-button");
-		AIPamView.setButtonIcon(saveSettings, FontAwesomeIcon.SAVE); 
-		saveSettings.prefWidthProperty().bind(holder.widthProperty());
-
-
 		
-		importSettings = new Button("Open Settings"); 
+		saveSettings = new Button(""); 
+		saveSettings.getStyleClass().add("fluent-menu-button");
+		AIPamView.setButtonIcon(saveSettings, FontAwesomeIcon.SAVE, Pos.CENTER); 
+		saveSettings.prefWidthProperty().bind(holder.widthProperty());
+		saveSettings.setTooltip(new Tooltip(
+				"Save a settings file. This can be opened iby a new instance of the \n"
+				+ "program to restore the current settings."));
+		
+		importSettings = new Button(""); 
 		importSettings.getStyleClass().add("fluent-menu-button");
-		AIPamView.setButtonIcon(importSettings, FontAwesomeIcon.FOLDER_OPEN_ALT); 
+		AIPamView.setButtonIcon(importSettings, FontAwesomeIcon.FOLDER_OPEN_ALT, Pos.CENTER); 
 		importSettings.prefWidthProperty().bind(holder.widthProperty());
-
-	
+		importSettings.setTooltip(new Tooltip(
+				"Import settings from a .mat settings file."));
+		
+		HBox saveBox = new HBox(); 
+		saveBox.prefWidthProperty().bind(holder.widthProperty());
+		saveBox.getChildren().addAll(saveSettings, importSettings); 
+		
+		HBox controlBox = new HBox(); 
+		controlBox.prefWidthProperty().bind(holder.widthProperty());
+		controlBox.getChildren().addAll(importAcoustic, cluster); 
+		
 		//holder.setSpacing(5);
-		holder.getChildren().addAll(labelHome, importAcoustic, cluster, labelSettings, saveSettings, importSettings); 
+		holder.getChildren().addAll(labelHome, saveBox, controlBox); 
 		
 		//holder.setAlignment(Pos.BASELINE_LEFT);
 

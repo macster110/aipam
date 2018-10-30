@@ -3,6 +3,7 @@ package com.jamdev.maven.aipam.layout;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.utils.SettingsPane;
 import com.jamdev.maven.clips.AudioInfo;
 
@@ -30,13 +31,13 @@ import javafx.util.StringConverter;
  * @author Jamie Macaulay
  *
  */
-public class AudioImportPane implements SettingsPane<AIPamParams>{
-	
+public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
+
 	/**
 	 * Text field for the file. 
 	 */
 	private TextField textField;
-	
+
 	/**
 	 * The import button 
 	 */
@@ -46,7 +47,7 @@ public class AudioImportPane implements SettingsPane<AIPamParams>{
 	 * Directory chooser for audio files 
 	 */
 	private DirectoryChooser chooser;
-	
+
 	/**
 	 * Selects possible clips sizes. 
 	 */
@@ -56,7 +57,7 @@ public class AudioImportPane implements SettingsPane<AIPamParams>{
 	 * Reference to a.i. pam view. 
 	 */
 	private AIPamView aiPamView;
-	
+
 	/**
 	 * The main pane. 
 	 */
@@ -65,12 +66,12 @@ public class AudioImportPane implements SettingsPane<AIPamParams>{
 	/**
 	 * Shows decimator values. 
 	 */
-	private ComboBox<Double> decimatorBox;
+	private ComboBox<Integer> decimatorBox;
 
 	/**
 	 * Shows channel box values. 
 	 */
-	private ComboBox<Double> channelBox;
+	private ComboBox<Integer> channelBox;
 
 	/**
 	 * The audio info. 
@@ -78,17 +79,23 @@ public class AudioImportPane implements SettingsPane<AIPamParams>{
 	private Label clipLength;
 
 	private Label audioInfoLabel;
-	
+
+	/**
+	 * A list of possible decimator values based on standard sample rates in bioacoustics. 
+	 */
+	private ObservableList<Integer> decimatorSR; 
+
 	/**
 	 * The audio importing pane
 	 */
 	public AudioImportPane(AIPamView aiPamView) {
 		this.aiPamView = aiPamView; 
+		mainPane = createPane(); 
 	}
 
 
 	private Pane createPane() {
-		
+
 		//create
 		HBox fileImportHolder = new HBox();
 		fileImportHolder.setSpacing(5);
@@ -102,12 +109,13 @@ public class AudioImportPane implements SettingsPane<AIPamParams>{
 		//	importButton.setGraphic(iconText);
 		importButton.setOnAction((action)->{
 			aiPamView.openAudioFolder(); 
+			//do not notify settings listeners here. Need to check out the .wav  file first. 
 		});
-		
+
 		//Label which shows audio info. 
 		audioInfoLabel = new Label("AudioInfo: "); 
 
-		
+
 		textField = new TextField(); 
 		textField.setEditable(false);
 		textField.prefHeightProperty().bind(importButton.heightProperty());
@@ -133,40 +141,57 @@ public class AudioImportPane implements SettingsPane<AIPamParams>{
 				+ "length value. The trim take place from the center of the clip such i.e. \n. "
 				+ "maximum clip length/2 before center of clip and maximum clip length/2 after the \n "
 				+ "center of the clip. "));
-		
+		clipLengthBox.setOnAction((action)->{
+			notifySettingsListeners(); 
+		});
+
 		Label decimatorLabel = new Label("Decimator"); 
 		decimatorLabel.getStyleClass().add("label-title1");
 
-		
-		decimatorBox = new ComboBox<Double>(defaultClipTimes); 
+
+		decimatorBox = new ComboBox<Integer>(); 
 		decimatorBox.setDisable(true);
-		
+		decimatorBox.setOnAction((action)->{
+			notifySettingsListeners(); 
+		});
+
+		decimatorSR = FXCollections.observableArrayList(); 
+		//set some standard decimator values. 
+		decimatorSR.addAll(500, 1000, 2000, 4000, 6000, 10000, 16000, 24000, 32000, 36000, 44100, 48000, 
+				60000, 80000, 96000, 128000, 192000, 256000, 500000);
+
+
 		Label channelLabel = new Label("Channel"); 
 		channelLabel.getStyleClass().add("label-title1");
-		
-		channelBox = new ComboBox<Double>(defaultClipTimes); 
+
+		channelBox = new ComboBox<Integer>(); 
 		channelBox.setDisable(true);
+		channelBox.setOnAction((action)->{
+			notifySettingsListeners(); 
+		});
 
 		VBox holder = new VBox();
 		holder.setSpacing(5); 
 		holder.getChildren().addAll(label,fileImportHolder, importButton, audioInfoLabel, clipLength, clipLengthBox, 
 				decimatorLabel, decimatorBox, channelLabel, channelBox); 
-		
+
 		return holder; 
 	}
-	
+
 	/**
 	 * Set Audio Label. 
 	 * @param audioInfo. 
 	 */
-	private void setAudioInfo(AudioInfo audioInfo) {
+	private void setAudioInfo(AudioInfo audioInfo, AIPamParams aiParams) {
+		System.out.println("SET AUDIO INFO: "); 
+
+		
 		audioInfoLabel.setTextFill(Color.WHITE);
 		if (audioInfo==null) {
 			audioInfoLabel.setText("No audio data in current directory \n"
 					+ "Browse to a directory of audio files");
 			audioInfoLabel.setTextFill(Color.YELLOW);
 			textField.setText(""); 
-			return;
 		}
 		else if (!audioInfo.isSameChannels) {
 			audioInfoLabel.setText("The clips have different numbers of channels");
@@ -177,37 +202,85 @@ public class AudioImportPane implements SettingsPane<AIPamParams>{
 			audioInfoLabel.setText("The clips have different sample rates");
 			audioInfoLabel.setTextFill(Color.RED);
 			textField.setText(""); 
-			return;
 		}
+		
 		else {
-			audioInfoLabel.setText(String.format("No. Files: % d Channels: %d Sample Rate: %.0f", 
+			audioInfoLabel.setText(String.format("No. Files: % d Channels: %d Sample Rate: %.0f \n"
+					+ "Press 'Generate Clips to import", 
 					audioInfo.nFiles, audioInfo.channels, audioInfo.sampleRate));
 			textField.setText(audioInfo.file); 
-			setUpDecimatorBox(); 
-			setUpChannelBox();
+
+			//set up the channel and audio info boxes
+			this.setAllowNotify(false);
+			setUpDecimatorBox(audioInfo, aiParams); 
+			setUpChannelBox(audioInfo, aiParams);
+			this.setAllowNotify(true);
+
+//			System.out.println("SET AUDIO INFO: decimatorBox: " + decimatorBox.getValue()); 
+//			System.out.println("SET AUDIO INFO: channelBox: " + channelBox.getValue()); 
+
+			return;
 		}
+
+		setUpDecimatorBox(null, null); 
+		setUpChannelBox(null, null);
 		
+		//now notify the setting listeners that the audio file settings have changed. 
+		this.notifySettingsListeners();
 	}
-	
+
 	/**
-	 * Set the decimator values- theseobviously have to be less than the nyquist frequency
+	 * Set the decimator values- these obviously have to be less than the Nyquist frequency
+	 * @param audioInfo - the current audio information
+	 * @param aiParams 
 	 */
-	private void setUpChannelBox() {
-		// TODO Auto-generated method stub
-		
+	private void setUpDecimatorBox(AudioInfo audioInfo, AIPamParams aiParams) {
+		decimatorBox.getItems().clear();
+		if (audioInfo==null) {
+			//decimatorBox.setDisable(true);
+		}
+		else {
+			int n=0; 
+			decimatorBox.setDisable(false);
+			while (audioInfo.sampleRate>=decimatorSR.get(n) && n<decimatorSR.size()) {
+				decimatorBox.getItems().add(decimatorSR.get(n)); 
+				n++;
+			}
+			//now try an set from current params
+			if (decimatorBox.getItems().indexOf(aiPamView.getAIParams().decimatorSR)!=-1) {
+				decimatorBox.getSelectionModel().select(aiParams.decimatorSR);
+			}
+			else decimatorBox.getSelectionModel().selectLast(); //select the current sample rate: default not decimation 
+		}
+
+	}
+
+	/**
+	 * Set up the channel box
+	 * @param audioInfo - the current audio information
+	 */
+	private void setUpChannelBox(AudioInfo audioInfo, AIPamParams aiParams) {
+		channelBox.getItems().clear(); 
+		if (audioInfo==null || audioInfo.channels==1) {
+			//channelBox.setDisable(true);
+			if (audioInfo!=null) {
+				channelBox.getItems().add(0); 
+			}
+		}
+		else {
+			channelBox.setDisable(false);
+			for (int i=0; i<audioInfo.channels; i++) {
+				channelBox.getItems().add(i); 
+			}
+			//now try an set from current params
+			if (channelBox.getItems().indexOf(aiParams.channel)!=-1) {
+				channelBox.getSelectionModel().select(aiParams.channel);
+			}
+			else channelBox.getSelectionModel().selectFirst(); //channel 0
+		}
 	}
 
 
-	private void setUpDecimatorBox() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	private void setSampleRate() {
-		ObservableList<Double> decimatorSR = FXCollections.observableArrayList(); 
-		decimatorSR.addAll(0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0);
-	}
 
 	/**
 	 * Class for showing seconds value on clip size combo box. 
@@ -234,42 +307,45 @@ public class AudioImportPane implements SettingsPane<AIPamParams>{
 
 	@Override
 	public Pane getPane() {
-		if (mainPane==null) {
-			mainPane = createPane(); 
-		}
 		return mainPane;
 	}
 
 
 	@Override
 	public AIPamParams getParams(AIPamParams paramsIn) {
-			
-		paramsIn.audioFolder=this.textField.getText(); 
+
+		paramsIn.audioFolder=textField.getText(); 
 		paramsIn.maximumClipLength = clipLengthBox.getValue(); 
 
-		paramsIn.audioFolder=this.textField.getText(); 
-		paramsIn.maximumClipLength = clipLengthBox.getValue(); 
-	
+//		System.out.println("GETPARAMS: ChannelBox value: " + channelBox.getValue()); 
+//		System.out.println("GETPARAMS: DecimatorBox value: " + decimatorBox.getSelectionModel().getSelectedItem()); 
 		
+		if (!channelBox.isDisable()) paramsIn.channel = channelBox.getValue();
+		if (!decimatorBox.isDisable()) paramsIn.decimatorSR = decimatorBox.getSelectionModel().getSelectedItem(); 
+
+//		System.out.println("The decimator value is: " + paramsIn.decimatorSR);
 		return paramsIn;
 	}
 
-	private void checkFolder() {
-		
-	}
 
 
 	@Override
 	public void setParams(AIPamParams params) {
 		
+//		System.out.println("SEPARAMS:  decimator value is: " + params.decimatorSR);
+//		System.out.println("SEPARAMS:  channel value is: " + params.channel);
+
+		this.setAllowNotify(false);
+
 		// TODO Auto-generated method stub
 		textField.setText(params.audioFolder); 
 		clipLengthBox.getSelectionModel().select(params.maximumClipLength);
+
+		setAudioInfo(this.aiPamView.getAIControl().getAudioInfo(), params); 
 		
-		setAudioInfo(this.aiPamView.getAIControl().getAudioInfo()); 
-	
-		textField.setText(params.audioFolder); 
-		clipLengthBox.getSelectionModel().select(params.maximumClipLength);
+		this.setAllowNotify(true);
+
+
 	}
 
 
@@ -280,7 +356,7 @@ public class AudioImportPane implements SettingsPane<AIPamParams>{
 		iconView.setFill(Color.WHITE);
 		return iconView;
 	}
-;
+	;
 
 	@Override
 	public String getTitle() {
@@ -292,10 +368,11 @@ public class AudioImportPane implements SettingsPane<AIPamParams>{
 	public void notifyUpdate(int flag, Object stuff) {
 		switch (flag) {
 		case AiPamController.END_FILE_HEADER_LOAD:
-			setAudioInfo(this.aiPamView.getAIControl().getAudioInfo()); 
+			setAudioInfo(this.aiPamView.getAIControl().getAudioInfo(),
+					aiPamView.getAIControl().getParams()); 
 			break;
 		} 
-		
+
 	}
 
 }

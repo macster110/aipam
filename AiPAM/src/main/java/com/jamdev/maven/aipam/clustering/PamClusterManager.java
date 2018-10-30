@@ -45,7 +45,7 @@ public class PamClusterManager {
 		@Override
 		protected Integer call() throws Exception {
 			//progress is in intermediate mode. 
-			System.out.println("Hello: Start clustering");
+			//System.out.println("Hello: Start clustering");
 			try {
 
 				updateTitle("Clustering");
@@ -61,11 +61,12 @@ public class PamClusterManager {
 				}
 
 				//start the algorithm 
-				clusterAlgorithm.cluster(pamClips);
 				updateMessage("Clustering Clips..."); 
 
+				if (pamClips==null) return -1; 
+				clusterAlgorithm.cluster(pamClips);
 
-				System.out.println("Hello: Finished!!!!");
+				//System.out.println("Hello: Finished!!!!");
 				return -1; 
 			}
 			catch (Exception e) {

@@ -3,6 +3,7 @@ package com.jamdev.maven.aipam.layout;
 import org.controlsfx.glyphfont.FontAwesome;
 
 import com.jamdev.maven.aipam.AIPamParams;
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.utils.SettingsPane;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -26,7 +27,7 @@ import javafx.scene.text.Text;
  * @author Jamie Macaulay 
  *
  */
-public class PlayBackPane extends BorderPane implements SettingsPane<AIPamParams> {
+public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 	
 	private Slider volume;
 	
@@ -38,7 +39,12 @@ public class PlayBackPane extends BorderPane implements SettingsPane<AIPamParams
 	/**
 	 * Reference to AIPamView
 	 */
-	private AIPamView aiPamView; 
+	private AIPamView aiPamView;
+
+	/**
+	 * The main holder pane. 
+	 */
+	private BorderPane mainPane; 
 
 	
 	/**
@@ -56,7 +62,7 @@ public class PlayBackPane extends BorderPane implements SettingsPane<AIPamParams
 		volumePercLabel.getStyleClass().add("label-title2");
 
 		
-		volume= new Slider(0.,1.,0.5); 
+		volume= new Slider(0.,100.,50.); 
 		volume.setValue(0.5);
 		volume.valueProperty().addListener((oldval, newVal, obsVal)->{
 			setIconGraphic(); 
@@ -75,9 +81,9 @@ public class PlayBackPane extends BorderPane implements SettingsPane<AIPamParams
 		Label volumeTitle = new Label("Volume");
 		volumeTitle.getStyleClass().add("label-title1");
 
-
-		this.setTop(volumeTitle);
-		this.setCenter(holder);
+		mainPane = new BorderPane(); 
+		mainPane.setTop(volumeTitle);
+		mainPane.setCenter(holder);
 		
 	}
 
@@ -86,7 +92,7 @@ public class PlayBackPane extends BorderPane implements SettingsPane<AIPamParams
 	 */
 	private void setLabelText() {
 		// TODO Auto-generated method stub
-		volumePercLabel.setText(String.format("%.0f", volume.getValue()*100)+"%"); 
+		volumePercLabel.setText(String.format("%.0f", volume.getValue())+"%"); 
 	}
 
 	/**
@@ -95,13 +101,13 @@ public class PlayBackPane extends BorderPane implements SettingsPane<AIPamParams
 	private void setIconGraphic() {
 		MaterialDesignIcon icon = MaterialDesignIcon.VOLUME_OFF; 
 		
-		if (volume.getValue()>0 && volume.getValue()<=0.25) {
+		if (volume.getValue()>0 && volume.getValue()<=25) {
 			icon=MaterialDesignIcon.VOLUME_LOW; 
 		}
-		if (volume.getValue()>0.25 && volume.getValue()<0.75) {
+		if (volume.getValue()>25 && volume.getValue()<75) {
 			icon=MaterialDesignIcon.VOLUME_MEDIUM; 
 		}
-		if (volume.getValue()>0.75) {
+		if (volume.getValue()>75) {
 			icon=MaterialDesignIcon.VOLUME_HIGH; 
 		}
 		
@@ -114,13 +120,13 @@ public class PlayBackPane extends BorderPane implements SettingsPane<AIPamParams
 
 	@Override
 	public Pane getPane() {
-		return this;
+		return mainPane;
 	}
 
 	@Override
 	public AIPamParams getParams(AIPamParams paramsIn) {
 		// TODO Auto-generated method stub
-		return null;
+		return paramsIn;
 	}
 
 	@Override

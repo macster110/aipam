@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.utils.SettingsPane;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -47,8 +50,6 @@ public class ControlPane extends BorderPane {
 	 */
 	private AudioImportPane audioImportPane;
 
-
-
 	/**
 	 * The master control pane. 
 	 */
@@ -65,8 +66,15 @@ public class ControlPane extends BorderPane {
 	 */
 	private AnnotationPane annotationPane;
 
-
+	/**
+	 * Pane for general program settings. 
+	 */
 	private GeneralSettingsPane generalSettingsPane;
+
+	/**
+	 * Label which shows some information
+	 */
+	private Label labelInfoLabel;
 
 
 
@@ -87,24 +95,63 @@ public class ControlPane extends BorderPane {
 
 		//master control pane. 
 		masterControlPane = new MasterControlPane(aiPamView); 
+		
+		//importing and exporting files. 		
+		Label labelSettings = new Label("Settings");
+		labelSettings.setPadding(new Insets(5,5,5,5));
+		labelSettings.getStyleClass().add("label-title1");
+		AIPamView.setButtonIcon(labelSettings, FontAwesomeIcon.GEAR); 
+		
+		labelInfoLabel = new Label(""); 
+		//labelSettings.prefWidthProperty().bind(holder.widthProperty());
 
 		//pane for importing audio clips. 
 		audioImportPane = new AudioImportPane(aiPamView); 
+		audioImportPane.setParams(aiPamView.getAIParams());
+		audioImportPane.addSettingsListener(()->{
+			audioImportPane.getParams(aiPamView.getAIParams());
+			aiPamView.checkSettings(); 
+		});
 
-		//pane for the fft settings. 
+		//pane for the FFT settings. 
 		fftPane = new FFTSettingsPane(aiPamView); 
+		fftPane.setParams(aiPamView.getAIParams());
+		fftPane.addSettingsListener(()->{
+			fftPane.getParams(aiPamView.getAIParams());
+			aiPamView.checkSettings(); 
+		});
 
-		//pane for data playback
+		//pane for data play back
 		playBackPane = new PlayBackPane(aiPamView); 
+		playBackPane.setParams(aiPamView.getAIParams());
+		playBackPane.addSettingsListener(()->{
+			playBackPane.getParams(aiPamView.getAIParams()); 
+			aiPamView.checkSettings(); 
+		});
 
-		//pane for clusterring algorithm. 
+		//pane for clustering algorithm. 
 		clusterPane = new ClusterPane(aiPamView); 
+		clusterPane.setParams(aiPamView.getAIParams());
+		clusterPane.addSettingsListener(()->{
+			clusterPane.getParams(aiPamView.getAIParams()); 
+			aiPamView.checkSettings(); 
+		});
 
-		//the annotaiton pane. 
+		//the annotation pane. 
 		annotationPane = new AnnotationPane(aiPamView);
+		annotationPane.setParams(aiPamView.getAIParams());
+		audioImportPane.addSettingsListener(()->{
+			audioImportPane.getParams(aiPamView.getAIParams()); 
+			aiPamView.checkSettings(); 
+		});
 
 		//the general settings pane. 
 		generalSettingsPane = new GeneralSettingsPane(aiPamView); 
+		generalSettingsPane.setParams(aiPamView.getAIParams());
+		generalSettingsPane.addSettingsListener(()->{
+			generalSettingsPane.getParams(aiPamView.getAIParams()); 
+			aiPamView.checkSettings(); 
+		});
 
 		controlPanes = new ArrayList<SettingsPane<AIPamParams>>(); 
 		controlPanes.add(audioImportPane);
@@ -115,9 +162,11 @@ public class ControlPane extends BorderPane {
 		controlPanes.add(annotationPane);
 		controlPanes.add(generalSettingsPane);
 
-
 		holderPane.getChildren().add(masterControlPane.getPane());
+		holderPane.getChildren().add(labelInfoLabel);
+		holderPane.getChildren().add(labelSettings);
 
+		
 		Button settingsButton;
 		for (int i=0; i<controlPanes.size(); i++) {
 			settingsButton = new Button(controlPanes.get(i).getTitle());
@@ -137,7 +186,6 @@ public class ControlPane extends BorderPane {
 			settingsButton.setGraphicTextGap(15);
 
 			//settingsButton.setTextAlignment(TextAlignment.LEFT);
-
 			holderPane.getChildren().add(settingsButton);
 
 		}
@@ -157,6 +205,7 @@ public class ControlPane extends BorderPane {
 	 */
 	public void setParams(AIPamParams params) {
 		for (int i=0; i<controlPanes.size(); i++) {
+			controlPanes.get(i).getPane(); //FIXME need to make sure it's intialised...bit messy
 			controlPanes.get(i).setParams(params);
 		}
 
@@ -169,7 +218,7 @@ public class ControlPane extends BorderPane {
 	 */
 	public AIPamParams getParams(AIPamParams params) {
 		for (int i=0; i<controlPanes.size(); i++) {
-			controlPanes.get(i).getPane(); //need to make sure it's intialised...bit messy
+			controlPanes.get(i).getPane(); //FIXME need to make sure it's intialised...bit messy
 			controlPanes.get(i).getParams(params); 
 		}
 		return params; 
