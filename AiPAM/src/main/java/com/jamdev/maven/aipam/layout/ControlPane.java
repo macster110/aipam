@@ -3,15 +3,20 @@ package com.jamdev.maven.aipam.layout;
 import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.AIPamParams;
+import com.jamdev.maven.aipam.layout.utilsFX.FluentMenuPane;
 import com.jamdev.maven.aipam.utils.SettingsPane;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -37,7 +42,9 @@ public class ControlPane extends BorderPane {
 	 */
 	private FFTSettingsPane fftPane;
 
-
+	/**
+	 * The playback pane. 
+	 */
 	private PlayBackPane playBackPane;
 
 	/**
@@ -74,7 +81,22 @@ public class ControlPane extends BorderPane {
 	/**
 	 * Label which shows some information
 	 */
-	private Label labelInfoLabel;
+	private BorderPane labelInfoLabel;
+
+	/**
+	 * Menu pane which holds the settings buttons. 
+	 */
+	private FluentMenuPane menuPane;
+	
+	/**
+	 * Import settings button
+	 */
+	private Button importSettings;
+
+	/**
+	 * Save settings button
+	 */
+	private Button saveSettings;
 
 
 
@@ -95,14 +117,16 @@ public class ControlPane extends BorderPane {
 
 		//master control pane. 
 		masterControlPane = new MasterControlPane(aiPamView); 
-		
+
 		//importing and exporting files. 		
 		Label labelSettings = new Label("Settings");
 		labelSettings.setPadding(new Insets(5,5,5,5));
 		labelSettings.getStyleClass().add("label-title1");
 		AIPamView.setButtonIcon(labelSettings, FontAwesomeIcon.GEAR); 
-		
-		labelInfoLabel = new Label(""); 
+
+		labelInfoLabel = new BorderPane(); 
+		labelInfoLabel.setPrefHeight(50);
+		labelInfoLabel.setPadding(new Insets(5,5,5,5));
 		//labelSettings.prefWidthProperty().bind(holder.widthProperty());
 
 		//pane for importing audio clips. 
@@ -153,6 +177,35 @@ public class ControlPane extends BorderPane {
 			aiPamView.checkSettings(); 
 		});
 
+		
+		//layout of everything
+		holderPane.getChildren().add(masterControlPane.getPane());
+		holderPane.getChildren().add(labelInfoLabel);
+		holderPane.getChildren().add(labelSettings);
+
+		
+		
+		saveSettings = new Button("Save Settings"); 
+		saveSettings.getStyleClass().add("fluent-menu-button");
+		AIPamView.setButtonIcon(saveSettings, FontAwesomeIcon.SAVE); 
+		saveSettings.prefWidthProperty().bind(holderPane.widthProperty());
+		saveSettings.setTooltip(new Tooltip(
+				"Save a settings file. This can be opened iby a new instance of the \n"
+				+ "program to restore the current settings."));
+		
+		importSettings = new Button("Import Settings"); 
+		importSettings.getStyleClass().add("fluent-menu-button");
+		AIPamView.setButtonIcon(importSettings, FontAwesomeIcon.DOWNLOAD); 
+		importSettings.prefWidthProperty().bind(holderPane.widthProperty());
+		importSettings.setTooltip(new Tooltip(
+				"Import settings from a .mat settings file."));
+		
+		
+		//add save stuff. 
+		holderPane.getChildren().add(saveSettings);
+		holderPane.getChildren().add(importSettings);
+
+		
 		controlPanes = new ArrayList<SettingsPane<AIPamParams>>(); 
 		controlPanes.add(audioImportPane);
 
@@ -161,15 +214,11 @@ public class ControlPane extends BorderPane {
 		controlPanes.add(clusterPane);
 		controlPanes.add(annotationPane);
 		controlPanes.add(generalSettingsPane);
-
-		holderPane.getChildren().add(masterControlPane.getPane());
-		holderPane.getChildren().add(labelInfoLabel);
-		holderPane.getChildren().add(labelSettings);
-
 		
-		Button settingsButton;
+		menuPane = new FluentMenuPane(); 
+
 		for (int i=0; i<controlPanes.size(); i++) {
-			settingsButton = new Button(controlPanes.get(i).getTitle());
+			final Button settingsButton = new Button(controlPanes.get(i).getTitle());
 			if (controlPanes.get(i).getIcon()!=null) {
 				settingsButton.setGraphic(controlPanes.get(i).getIcon());
 			}
@@ -186,9 +235,12 @@ public class ControlPane extends BorderPane {
 			settingsButton.setGraphicTextGap(15);
 
 			//settingsButton.setTextAlignment(TextAlignment.LEFT);
-			holderPane.getChildren().add(settingsButton);
-
+			menuPane.addMenuItem(settingsButton);		
 		}
+		
+
+		holderPane.getChildren().add(menuPane);
+
 
 		holderPane.getStyleClass().add("fluent-pane");
 		holderPane.setPrefWidth(200);
@@ -223,7 +275,7 @@ public class ControlPane extends BorderPane {
 		}
 		return params; 
 	}
-	
+
 	/**
 	 * Get the audio import pane.This handles importing audio files
 	 * 
@@ -231,6 +283,39 @@ public class ControlPane extends BorderPane {
 	 */
 	public AudioImportPane getAudioImportPane() {
 		return audioImportPane;
+	}
+
+	/**
+	 * Set the settings menu to be deselected.
+	 */
+	public void setMenuDeselected() {
+		this.menuPane.setMenuButtonsDeselected(); 
+		
+	}
+
+	/**
+	 * The volume property of the slider. 
+	 * @return the volume property set by the volume control. 
+	 */
+	public DoubleBinding volumeProperty() {
+		return playBackPane.volumeProperty();
+	}
+
+	/**
+	 * Set the user prompts. Usually just text but can also inlcude interactive controls. 
+	 * @param userPromptPane - the user prompt pane to set. 
+	 */
+	public void setUserPrompts(Pane userPromptPane) {
+		labelInfoLabel.setCenter(userPromptPane);
+	}
+
+	/**
+	 * Called whenever a settings pane is programaticaly opened to highlight the relevant menu button. 
+	 * @param settingsPane - the settings pane which is being opened.
+	 */
+	public void setSelectedPane(SettingsPane<AIPamParams> settingsPane) {
+		menuPane.setMenuButtonsDeselected(); //clear all selections. 
+		menuPane.buttonSelected(controlPanes.indexOf(settingsPane));
 	}
 
 }

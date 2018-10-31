@@ -17,10 +17,10 @@ import javafx.concurrent.Task;
  *
  */
 public class AiPamController {
-	
+
 
 	public int verbose = 1; 
-	
+
 	/**
 	 * Start loading audio data from a file
 	 */
@@ -30,28 +30,28 @@ public class AiPamController {
 	 * End loading audio data from a file. 
 	 */
 	public static final int END_FILE_LOAD =2;
-	
+
 	/**
 	 * Start creating spectrogrma images for all the loaded clips. 
 	 */
 	public static final int START_IMAGE_LOAD =3;
-	
+
 	/**
 	 * Flag indicating end of image loading. 
 	 */
 	public static final int END_IMAGE_LOAD =4;
-	
+
 	/**
 	 * Cancelled image load. 
 	 */
 	public static final int CANCELLED_IMAGE_LOAD =5;
 
-	
+
 	/**
 	 * Message for cancelled data loaded.
 	 */
 	public static final int CANCELLED_FILE_LOAD=6; 
-	
+
 	/**
 	 * Start the clustering algorithm 
 	 */
@@ -66,7 +66,7 @@ public class AiPamController {
 	 * The clustering algorithm has been cancelled. 
 	 */
 	public static final int CANCEL_CLUSTERING_ALGORITHM = 9;
-	
+
 	/**
 	 * There is no audio directory does not exist. 
 	 */
@@ -82,7 +82,7 @@ public class AiPamController {
 	 * The cluster manager
 	 */
 	private PamClusterManager pamClusterManager; 
-	
+
 	/**
 	 * Manages importing audio clips. 
 	 */
@@ -92,12 +92,16 @@ public class AiPamController {
 	 * The current parameters for the program. 
 	 */
 	private AIPamParams aiPamParams;
-	
+
 	/**
 	 * Listeners for messages form the controller. 
 	 */
 	ArrayList<AIMessageListener> aiMessageListeners = new ArrayList<AIMessageListener>();
 
+	/**
+	 * The last AiParams use din importing and/or clustering. Primarily used by a GUI
+	 * to check whether a new settings files need clips imported again and/or clustered again. 
+	 */
 	private AIPamParams lastAiParams;
 
 	/**
@@ -108,8 +112,8 @@ public class AiPamController {
 		this.pamClipManager = new PAMClipManager(); 
 		this.pamClusterManager= new PamClusterManager(); 
 	}
-	
-	
+
+
 	/**
 	 * Add a sensor message listener 
 	 * @param the aiMessageListener to add. 
@@ -117,7 +121,7 @@ public class AiPamController {
 	public void addSensorMessageListener(AIMessageListener aiMessageListener){
 		aiMessageListeners.add(aiMessageListener); 
 	}
-	
+
 	/**
 	 * Update the message listeners.
 	 * @param flag - the flag to update. 
@@ -128,14 +132,14 @@ public class AiPamController {
 			listener.newMessage(flag, data);
 		}
 	}
-	
+
 
 	/**
 	 * Load the audio data. 
 	 * @param selectedDirectory - the directory for the clips
 	 */
 	public void loadAudioData(File selectedDirectory) {
-		 loadAudioData( selectedDirectory, true); 
+		loadAudioData( selectedDirectory, true); 
 	}
 
 
@@ -145,12 +149,16 @@ public class AiPamController {
 	 * @param loadClips - true to load the clips. False checks the files. 
 	 */
 	public void loadAudioData(File selectedDirectory, boolean loadClips) {
-		
-		this.lastAiParams = aiPamParams.clone(); 
-		
+
+		if (loadClips) {
+			this.lastAiParams = aiPamParams.clone(); 
+			this.lastAiParams.clusterParams = null; //indicates no clusterring has taken placesince last audio import. 
+		}
+
+
 		Task<Integer> task = pamClipManager.importClipsTask(selectedDirectory, this.aiPamParams, loadClips);
 		updateMessageListeners(START_FILE_LOAD, task); 
-		
+
 		task.setOnCancelled((value)->{
 			//send notification when 
 			updateMessageListeners(CANCELLED_FILE_LOAD, task); 
@@ -162,17 +170,17 @@ public class AiPamController {
 				updateMessageListeners(END_FILE_HEADER_LOAD, task); 
 
 		});
-	
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start(); 
+
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start(); 
 	}
-	
+
 	/**
 	 * Start a thread clustering the data. 
 	 */
 	public void clusterData() {
-		
+
 	}
 
 	/**
@@ -182,7 +190,7 @@ public class AiPamController {
 	public ArrayList<PAMClip> getPAMClips() {
 		return pamClipManager.getCurrentClips();
 	}
-	
+
 	/**
 	 * Get the audio info. This gets information. 
 	 * @return the audio info.
@@ -204,13 +212,13 @@ public class AiPamController {
 	 * Cluster the clips. 
 	 */
 	public void clusterClips() {
-		
+
 		//keep a copy of the last settings
 		this.lastAiParams.clusterParams = aiPamParams.clusterParams.clone();
 
 		Task<Integer> task = pamClusterManager.clusterDataTask(pamClipManager.getCurrentClips(), this.aiPamParams); 
 		updateMessageListeners(START_CLUSTERING_ALGORITHM, task); 
-		
+
 		task.setOnCancelled((value)->{
 			//send notification when 
 			updateMessageListeners(CANCEL_CLUSTERING_ALGORITHM, task); 
@@ -219,10 +227,10 @@ public class AiPamController {
 			//
 			updateMessageListeners(END_CLUSTERING_ALGORITHM, task); 
 		});
-	
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start(); 
+
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start(); 
 	}
 
 	/**
@@ -250,7 +258,7 @@ public class AiPamController {
 
 
 
-	
-	
+
+
 
 }

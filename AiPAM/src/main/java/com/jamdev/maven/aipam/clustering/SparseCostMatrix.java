@@ -106,7 +106,7 @@ public class SparseCostMatrix
 
 		// Check sizes
 		if (cc.length != kk.length) {
- throw new IllegalArgumentException( "Cost and column indices arrays must have the same length. Found " + cc.length + " and " + kk.length + "." );
+			throw new IllegalArgumentException( "Cost and column indices arrays must have the same length. Found " + cc.length + " and " + kk.length + "." );
 		}
 
 		this.cardinality = cc.length;
@@ -314,7 +314,7 @@ public class SparseCostMatrix
 
 		return cm;
 	}
-	
+
 	/**
 	 * Returns the value stored by this matrix at the specified row and column.
 	 * If a value is not present in the sparse matrix, the specified missing
@@ -482,7 +482,7 @@ public class SparseCostMatrix
 		{
 			final int j = kk[ k ];
 			final double c = cc[ k ];
-			
+
 			// Determine whether we changed line.
 			if ( j <= previousJ || walked >= number[ currentLine ] )
 			{

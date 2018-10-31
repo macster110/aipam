@@ -1,7 +1,10 @@
 package com.jamdev.maven.aipam.layout;
 
 import com.jamdev.maven.aipam.AIPamParams;
+import com.jamdev.maven.aipam.clustering.tsne.TSNEParams;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
+import com.jamdev.maven.aipam.layout.utilsFX.SettingsListener;
+
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.geometry.Pos;
@@ -28,10 +31,13 @@ import javafx.scene.paint.Color;
 public class ClusterPane extends DynamicSettingsPane<AIPamParams> {
 	
 	/**
-	 * The default 
+	 * The default TSNE cluster pane.  
 	 */
 	public TSNEClusterPane clusterPane;
-	
+
+	/**
+	 * Reference to the AIPAMView. 
+	 */
 	private AIPamView aiPamView; 
 	
 	private Pane mainPane; 
@@ -44,7 +50,7 @@ public class ClusterPane extends DynamicSettingsPane<AIPamParams> {
 	
 	private Pane createPane() {
 		
-		Label  titleLabel = new Label("Cluster"); 
+		Label  titleLabel = new Label("TSNE Settings"); 
 		titleLabel.getStyleClass().add("label-title1");
 		
 		clusterPane= new TSNEClusterPane(); 
@@ -52,7 +58,7 @@ public class ClusterPane extends DynamicSettingsPane<AIPamParams> {
 		VBox holder = new VBox(); 
 		holder.setSpacing(5);
 		
-		holder.getChildren().addAll(titleLabel); 
+		holder.getChildren().addAll(titleLabel, clusterPane.getPane()); 
 		
 		return holder; 
 	}
@@ -65,14 +71,14 @@ public class ClusterPane extends DynamicSettingsPane<AIPamParams> {
 
 	@Override
 	public AIPamParams getParams(AIPamParams paramsIn) {
-		// TODO Auto-generated method stub
+		//for now only using TSNE...in future if using different algorithms this will need updated. 
+		paramsIn.clusterParams = clusterPane.getParams((TSNEParams) paramsIn.clusterParams); 
 		return paramsIn;
 	}
 
 	@Override
 	public void setParams(AIPamParams params) {
-		// TODO Auto-generated method stub
-		
+		clusterPane.setParams((TSNEParams) params.clusterParams);
 	}
 
 	@Override
@@ -99,6 +105,12 @@ public class ClusterPane extends DynamicSettingsPane<AIPamParams> {
 	public String getTitle() {
 		return "Cluster Algorithm";
 	}
+	
+	@Override
+	public void addSettingsListener(SettingsListener settingsListener){
+		//add a settings listener to the cluster instead as this is just a holder pane. 
+		clusterPane.addSettingsListener(settingsListener);
+	} 
 
 	@Override
 	public void notifyUpdate(int flag, Object stuff) {

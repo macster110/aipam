@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.deeplearning4j.optimize.api.TrainingListener;
 
 import com.jamdev.maven.aipam.AIPamParams;
+import com.jamdev.maven.aipam.clustering.tsne.TSNEClipClustererYK;
 import com.jamdev.maven.clips.PAMClip;
 
 import javafx.application.Platform;
@@ -22,12 +23,14 @@ public class PamClusterManager {
 	 * The current clustering algorithm
 	 */
 	private ClusteringAlgorithm clusterAlgorithm = new TSNEClipClustererYK(); 
+	
+	private ClusterSnapGrid clusterSnapGrid = new ClusterSnapGrid(); 
 
 	/**
 	 * Construct the cluster data task. 
 	 * @param pamClips  - the pamClips
 	 * @param params 	- the aiPamParams
-	 * @return the clusterring task.
+	 * @return the clustering task.
 	 */
 	public Task<Integer> clusterDataTask(ArrayList<PAMClip> pamClips, AIPamParams params) {
 		return new ClusterTask(pamClips, params); 
@@ -37,8 +40,11 @@ public class PamClusterManager {
 	public class ClusterTask extends Task<Integer> {
 
 		private ArrayList<PAMClip> pamClips;
+		
+		private AIPamParams params;
 
 		public ClusterTask(ArrayList<PAMClip> pamClips, AIPamParams params) {
+			this.params=params; 
 			this.pamClips=pamClips; 
 		}
 
@@ -61,13 +67,19 @@ public class PamClusterManager {
 				}
 
 				//start the algorithm 
-				updateMessage("Clustering Clips..."); 
+				updateMessage("Clustering Clips...This could take some time"); 
 
 				if (pamClips==null) return -1; 
-				clusterAlgorithm.cluster(pamClips);
-
+				//cluster data is stored in the clips. 
+				clusterAlgorithm.cluster(pamClips,  params.clusterParams);
+				
+				//start snapping to gird.
+				updateMessage("Snapping the cluster points to a grid...this can also take some time"); 
+				
+				clusterSnapGrid.snapToGrid(pamClips); 
+				
 				//System.out.println("Hello: Finished!!!!");
-				return -1; 
+				return 1; 
 			}
 			catch (Exception e) {
 				e.printStackTrace();

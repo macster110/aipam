@@ -27,11 +27,11 @@ public class FingerPrintManager {
 	 */
 	public static double[] simpleSpectrogramFingerPrint(double[][] spectrogram, int compression) {
 		double[][] data = DownSampleImpl.largestTriangleThreeBuckets(spectrogram, compression);
-		for (int i=0; i<data.length; i++) {
-			for (int j=0; j<data[0].length; j++) {
-				data[i][j]=20*Math.log10(data[i][j]); 
-			}
-		}
+//		for (int i=0; i<data.length; i++) {
+//			for (int j=0; j<data[0].length; j++) {
+//				data[i][j]=20*Math.log10(data[i][j]); 
+//			}
+//		}
 		return ArrayUtil.flattenDoubleArray(data);
 	}
 

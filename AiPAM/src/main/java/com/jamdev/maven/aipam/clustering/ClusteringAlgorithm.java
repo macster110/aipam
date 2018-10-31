@@ -18,7 +18,7 @@ public interface ClusteringAlgorithm {
 	 * Cluster audio clips. 
 	 * @param pamClips - list of clips to cluster. 
 	 */
-	public void cluster(ArrayList<PAMClip> pamClips);
+	public void cluster(ArrayList<PAMClip> pamClips, ClusterParams clusterParams);
 	
 	/**
 	 * Get the settings pane for the clustering algorithm 

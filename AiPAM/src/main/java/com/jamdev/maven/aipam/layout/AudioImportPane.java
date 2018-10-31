@@ -179,13 +179,12 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 	}
 
 	/**
-	 * Set Audio Label. 
-	 * @param audioInfo. 
+	 * Set Audio labels and set up the decimator and channel combo boxes so that they have the correct
+	 * values i.e. correct possible decimator values and the correct channel numbers. 
+	 * @param audioInfo - audio info describing the audio files. 
 	 */
 	private void setAudioInfo(AudioInfo audioInfo, AIPamParams aiParams) {
-		System.out.println("SET AUDIO INFO: "); 
 
-		
 		audioInfoLabel.setTextFill(Color.WHITE);
 		if (audioInfo==null) {
 			audioInfoLabel.setText("No audio data in current directory \n"
@@ -203,7 +202,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 			audioInfoLabel.setTextFill(Color.RED);
 			textField.setText(""); 
 		}
-		
+
 		else {
 			audioInfoLabel.setText(String.format("No. Files: % d Channels: %d Sample Rate: %.0f \n"
 					+ "Press 'Generate Clips to import", 
@@ -216,15 +215,15 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 			setUpChannelBox(audioInfo, aiParams);
 			this.setAllowNotify(true);
 
-//			System.out.println("SET AUDIO INFO: decimatorBox: " + decimatorBox.getValue()); 
-//			System.out.println("SET AUDIO INFO: channelBox: " + channelBox.getValue()); 
+			//			System.out.println("SET AUDIO INFO: decimatorBox: " + decimatorBox.getValue()); 
+			//			System.out.println("SET AUDIO INFO: channelBox: " + channelBox.getValue()); 
 
 			return;
 		}
 
 		setUpDecimatorBox(null, null); 
 		setUpChannelBox(null, null);
-		
+
 		//now notify the setting listeners that the audio file settings have changed. 
 		this.notifySettingsListeners();
 	}
@@ -317,13 +316,13 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 		paramsIn.audioFolder=textField.getText(); 
 		paramsIn.maximumClipLength = clipLengthBox.getValue(); 
 
-//		System.out.println("GETPARAMS: ChannelBox value: " + channelBox.getValue()); 
-//		System.out.println("GETPARAMS: DecimatorBox value: " + decimatorBox.getSelectionModel().getSelectedItem()); 
-		
+		//		System.out.println("GETPARAMS: ChannelBox value: " + channelBox.getValue()); 
+		//		System.out.println("GETPARAMS: DecimatorBox value: " + decimatorBox.getSelectionModel().getSelectedItem()); 
+
 		if (!channelBox.isDisable()) paramsIn.channel = channelBox.getValue();
 		if (!decimatorBox.isDisable()) paramsIn.decimatorSR = decimatorBox.getSelectionModel().getSelectedItem(); 
 
-//		System.out.println("The decimator value is: " + paramsIn.decimatorSR);
+		//		System.out.println("The decimator value is: " + paramsIn.decimatorSR);
 		return paramsIn;
 	}
 
@@ -331,9 +330,9 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 	@Override
 	public void setParams(AIPamParams params) {
-		
-//		System.out.println("SEPARAMS:  decimator value is: " + params.decimatorSR);
-//		System.out.println("SEPARAMS:  channel value is: " + params.channel);
+
+		//		System.out.println("SEPARAMS:  decimator value is: " + params.decimatorSR);
+		//		System.out.println("SEPARAMS:  channel value is: " + params.channel);
 
 		this.setAllowNotify(false);
 
@@ -342,7 +341,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 		clipLengthBox.getSelectionModel().select(params.maximumClipLength);
 
 		setAudioInfo(this.aiPamView.getAIControl().getAudioInfo(), params); 
-		
+
 		this.setAllowNotify(true);
 
 

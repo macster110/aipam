@@ -1,7 +1,7 @@
 package com.jamdev.maven.aipam;
 
 import com.jamdev.maven.aipam.clustering.ClusterParams;
-import com.jamdev.maven.aipam.clustering.TSNEParams;
+import com.jamdev.maven.aipam.clustering.tsne.TSNEParams;
 import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
 
 /**
@@ -57,6 +57,13 @@ public class AIPamParams implements Cloneable  {
 	 */
 	public double[] colourLims = new double[]{20, 100};  
 	//	public double[] colourLims = new double[]{0, 100};  
+	
+	//playback settings
+	
+	/**
+	 * The playback volume. 
+	 */
+	public double volume = 50;  //0->100
 
 
 	//Clustering algorithm 

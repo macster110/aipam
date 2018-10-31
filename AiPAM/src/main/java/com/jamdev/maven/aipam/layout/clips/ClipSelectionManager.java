@@ -21,11 +21,6 @@ import javafx.scene.paint.Color;
  */
 public class ClipSelectionManager {
 
-	/**
-	 * The border used to select the clip 
-	 */
-	private  Border border = new Border(new BorderStroke(Color.LIMEGREEN, BorderStrokeStyle.SOLID, 
-			new CornerRadii(0), new BorderWidths(3)));
 
 	/**
 	 * The AIPamView
@@ -52,7 +47,8 @@ public class ClipSelectionManager {
 	 */
 	public void selectClip(PamClipPane pamClipPane) {
 		clearSelectedClips(); 
-		pamClipPane.setBorder(border);
+		pamClipPane.setStyle("-fx-border-color: ACCENT_COLOR; -fx-border-width: 2px;");
+		pamClipPane.getAudioPlay().getVolumePropery().bind(aiPamView.volumeProperty());
 		pamClipPane.getAudioPlay().playClipAudio();
 		selectedClips.add(pamClipPane); 
 	}
@@ -68,7 +64,8 @@ public class ClipSelectionManager {
 		}
 		
 		if (!selectedClips.contains(pamClipPane)) {
-			pamClipPane.setBorder(border);
+			pamClipPane.setStyle("-fx-border-color: ACCENT_COLOR; -fx-border-width: 2px;");
+			pamClipPane.getAudioPlay().getVolumePropery().bind(aiPamView.volumeProperty());
 			pamClipPane.getAudioPlay().playClipAudio();
 			selectedClips.add(pamClipPane); 
 		}
@@ -79,7 +76,7 @@ public class ClipSelectionManager {
 	 */
 	private void clearSelectedClips() {
 		for (PamClipPane pamClipPane: selectedClips) {
-			pamClipPane.setBorder(null);
+			pamClipPane.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
 			pamClipPane.getAudioPlay().stopClipAudio();
 		}
 		selectedClips.clear();

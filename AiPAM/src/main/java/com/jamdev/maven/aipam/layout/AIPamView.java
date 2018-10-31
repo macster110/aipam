@@ -7,19 +7,21 @@ import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
+import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
 import com.jamdev.maven.aipam.layout.clips.ClipGridPane;
 import com.jamdev.maven.aipam.layout.clips.ClipSelectionManager;
 import com.jamdev.maven.aipam.layout.clustering.ClusterGraphPane;
 import com.jamdev.maven.aipam.layout.utilsFX.HidingPane;
+import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 import com.jamdev.maven.aipam.utils.SettingsPane;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.beans.binding.DoubleBinding;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
-import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -31,11 +33,13 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 /**
- * The main view for PamSne
+ * The main view for AIPam. This controls the GUI components and recievers messages from the 
+ * controller. 
  * 
  * @author Jamie Macaulay
  *
  */
+@SuppressWarnings("rawtypes")
 public class AIPamView extends BorderPane {
 
 	/**
@@ -111,7 +115,12 @@ public class AIPamView extends BorderPane {
 	/**
 	 * The pane which holds the settings panes inside the hide pane
 	 */
-	private BorderPane settingsHolder; 
+	private BorderPane settingsHolder;
+
+	/**
+	 * User prompts 
+	 */
+	private UserPrompts userPrompts; 
 
 	public AIPamView(AiPamController aiPamControl, Stage primaryStage) {
 
@@ -120,6 +129,9 @@ public class AIPamView extends BorderPane {
 		this.aiPamContol.addSensorMessageListener((flag, dataObject)->{
 			notifyUpdate(flag, dataObject); 
 		});
+		
+		userPrompts = new UserPrompts(this); 
+		
 		controlPane= new ControlPane(this); 
 		//set the current params here. Otherwise on getParams default values on controls will be returned...
 		controlPane.setParams(aiPamContol.getParams()); 
@@ -140,6 +152,7 @@ public class AIPamView extends BorderPane {
 
 		//create a cluster pane
 		TabPane tabPane = new TabPane(); 
+		tabPane.setSide(Side.RIGHT);
 		Tab tabClip = new Tab("Clips", clipPane); 
 		Tab tabCluster = new Tab("ClusterGraph", clusterGraphPane);
 		tabClip.setClosable(false);
@@ -147,15 +160,23 @@ public class AIPamView extends BorderPane {
 		tabPane.getTabs().addAll(tabClip, tabCluster); 
 
 		settingsHolder = new BorderPane();
-		settingsHolder.setCenter(new Label("hello"));
+		
+		//GaussianBlur blur = new GaussianBlur(20);       
 		settingsHolder.setPrefWidth(300);
-		settingsHolder.setStyle("-fx-background-color: BACKGROUND;"); 
+		settingsHolder.setStyle("-fx-background-color: BACKGROUND_TRANS;"); 
+		//settingsHolder.setEffect(blur);
 		settingsHolder.setPadding(new Insets(5,5,5,10));
 
 		StackPane pane = new StackPane(); 
 		hidingPane=new HidingPane(Side.LEFT, settingsHolder,  pane, true);
 		hidingPane.setPrefWidth(100);
-		hidingPane.setStyle("-fx-background-color: blue;");
+		//hidingPane.setStyle("-fx-background-color: blue;");
+		hidingPane.showingProperty().addListener((obsVal, oldVal, newVal)->{
+			//return the menu to it's deselected state if no button showing. 
+			if (!newVal) {
+				controlPane.setMenuDeselected();
+			}
+		});
 		pane.getChildren().add(tabPane);
 		pane.getChildren().add(hidingPane); 
 		StackPane.setAlignment(hidingPane, Pos.TOP_LEFT);
@@ -212,7 +233,7 @@ public class AIPamView extends BorderPane {
 	 * @param updateType - the update type. 
 	 */
 	public void notifyUpdate(int updateType, Object data) {
-		System.out.println("AIPamView: notifyUpdate: " +updateType + " " + data);
+		//System.out.println("AIPamView: notifyUpdate: " +updateType + " " + data);
 		switch (updateType) {
 		case AiPamController.START_FILE_LOAD:
 			showProgressPane(true); 
@@ -250,6 +271,8 @@ public class AIPamView extends BorderPane {
 			this.showSettingsPane(controlPane.getAudioImportPane());
 			break;
 		} 
+		
+		checkSettings();
 	}
 
 
@@ -257,6 +280,10 @@ public class AIPamView extends BorderPane {
 	 * Starts a thread to generate spectrogram clips. 
 	 */
 	private void generateSpectrogramClips() {
+		//not very neat but need to update control params so that they know last colour limits 
+		this.aiPamContol.getLastAiParams().colourLims= this.getAIParams().colourLims;
+		this.aiPamContol.getLastAiParams().spectrogramColour= this.getAIParams().spectrogramColour; 
+
 		clipPane.clearSpecImages(); 
 		Task<Integer> task  = clipPane.generateSpecImagesTask(this.aiPamContol.getPAMClips());
 		task.setOnCancelled((value)->{
@@ -275,6 +302,14 @@ public class AIPamView extends BorderPane {
 		th.setDaemon(true);
 		th.start(); 
 	}
+	
+	/**
+	 * Recalculate the spectrogram images. 
+	 */
+	public void reCalcImages() {
+		generateSpectrogramClips();
+	}
+
 
 
 
@@ -326,8 +361,7 @@ public class AIPamView extends BorderPane {
 		settingsHolder.setCenter(settingsPane.getPane());
 		settingsPane.setParams(this.aiPamContol.getParams());
 		hidingPane.showHidePane(true); 
-
-
+		controlPane.setSelectedPane(settingsPane);
 	}
 
 	/**
@@ -362,6 +396,15 @@ public class AIPamView extends BorderPane {
 
 	public Image getSpectrogramIcon() {
 		return getIcon("Audio.svg"); 
+	}
+	
+	public Image getClusterIcon(int size) {
+		return UtilsFX.scale(getIcon("Cluster.svg"), size, size, true); 
+	}
+
+
+	public Image getSpectrogramIcon(int size) {
+		return UtilsFX.scale(getIcon("Audio.svg"), size, size, true); 
 	}
 
 	/**
@@ -401,24 +444,6 @@ public class AIPamView extends BorderPane {
 	}
 
 
-	/**
-	 * Figure what has changed since lad audio load. 
-	 * @return a list of flags indicating what needs re run. 
-	 */
-	private ArrayList<Integer> checkLastSettings() {
-		
-		if (this.aiPamContol.getLastAiParams().fftHop!=this.aiPamContol.getParams().fftHop);
-		if (this.aiPamContol.getLastAiParams().fttLength!=this.aiPamContol.getParams().fttLength); 
-		
-		if (this.aiPamContol.getLastAiParams().decimatorSR!=this.aiPamContol.getParams().decimatorSR);
-		if (this.aiPamContol.getLastAiParams().channel!=this.aiPamContol.getParams().channel); 
-		if (!this.aiPamContol.getLastAiParams().audioFolder.equals(aiPamContol.getParams().audioFolder)); 
-		
-		if (!this.aiPamContol.getLastAiParams().audioFolder.equals(aiPamContol.getParams().audioFolder)); 
-
-		//TODO 
-		return null; 
-	}
 	
 	
 	/**
@@ -426,9 +451,28 @@ public class AIPamView extends BorderPane {
 	 * If not then presents a message to the user indicating that files need re imported etc. 
 	 */
 	public void checkSettings() {
-		//TODO
-		
+		//ArrayList<Integer> toDoFlags = checkLastSettings(); 
+		ArrayList<UserPrompt> userPromptsA = userPrompts.checkLastSettings();
+		controlPane.setUserPrompts(userPrompts.getUserPromptPane(userPromptsA)); 
 	}
+
+	/**
+	 * The volume property which specifies volume between 0 and 1. Changed by volume controls. 
+	 * @return the volume property.
+	 */
+	public DoubleBinding volumeProperty() {		// TODO Auto-generated method stub
+		return controlPane.volumeProperty();
+	}
+
+	/**
+	 * Browse for audio folder and figure out audio file information 
+	 */
+	public void browseAndCheckAudio() {
+		openAudioFolder(); 
+		showSettingsPane(controlPane.getAudioImportPane());
+	}
+
+
 
 
 }

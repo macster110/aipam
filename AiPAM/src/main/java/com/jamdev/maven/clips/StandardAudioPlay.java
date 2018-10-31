@@ -2,6 +2,7 @@ package com.jamdev.maven.clips;
 
 import java.io.File;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -34,16 +35,30 @@ public class StandardAudioPlay implements AudioPlay {
 
 	@Override
 	public void playClipAudio() {
+		getMediaPlay().play();		
+	}
+	
+	private MediaPlayer getMediaPlay() {
 		if (mediaPlayer==null) {
-		Media hit = new Media(audioFile.toURI().toString());
-		mediaPlayer = new MediaPlayer(hit);
+			Media hit = new Media(audioFile.toURI().toString());
+			mediaPlayer = new MediaPlayer(hit);
 		}
-		mediaPlayer.play();		
+		return mediaPlayer; 
 	}
 
 	@Override
 	public void stopClipAudio() {
 		if (mediaPlayer!=null) mediaPlayer.stop();
 	}
+	
+	/**
+	 * Get the volume property. 
+	 * @return the volume property
+	 */
+	public DoubleProperty getVolumePropery() {
+		return getMediaPlay().volumeProperty(); 
+	}
+	
+
 
 }

@@ -1,25 +1,22 @@
 package com.jamdev.maven.aipam.layout;
 
-import org.controlsfx.glyphfont.FontAwesome;
-
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
-import com.jamdev.maven.aipam.utils.SettingsPane;
-
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 /**
  * Pane with controls for  audio playback settings. 
@@ -44,7 +41,7 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 	/**
 	 * The main holder pane. 
 	 */
-	private BorderPane mainPane; 
+	private VBox mainPane; 
 
 	
 	/**
@@ -80,11 +77,12 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 		
 		Label volumeTitle = new Label("Volume");
 		volumeTitle.getStyleClass().add("label-title1");
-
-		mainPane = new BorderPane(); 
-		mainPane.setTop(volumeTitle);
-		mainPane.setCenter(holder);
 		
+		
+
+		mainPane = new VBox(); 
+		mainPane.setSpacing(5); 
+		mainPane.getChildren().addAll(volumeTitle, holder);
 	}
 
 	/**
@@ -125,14 +123,13 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 
 	@Override
 	public AIPamParams getParams(AIPamParams paramsIn) {
-		// TODO Auto-generated method stub
+		paramsIn.volume = this.volume.getValue();
 		return paramsIn;
 	}
 
 	@Override
 	public void setParams(AIPamParams params) {
-		// TODO Auto-generated method stub
-		
+		volume.setValue(params.volume);
 	}
 
 	@Override
@@ -152,6 +149,14 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 	public void notifyUpdate(int flag, Object stuff) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	/**
+	 * The volume property. 
+	 * @return the volume property. 
+	 */
+	public DoubleBinding volumeProperty() {
+		return this.volume.valueProperty().divide(100);
 	}
 
 }

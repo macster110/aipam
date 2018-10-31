@@ -6,7 +6,12 @@
     BACKGROUND_MENU: rgb(68,68,68);
     BACKGROUND_PRESSED_MENU: rgba(100,100,100,0.5);
     BACKGROUND: #1d1d1d; /*dark background*/
+    BACKGROUND_TRANS: rgb(29, 29, 29, 0.96);
+
+    /*Override JMetro*/
+    ACCENT_COLOR: #26C223; /*For high lights, toggle buttons etc.**/
 }
+
 
 
 /*******************************************************************************
@@ -28,6 +33,15 @@
 }
 
 
+
+.chart-symbol {
+    -fx-background-radius: 0;
+    -fx-padding: 1px ;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+
 /*******************************************************************************
  *                                                                             *
  * Fluent design menu button for side pane                                  *
@@ -36,7 +50,7 @@
 
 .fluent-menu-button {
     -fx-skin: "com.jamdev.maven.aipam.layout.utilsFX.FluentButtonSkin";
-    -fx-padding: 0.4em 0.25em 0.4em 0.25em; /*3 20 3 20*/
+    -fx-padding: 0.4em 0.4em 0.4em 0.4em; /*3 20 3 20*/
 
     -fx-font: 16px "Segoe UI";
     -fx-background-radius: 0;
@@ -55,6 +69,14 @@
     -fx-border-color: BACKGROUND_PRESSED_MENU;
     -fx-background-color: BACKGROUND_PRESSED_MENU;
 }
+
+.fluent-menu-button:focused
+{
+    -fx-border-color: transparent;
+    -fx-background: BACKGROUND_MENU;
+    -fx-background-color: BACKGROUND_MENU;
+}
+
 
 
 /*******************************************************************************

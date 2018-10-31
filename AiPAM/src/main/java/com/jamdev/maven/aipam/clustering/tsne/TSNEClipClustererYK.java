@@ -1,9 +1,11 @@
-package com.jamdev.maven.aipam.clustering;
+package com.jamdev.maven.aipam.clustering.tsne;
 
 import java.util.ArrayList;
 
-import org.nd4j.linalg.util.ArrayUtil;
-
+import com.jamdev.maven.aipam.clustering.ClusterParams;
+import com.jamdev.maven.aipam.clustering.ClusteringAlgorithm;
+import com.jamdev.maven.aipam.clustering.FingerPrintManager;
+import com.jamdev.maven.aipam.clustering.StandardTrainingListener;
 import com.jamdev.maven.aipam.utils.SettingsPane;
 import com.jamdev.maven.clips.PAMClip;
 import com.jujutsu.tsne.TSneConfiguration;
@@ -21,12 +23,47 @@ import com.jujutsu.utils.TSneUtils;
  *
  */
 public class TSNEClipClustererYK  implements ClusteringAlgorithm {
+	/**
+	 * The perplexity 
+	 */
+	private int perplexity = 30 ;
 	
-	public TSNEClipClustererYK() {}
+	/**
+	 * The number of initial dimensions
+	 */
+	private int initial_dims = 30;
+	
+	/**
+	 * Use principle component analysis.
+	 */
+	private boolean usePCA = false; 
+	
+	/**
+	 * The maximum umber of iterations. 
+	 */
+	private int maxIterations = 1000;
+
+	/**
+	 * The theta value. Can onlu be 0->1. 
+	 */
+	private double theta = 0.5;
+
+
+	public TSNEClipClustererYK() {
+		
+	}
 
 	@Override
-	public void cluster(ArrayList<PAMClip> pamClips) {
+	public void cluster(ArrayList<PAMClip> pamClips, ClusterParams clusterParams) {
 		try {
+			
+			//set up the params
+			this.perplexity = ((TSNEParams) clusterParams).perplexity; 
+			this.initial_dims = ((TSNEParams) clusterParams).initialDim; 
+			this.usePCA = ((TSNEParams) clusterParams).usePCA; 
+			this.maxIterations = ((TSNEParams) clusterParams).maxIterations; 
+			this.theta = ((TSNEParams) clusterParams).theta; 
+
 			
 			double[][] fingerprints = new double[pamClips.size()][]; 	
 			
@@ -51,8 +88,7 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 	}
 
 	public double[][] clutserTSNE(double [][] X) {
-		int initial_dims = 30;
-		double perplexity = 30.0;
+
 
 		BarnesHutTSne tsne;
 		boolean parallel = true;
@@ -62,9 +98,17 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 			tsne = new BHTSne();
 		}
 		
-		TSneConfiguration config = TSneUtils.buildConfig(X, 2, initial_dims, perplexity, 1000);
-		config.setTheta(0.5);
-		//config.setUsePca(true);
+//		System.setOut(new PrintStream(System.out) {
+//			  public void println(String s) {
+//			    super.println("Hello: " + s);
+//			    
+//			  }
+//		});
+		
+		
+		TSneConfiguration config = TSneUtils.buildConfig(X, 2, initial_dims, perplexity, maxIterations);
+		config.setTheta(theta);
+		config.setUsePca(usePCA);
 				
 		double[][] Y = tsne.tsne(config); 
 

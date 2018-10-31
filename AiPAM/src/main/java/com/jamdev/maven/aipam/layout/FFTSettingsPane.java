@@ -132,7 +132,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		colourRangleSlider.lowValueProperty().addListener((obsval, oldval, newval)->{
 			notifySettingsListeners();
 		});
-		colourRangleSlider.lowValueProperty().addListener((obsval, oldval, newval)->{
+		colourRangleSlider.highValueProperty().addListener((obsval, oldval, newval)->{
 			notifySettingsListeners();
 		});
 		
@@ -156,9 +156,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		paramsIn.fftHop		=hopComboBox.getValue();
 		paramsIn.colourLims = new double[] {colourRangleSlider.getLowValue(), 
 				colourRangleSlider.getHighValue()}; 
-		
-		
-		System.out.println("ColourLimits: " + paramsIn.colourLims[0] + "   " + paramsIn.colourLims[1]); 
+		//System.out.println("ColourLimits: " + paramsIn.colourLims[0] + "   " + paramsIn.colourLims[1]); 
 		paramsIn.spectrogramColour = ColourArray.getColorArrayType(colorType.getValue()); 
 		return paramsIn;
 	}

@@ -47,7 +47,7 @@ public class AIPamApp extends Application {
         root.getChildren().add(sensorView);
         
 //        root.getStylesheets().add(darkStyle);
-        primaryStage.setScene(new Scene(root, 750, 550));
+        primaryStage.setScene(new Scene(root, 1000, 750));
         primaryStage.show();
     }
 

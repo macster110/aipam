@@ -3,6 +3,9 @@ package com.jamdev.maven.aipam.layout.utilsFX;
 import java.util.concurrent.CountDownLatch;
 
 import javafx.application.Platform;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class UtilsFX {
 	
@@ -38,6 +41,34 @@ public class UtilsFX {
 	    } catch (InterruptedException e) {
 	        // ignore exception
 	    }
+	}
+	
+	/**
+	 * Scale an image. 
+	 * @param source - the source image
+	 * @param targetWidth - the target image width.
+	 * @param targetHeight - the target image height.
+	 * @param preserveRatio - true to preserve ratio. 
+	 * @return the scaled image. 
+	 */
+	public static Image scale(Image source, int targetWidth, int targetHeight, boolean preserveRatio) {
+	    ImageView imageView = new ImageView(source);
+	    imageView.setPreserveRatio(preserveRatio);
+	    imageView.setFitWidth(targetWidth);
+	    imageView.setFitHeight(targetHeight);
+	    return imageView.snapshot(null, null);
+	}
+	
+	/**
+	 * Whitens an image
+	 * @param imageView - the image to whiten
+	 * @return the whitened image. 
+	 */
+	public static ImageView whitenImage(ImageView imageView) {
+		ColorAdjust colorAdjust = new ColorAdjust();
+		colorAdjust.setBrightness(1);
+		imageView.setEffect(colorAdjust);
+		return imageView;
 	}
 
 }

@@ -2,9 +2,9 @@ package com.jamdev.maven.aipam.layout.clips;
 
 
 import com.jamdev.maven.aipam.layout.ColourArray;
+import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -65,14 +65,7 @@ public class SpectrogramImage {
 		
 		return specImage; 
 	}
-	
-	public Image scale(Image source, int targetWidth, int targetHeight, boolean preserveRatio) {
-	    ImageView imageView = new ImageView(source);
-	    imageView.setPreserveRatio(preserveRatio);
-	    imageView.setFitWidth(targetWidth);
-	    imageView.setFitHeight(targetHeight);
-	    return imageView.snapshot(null, null);
-	}
+
 	
 	/**
 	 * Calculate the colour which corresponds to a point on the spectrogram. 
@@ -87,11 +80,11 @@ public class SpectrogramImage {
 
 
 	/**
-	 * Get the writable image 
-	 * @return
+	 * Scaled the writable images.
+	 * @return the scaled image.
 	 */
 	public Image getSpecImage(int width, int height) {
-		return scale(writeImageData(spectrogram, colourArray, clims) , width, height, false);
+		return UtilsFX.scale(writeImageData(spectrogram, colourArray, clims) , width, height, false);
 	}
 
 }

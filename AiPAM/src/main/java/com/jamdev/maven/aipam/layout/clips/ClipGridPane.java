@@ -2,6 +2,7 @@ package com.jamdev.maven.aipam.layout.clips;
 
 import java.util.ArrayList;
 
+import com.jamdev.maven.aipam.clustering.ClusterSnapGrid;
 import com.jamdev.maven.aipam.layout.AIPamView;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 import com.jamdev.maven.aipam.layout.utilsFX.ZoomableScrollPane;
@@ -53,8 +54,8 @@ public class ClipGridPane extends BorderPane {
 	private Node createPane() {
 		tilePane = new TilePane();
 		tilePane.setPadding(new Insets(5));
-		tilePane.setVgap(4);
-		tilePane.setHgap(4);
+		tilePane.setVgap(2);
+		tilePane.setHgap(2);
 		//tilePane.setPrefColumns(4);
 
 		HBox hbox = new HBox();
@@ -101,9 +102,9 @@ public class ClipGridPane extends BorderPane {
 	 */
 	public Task<Integer> generateSpecImagesTask(ArrayList<PAMClip> pamClips) {
 
-		int gridSize = (int) Math.sqrt(pamClips.size()); 
-		tilePane.setPrefColumns(gridSize);
-
+		int[] gridSize = ClusterSnapGrid.calcGridSize(pamClips.size());
+		tilePane.setPrefColumns(gridSize[0]);
+//
 		currentPamClips= new ArrayList<PamClipPane>(); 
 
 		Task<Integer> task = new Task<Integer>() {

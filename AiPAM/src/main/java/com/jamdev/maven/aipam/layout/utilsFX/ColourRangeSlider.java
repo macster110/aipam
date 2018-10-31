@@ -168,6 +168,7 @@ public class ColourRangeSlider extends PamRangeSlider {
 			}
 			getRangeBar().setBackground(new Background(new BackgroundFill(linearGradient, CornerRadii.EMPTY, Insets.EMPTY)));		
 		}
+		
 	}
 
 

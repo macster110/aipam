@@ -2,6 +2,8 @@ package com.jamdev.maven.aipam.layout;
 
 
 
+import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
+
 import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -10,6 +12,7 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.utils.MaterialDesignIconFactory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -34,16 +37,6 @@ public class MasterControlPane {
 	private AIPamView aiPamView;
 
 	/**
-	 * Import settings button
-	 */
-	private Button importSettings;
-
-	/**
-	 * Save settings button
-	 */
-	private Button saveSettings;
-
-	/**
 	 * Import acoustic button
 	 */
 	private Button importAcoustic;
@@ -51,7 +44,12 @@ public class MasterControlPane {
 	/**
 	 * The cluster button
 	 */
-	private Button cluster; 
+	private Button cluster;
+
+	/**
+	 * Browse to clips
+	 */
+	private Button browseButton; 
 	
 	public MasterControlPane(AIPamView aiPamView) {
 		this.aiPamView = aiPamView; 
@@ -65,15 +63,27 @@ public class MasterControlPane {
 		
 		//main controls, import clips and cluster 
 		
-		Label labelHome = new Label("Home");
+		Label labelHome = new Label("Controls");
 		labelHome.setPadding(new Insets(5,5,5,5));
 		labelHome.getStyleClass().add("label-title1");
 		AIPamView.setButtonIcon(labelHome, FontAwesomeIcon.HOME); 
+		
+		
+		browseButton = new Button("Browse..."); 
+		browseButton.getStyleClass().add("fluent-menu-button");
+		AIPamView.setButtonIcon(browseButton, FontAwesomeIcon.FOLDER_OPEN_ALT); 
+		browseButton.prefWidthProperty().bind(holder.widthProperty());
+		browseButton.setTooltip(new Tooltip(
+				"Start importing clips"));
+		
+		browseButton.setOnAction((action)->{
+			aiPamView.browseAndCheckAudio();
+		});
 
 		
-		importAcoustic = new Button(""); 
+		importAcoustic = new Button("Import Clips"); 
 		importAcoustic.getStyleClass().add("fluent-menu-button");
-		AIPamView.setButtonIcon(importAcoustic, FontAwesomeIcon.TH, Pos.CENTER); 
+		AIPamView.setButtonIcon(importAcoustic, FontAwesomeIcon.TH); 
 		importAcoustic.prefWidthProperty().bind(holder.widthProperty());
 		importAcoustic.setTooltip(new Tooltip(
 				"Start importing clips"));
@@ -83,48 +93,27 @@ public class MasterControlPane {
 		});
 
 		
-		cluster = new Button(""); 
+		cluster = new Button("Cluster Clips"); 
 		cluster.getStyleClass().add("fluent-menu-button");
-		ImageView icon = new ImageView(aiPamView.getClusterIcon()); 
-		ColorAdjust colorAdjust = new ColorAdjust();
-		colorAdjust.setBrightness(1);
-		icon.setEffect(colorAdjust);
+		ImageView icon = UtilsFX.whitenImage(new ImageView(aiPamView.getClusterIcon())); 
 		cluster.setGraphic(icon);
-		cluster.setAlignment(Pos.CENTER);
+		cluster.setAlignment(Pos.CENTER_LEFT);
 		cluster.setGraphicTextGap(15);
 		cluster.prefWidthProperty().bind(holder.widthProperty());
 		cluster.setTooltip(new Tooltip(
-				"Start the clusterring algorithm"));
+				"Start the clustering algorithm"));
 		
 		cluster.setOnAction((action)->{
 			aiPamView.cluster();
 		});
 		
-		saveSettings = new Button(""); 
-		saveSettings.getStyleClass().add("fluent-menu-button");
-		AIPamView.setButtonIcon(saveSettings, FontAwesomeIcon.SAVE, Pos.CENTER); 
-		saveSettings.prefWidthProperty().bind(holder.widthProperty());
-		saveSettings.setTooltip(new Tooltip(
-				"Save a settings file. This can be opened iby a new instance of the \n"
-				+ "program to restore the current settings."));
-		
-		importSettings = new Button(""); 
-		importSettings.getStyleClass().add("fluent-menu-button");
-		AIPamView.setButtonIcon(importSettings, FontAwesomeIcon.FOLDER_OPEN_ALT, Pos.CENTER); 
-		importSettings.prefWidthProperty().bind(holder.widthProperty());
-		importSettings.setTooltip(new Tooltip(
-				"Import settings from a .mat settings file."));
-		
-		HBox saveBox = new HBox(); 
-		saveBox.prefWidthProperty().bind(holder.widthProperty());
-		saveBox.getChildren().addAll(saveSettings, importSettings); 
 		
 		HBox controlBox = new HBox(); 
 		controlBox.prefWidthProperty().bind(holder.widthProperty());
 		controlBox.getChildren().addAll(importAcoustic, cluster); 
 		
 		//holder.setSpacing(5);
-		holder.getChildren().addAll(labelHome, saveBox, controlBox); 
+		holder.getChildren().addAll(labelHome, browseButton,  importAcoustic, cluster); 
 		
 		//holder.setAlignment(Pos.BASELINE_LEFT);
 

@@ -74,7 +74,7 @@ public class PamRangeSlider extends RangeSlider {
 	@Override
 	public void layoutChildren() {
 		super.layoutChildren();
-		//initialise the childrne we need. 
+		//initialise the children we need. 
 		if (lowThumb==null || highThumb==null 
 				|| track==null || rangeBar==null) {
 			initColorTracks();

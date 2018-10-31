@@ -56,7 +56,8 @@ public class PamClipPane extends StackPane {
 		this.getChildren().add(imageCanvas = new Canvas(width, height)); 
 		addMouseBeahviour(); //add the default mouse behaviours. 
 		generateSpecImage(colourArray, clims); 
-		
+		//need the border so that the tile pane does not change size when a highlight border is first set
+		this.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
 		Tooltip tooltip = new Tooltip(new File(clip.fileName).getName());
 		Tooltip.install(this, tooltip);
 		

@@ -9,6 +9,7 @@ import com.jamdev.maven.aipam.layout.clips.SpectrogramImage;
 import com.jamdev.maven.clips.PAMClip;
 import com.sun.javafx.geom.Rectangle;
 
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
@@ -42,6 +43,12 @@ public class ClusterGraphPane extends BorderPane {
 	 * The line chart
 	 */
 	private ScatterChart<Number, Number> scatterChart;
+	
+	/**
+	 * The last clicked on node. This prevents needing to iterate through all
+	 * points to reset highligted nodes. 
+	 */
+	private Node lastClicked = null; 
 
 
 	public ClusterGraphPane(AIPamView aiPamView) {
@@ -93,12 +100,25 @@ public class ClusterGraphPane extends BorderPane {
         			aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
         	//toolTip.setGraphic(new ImageView(image.getSpecImage(100, 100)));
 			
-			ImageView imageView = new ImageView(image.getSpecImage(25, 25));
-			imageView.setOnMouseClicked((event)->{
-				imageView.toFront();
+			ImageView imageView = new ImageView(image.getSpecImage(15, 15));
+		    BorderPane imageViewWrapper = new BorderPane(imageView); //need a wrapper for border effects. 
+		    imageViewWrapper.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
+
+		    imageViewWrapper.setOnMouseClicked((event)->{
+				//reset last clicks to transparent. 
+				if (lastClicked!=null) lastClicked.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
+
+				//set new one to have highlighted border
+				imageViewWrapper.setStyle("-fx-border-color: ACCENT_COLOR; -fx-border-width: 2px;");
+
+				//brinf to front
+				imageViewWrapper.toFront();
+							    
+				//set as last clicked,. 
+				lastClicked=imageViewWrapper; 
 			});
         	
-			dataPoint.setNode(imageView);
+			dataPoint.setNode(imageViewWrapper);
 						
 			series.getData().add(dataPoint); 
 			

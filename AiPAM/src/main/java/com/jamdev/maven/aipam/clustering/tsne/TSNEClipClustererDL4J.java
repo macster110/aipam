@@ -1,10 +1,15 @@
-package com.jamdev.maven.aipam.clustering;
+package com.jamdev.maven.aipam.clustering.tsne;
 
 import java.util.ArrayList;
 import org.nd4j.linalg.factory.Nd4j;
 import org.deeplearning4j.plot.BarnesHutTsne;
 import org.nd4j.linalg.api.buffer.DataBuffer;
 import org.nd4j.linalg.api.ndarray.INDArray;
+
+import com.jamdev.maven.aipam.clustering.ClusterParams;
+import com.jamdev.maven.aipam.clustering.ClusteringAlgorithm;
+import com.jamdev.maven.aipam.clustering.FingerPrintManager;
+import com.jamdev.maven.aipam.clustering.StandardTrainingListener;
 import com.jamdev.maven.aipam.utils.SettingsPane;
 import com.jamdev.maven.clips.PAMClip;
 
@@ -36,7 +41,7 @@ public class TSNEClipClustererDL4J implements ClusteringAlgorithm{
 	
 
 	@Override
-	public void cluster(ArrayList<PAMClip> pamClips) {
+	public void cluster(ArrayList<PAMClip> pamClips, ClusterParams clusterParams) {
 		try {
 			double[][] clusterResults = clusterFingerprints(pamClips); 
 			for (int i=0; i<pamClips.size(); i++) {
