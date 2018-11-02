@@ -3,8 +3,9 @@ package com.jamdev.maven.aipam.layout;
 import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.AIPamParams;
+import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
 import com.jamdev.maven.aipam.layout.utilsFX.FluentMenuPane;
-import com.jamdev.maven.aipam.utils.SettingsPane;
+import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.beans.binding.DoubleBinding;
@@ -78,10 +79,6 @@ public class ControlPane extends BorderPane {
 	 */
 	private GeneralSettingsPane generalSettingsPane;
 
-	/**
-	 * Label which shows some information
-	 */
-	private BorderPane labelInfoLabel;
 
 	/**
 	 * Menu pane which holds the settings buttons. 
@@ -114,7 +111,6 @@ public class ControlPane extends BorderPane {
 		VBox holderPane = new VBox(); 
 		//holderPane.setSpacing(5);
 
-
 		//master control pane. 
 		masterControlPane = new MasterControlPane(aiPamView); 
 
@@ -123,11 +119,6 @@ public class ControlPane extends BorderPane {
 		labelSettings.setPadding(new Insets(5,5,5,5));
 		labelSettings.getStyleClass().add("label-title1");
 		AIPamView.setButtonIcon(labelSettings, FontAwesomeIcon.GEAR); 
-
-		labelInfoLabel = new BorderPane(); 
-		labelInfoLabel.setPrefHeight(50);
-		labelInfoLabel.setPadding(new Insets(5,5,5,5));
-		//labelSettings.prefWidthProperty().bind(holder.widthProperty());
 
 		//pane for importing audio clips. 
 		audioImportPane = new AudioImportPane(aiPamView); 
@@ -180,7 +171,6 @@ public class ControlPane extends BorderPane {
 		
 		//layout of everything
 		holderPane.getChildren().add(masterControlPane.getPane());
-		holderPane.getChildren().add(labelInfoLabel);
 		holderPane.getChildren().add(labelSettings);
 
 		
@@ -302,20 +292,21 @@ public class ControlPane extends BorderPane {
 	}
 
 	/**
-	 * Set the user prompts. Usually just text but can also inlcude interactive controls. 
-	 * @param userPromptPane - the user prompt pane to set. 
-	 */
-	public void setUserPrompts(Pane userPromptPane) {
-		labelInfoLabel.setCenter(userPromptPane);
-	}
-
-	/**
 	 * Called whenever a settings pane is programaticaly opened to highlight the relevant menu button. 
 	 * @param settingsPane - the settings pane which is being opened.
 	 */
 	public void setSelectedPane(SettingsPane<AIPamParams> settingsPane) {
 		menuPane.setMenuButtonsDeselected(); //clear all selections. 
 		menuPane.buttonSelected(controlPanes.indexOf(settingsPane));
+	}
+
+	/**
+	 * Set user prompts. 
+	 * @param userPromptsA
+	 */
+	public void setUserPrompt(ArrayList<UserPrompt> userPromptsA) {
+		masterControlPane.setUserPrompts(userPromptsA); 
+		
 	}
 
 }

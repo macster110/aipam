@@ -2,10 +2,13 @@ package com.jamdev.maven.clips;
 
 import java.io.File;
 
+import com.jamdev.maven.aipam.annotation.Annotation;
+
 /**
+ * 
  * A single clip for display on the clip pane. 
  * <p>
- * The clip stores a spectogram image but no raw wav data. 
+ * The clip stores a spectrogram image but no raw .wav data. 
  * Can be dealing with Gigabytes of clips so cannot store these in memory
  * 
  * @author Jamie Macaulay 
@@ -40,13 +43,21 @@ public class PAMClip {
 	/**
 	 * The position defined by the cluster algorithm
 	 */
-	private double[] clusterPoint; 
+	private double[] clusterPoint;
+
+	/**
+	 * The grid ID. 
+	 */
+	private int gridID;
+
+	private Annotation annotation; 
 		
-	public PAMClip(ClipWave wave){
-		this(wave , DEFAULT_FFT_LEN, DEFUALT_FFT_HOP); 
+	public PAMClip(ClipWave wave, int gridID){
+		this(wave , DEFAULT_FFT_LEN, DEFUALT_FFT_HOP, gridID); 
 	} 
 	
-	public PAMClip(ClipWave wave, int fftLength, int fftHop){
+	public PAMClip(ClipWave wave, int fftLength, int fftHop, int gridID){
+		this.gridID=gridID; 
 		spectrogramClip=wave.getSpectrogram(fftLength, fftLength/fftHop).getAbsoluteSpectrogram();
 			
 		//spectrogramClip =  DownSampleImpl.largestTriangleThreeBuckets(spectrogramClip, 50);
@@ -96,6 +107,7 @@ public class PAMClip {
 	 * @return the audio play
 	 */
 	public AudioPlay getAudioPlay() {
+		
 		return audioPlay;
 	}
 
@@ -124,6 +136,38 @@ public class PAMClip {
 		this.clusterPoint=clusterPoints; 
 	}
 
+	/**
+	 * Set the grid ID. This is the position of the pamclips on the grid. 
+	 * @param i - the grid ID. This should ideally be unique for each pamclip 
+	 */
+	public void setGridID(int i) {
+		this.gridID=i; 
+		
+	}
+
+	/**
+	 * Get the grid ID. This is the position in the grid (counting from (0,0) along rows)
+	 * @return the gridID of the clip. 
+	 */
+	public int getGridID() {
+		return this.gridID;
+	}
+	
+	/**
+	 * Get the annotation for the clip. Can be null/ 
+	 * @return the annotation of rthe clip
+	 */
+	public Annotation getAnnotation() {
+		return annotation;
+	}
+
+	/**
+	 * Set the annotation. 
+	 * @param annotation - the annotaiton to set. 
+	 */
+	public void setAnnotation(Annotation annotation) {
+		this.annotation = annotation;
+	}
 	
 
 }

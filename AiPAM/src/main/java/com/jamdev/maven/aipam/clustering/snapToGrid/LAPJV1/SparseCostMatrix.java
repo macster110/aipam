@@ -1,4 +1,4 @@
-package com.jamdev.maven.aipam.clustering;
+package com.jamdev.maven.aipam.clustering.snapToGrid.LAPJV1;
 
 import java.util.Arrays;
 import java.util.Collections;

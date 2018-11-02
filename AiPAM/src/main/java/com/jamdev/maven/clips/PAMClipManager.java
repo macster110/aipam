@@ -4,11 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.datavec.audio.properties.FingerprintProperties;
-
 import com.jamdev.maven.aipam.AIPamParams;
-import com.jamdev.maven.aipam.utils.AiPamUtils;
-
 import javafx.concurrent.Task;
 
 
@@ -95,11 +91,11 @@ public class PAMClipManager {
 									currentClips=pamClips; 
 									return n; //cancel stuff 
 								}
-								pamClip = new PAMClip(wave, params.fttLength, params.fttLength); 
+								pamClip = new PAMClip(wave, params.fttLength, params.fttLength, n); 
 								pamClips.add(pamClip); 
+								n++;
 							}
 						}
-						n++;
 						double memoryMB = Runtime.getRuntime().totalMemory()/1000./1000.; 
 						//System.out.println("Loaded " + n + " of " + files.size() + " wave: " + waveData.size() + " Memory usage: " + memoryMB + "MB");
 						this.updateProgress(n, files.size());

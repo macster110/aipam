@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.deeplearning4j.optimize.api.TrainingListener;
 
 import com.jamdev.maven.aipam.AIPamParams;
+import com.jamdev.maven.aipam.clustering.snapToGrid.ClusterSnapGrid;
 import com.jamdev.maven.aipam.clustering.tsne.TSNEClipClustererYK;
 import com.jamdev.maven.clips.PAMClip;
 
@@ -13,7 +14,9 @@ import javafx.concurrent.Task;
 import javafx.scene.control.ProgressBar;
 
 /**
- * Manages clusterring on different threads. 
+ * Manages clustering on different threads. 
+ * 
+ * 
  * @author Jamie Macaulay
  *
  */
@@ -67,7 +70,7 @@ public class PamClusterManager {
 				}
 
 				//start the algorithm 
-				updateMessage("Clustering Clips...This could take some time"); 
+				updateMessage("Using TSNE to cluster clips...This could take some time"); 
 
 				if (pamClips==null) return -1; 
 				//cluster data is stored in the clips. 
@@ -75,8 +78,18 @@ public class PamClusterManager {
 				
 				//start snapping to gird.
 				updateMessage("Snapping the cluster points to a grid...this can also take some time"); 
+				if (clusterSnapGrid.getListener()!=null) {
+					clusterSnapGrid.getListener().lapjvProgressProperty().addListener((obsval, oldval, newval)->{
+						updateProgress(newval.doubleValue(), 1);
+					});
+					clusterSnapGrid.getListener().lapjvMessageProperty().addListener((obsval, oldval, newval)->{
+						updateMessage("Snapping to grid: " + newval);
+					});
+				}
+
 				
 				clusterSnapGrid.snapToGrid(pamClips); 
+				
 				
 				//System.out.println("Hello: Finished!!!!");
 				return 1; 

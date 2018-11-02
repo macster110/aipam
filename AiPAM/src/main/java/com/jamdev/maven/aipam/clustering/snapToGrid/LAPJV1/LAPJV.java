@@ -1,4 +1,4 @@
-package com.jamdev.maven.aipam.clustering;
+package com.jamdev.maven.aipam.clustering.snapToGrid.LAPJV1;
 
 
 import java.util.Arrays;
@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.jamdev.maven.aipam.clustering.snapToGrid.AssignmentProblemAlgorithm;
+import com.jamdev.maven.aipam.clustering.snapToGrid.SnapToGridListener;
+import com.jamdev.maven.aipam.clustering.snapToGrid.AssignmentListener;
 import com.jamdev.maven.aipam.utils.AiPamUtils;
 
 /**
@@ -41,7 +44,7 @@ import com.jamdev.maven.aipam.utils.AiPamUtils;
  *      Volgenant
  *      "Linear and semi-assignment problems: A core oriented approach"</a>
  */
-public class LAPJV 
+public class LAPJV implements AssignmentProblemAlgorithm
 {
 
 	private static final String BASE_ERROR_MESSAGE = "[JonkerVolgenantSparseAlgorithm] ";
@@ -53,7 +56,8 @@ public class LAPJV
 	private long processingTime;
 
 	private final SparseCostMatrix cm;
-
+	
+	private AssignmentListener listener;
 	/**
 	 * Instantiates a new Jonker-Volgenant algorithm for the specified sparse
 	 * cost matrix.
@@ -83,7 +87,7 @@ public class LAPJV
 		/*
 		 * Column reduction
 		 */
-
+		if (listener!=null) listener.columnReduction();
 		Arrays.fill( v, Double.MAX_VALUE );
 		for ( int i = 0; i < cm.nRows; i++ )
 		{
@@ -118,7 +122,7 @@ public class LAPJV
 		/*
 		 * Reduction transfer.
 		 */
-
+		if (listener!=null) listener.reductionTransfer();
 		int f = 0;
 		final int[] free = new int[ cm.nRows ];
 		for ( int i = 0; i < cm.nRows; i++ )
@@ -159,7 +163,7 @@ public class LAPJV
 		/*
 		 * Augmenting row reduction.
 		 */
-
+		int listcount = 0 ;
 		for ( int count = 0; count < 2; count++ )
 		{
 			int k = 0;
@@ -167,6 +171,8 @@ public class LAPJV
 			f = 0;
 			while ( k < f0 )
 			{
+				if (listener!=null && listcount%10000==0) listener.augmentingRowReduction(f0, k, count);
+				listcount++;
 				final int i = free[ k++ ];
 				double v0 = Double.MAX_VALUE;
 				int j0 = 0, j1 = -1;
@@ -223,7 +229,7 @@ public class LAPJV
 		/*
 		 * Augmentation.
 		 */
-
+		if (listener!=null) listener.augmenting();
 		final int f0 = f;
 		final double[] d = new double[ cm.nCols ];
 		final int[] pred = new int[ cm.nCols ];
@@ -519,4 +525,22 @@ public class LAPJV
 
 		return str.toString();
 	}
+	
+	/**
+	 * Set the algorithm 
+	 * @return
+	 */
+	public AssignmentListener getListener() {
+		return listener;
+	}
+
+	/**
+	 * Set the listener for the algorithm. 
+	 * @param listener - the LAPJV listener to set. 
+	 */
+	public void setListener(SnapToGridListener listener) {
+		this.listener = listener;
+	}
+
+
 }

@@ -12,7 +12,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import jfxtras.styles.jmetro8.JMetro;
 /**
- * The main FX app for AiPam.
+ * The main FX application for AiPam.
+ * 
  * @author Jamie Macaulay 
  *
  */

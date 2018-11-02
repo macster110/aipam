@@ -5,7 +5,7 @@ import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
 import com.jamdev.maven.aipam.layout.utilsFX.ColourRangeSlider;
 import com.jamdev.maven.aipam.layout.utilsFX.DefaultSliderLabel;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
-import com.jamdev.maven.aipam.utils.SettingsPane;
+import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

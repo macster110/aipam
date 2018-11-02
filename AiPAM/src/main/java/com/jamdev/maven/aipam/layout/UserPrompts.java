@@ -87,6 +87,8 @@ public class UserPrompts {
 			return userPrompts; 
 		}
 		
+//		System.out.println("Last decimator: " + aiPamContol.getLastAiParams().decimatorSR
+//		+ " New channels: " + aiPamContol.getParams().decimatorSR);
 //		System.out.println("Last channel: " + aiPamContol.getLastAiParams().channel
 //				+ " New channels: " + aiPamContol.getParams().channel);
 
@@ -112,10 +114,13 @@ public class UserPrompts {
 		}
 		else if (!aiPamContol.getLastAiParams().clusterParams.compare(aiPamContol.getParams().clusterParams)) reCluster=true;
 
-		if (reimport) userPrompts.add(UserPrompt.IMPORT_AGAIN); 
+		if (reimport) userPrompts.add(0,UserPrompt.IMPORT_AGAIN); //should always be first. 
 		if (reCalcImage && !reimport) userPrompts.add(UserPrompt.RECREATE_IMAGES); 
 		if (reCluster) userPrompts.add(UserPrompt.RE_CLUSTER); 
 
+//		for (int i =0; i<userPrompts.size(); i++) {
+//			System.out.println("UserPrompts: " + userPrompts.get(i));
+//		}
 
 		return userPrompts; 
 	}
@@ -151,30 +156,14 @@ public class UserPrompts {
 	}
 
 	private Pane nothingClusterredYet() {
-		HBox hBox = new HBox(); 
-		hBox.setSpacing(5);
-		hBox.setAlignment(Pos.CENTER_LEFT);
-		
-		Label label = new Label("Nothing clustered yet: select"); 
-		label.setTextFill(textColor);
-				
-		hBox.getChildren().addAll(label, clusterImage);
-
-		return hBox;
+		return iconLabelPane(clusterImage, 
+				 "Nothing lcusterred yet: Press ", "Cluster to start algorithm" ); 
 	}
 
 
 	private Pane reClusterMessage() {
-		HBox hBox = new HBox(); 
-		hBox.setSpacing(5);
-		hBox.setAlignment(Pos.CENTER_LEFT);
-		
-		Label label = new Label("Need to re cluster clips: select"); 
-		label.setTextFill(textColor);
-				
-		hBox.getChildren().addAll(label, clusterImage);
-
-		return hBox;
+		 return iconLabelPane(clusterImage, 
+				 "Need to re cluster clips: Press ", "Cluster to start algorithm" ); 
 	}
 	
 	/**
@@ -221,7 +210,7 @@ public class UserPrompts {
 		Pane pane2=iconLabelPane(iconViewClips, "and then ", " to import."); 
 		Pane pane3=iconLabelPane(audioFile, "Use ", "Audio for settings"); 
 
-		VBox vBox = new VBox(); 
+		HBox vBox = new HBox(); 
 		vBox.getChildren().addAll(pane1, pane2, pane3); 
 
 		return vBox;
@@ -230,23 +219,19 @@ public class UserPrompts {
 
 
 	private Pane reCalcImageMessage() {
-		VBox vBox = new VBox(); 
-		vBox.setSpacing(5);
-		vBox.setAlignment(Pos.CENTER_LEFT);
-
 		Button button = new Button();
 	
 		button.setGraphic(specImage);	
 		
-		Label label = new Label("Need to recalc spectrogram images:");
+		Label label = new Label("Need to recalc spectrogram images: Press");
 		label.setTextFill(textColor);;
-
-		vBox.getChildren().addAll(label, button);
+		
 		button.setOnAction((action)->{
 			aiPamView.reCalcImages();
 		});
 
-		return vBox;
+		return 	iconLabelPane(button, "Need to recalc spectrogram images: Press", "to recalculate now" )
+;
 	}
 
 	/**
@@ -261,14 +246,9 @@ public class UserPrompts {
 		FontAwesomeIconView iconViewSettings = new FontAwesomeIconView(FontAwesomeIcon.TH); 
 		iconViewSettings.setGlyphSize(iconSize);
 		iconViewSettings.setFill(textColor);
-
-		Label label = new Label("Need to reimport clips: select");
-		label.setTextFill(textColor);
 		
-		hBox.getChildren().addAll(label, iconViewSettings);
-
-		return hBox;
-
+		return iconLabelPane(iconViewSettings, 
+				 "Need to reimport clips: Press ", "Import Clips to start import" ); 
 	}
 
 	/**

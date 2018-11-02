@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.deeplearning4j.optimize.api.TrainingListener;
 
-import com.jamdev.maven.aipam.utils.SettingsPane;
+import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 import com.jamdev.maven.clips.PAMClip;
 
 /**

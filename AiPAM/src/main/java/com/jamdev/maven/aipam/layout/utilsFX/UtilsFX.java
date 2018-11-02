@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 public class UtilsFX {
 	
@@ -70,5 +71,18 @@ public class UtilsFX {
 		imageView.setEffect(colorAdjust);
 		return imageView;
 	}
+	
+	/**
+	 * Get the hex code form a color
+	 * @param color - the color. 
+	 * @return the color. 
+	 */
+	 public static String toRGBCode( Color color )
+	    {
+	        return String.format( "#%02X%02X%02X",
+	            (int)( color.getRed() * 255 ),
+	            (int)( color.getGreen() * 255 ),
+	            (int)( color.getBlue() * 255 ) );
+	    }
 
 }

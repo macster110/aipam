@@ -100,7 +100,7 @@ public class ClusterGraphPane extends BorderPane {
         			aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
         	//toolTip.setGraphic(new ImageView(image.getSpecImage(100, 100)));
 			
-			ImageView imageView = new ImageView(image.getSpecImage(15, 15));
+			ImageView imageView = new ImageView(image.getSpecImage(30, 30));
 		    BorderPane imageViewWrapper = new BorderPane(imageView); //need a wrapper for border effects. 
 		    imageViewWrapper.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
 

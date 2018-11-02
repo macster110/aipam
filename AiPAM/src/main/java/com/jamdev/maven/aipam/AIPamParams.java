@@ -64,6 +64,13 @@ public class AIPamParams implements Cloneable  {
 	 * The playback volume. 
 	 */
 	public double volume = 50;  //0->100
+	
+	//Annotation settings
+	
+	/**
+	 * The output annotation folder. This folder will hold all output data clips and automaticaly save settings. 
+	 */
+	private String outPutAnnotationFolder = "";  
 
 
 	//Clustering algorithm 

@@ -12,6 +12,7 @@ import com.jamdev.maven.aipam.clustering.tsne.TSNEClipClustererDL4J;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ObservableValue;
 
 /**
  * Standard listener for clustering progress. 
@@ -97,6 +98,7 @@ public class StandardTrainingListener implements TrainingListener {
 	public DoubleProperty progressProperty() {
 		return progressProperty;
 	}
+
 	
 
 

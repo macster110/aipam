@@ -1,8 +1,9 @@
 package com.jamdev.maven.aipam.layout.clips;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-import com.jamdev.maven.aipam.clustering.ClusterSnapGrid;
+import com.jamdev.maven.aipam.clustering.snapToGrid.ClusterSnapGrid;
 import com.jamdev.maven.aipam.layout.AIPamView;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 import com.jamdev.maven.aipam.layout.utilsFX.ZoomableScrollPane;
@@ -156,11 +157,20 @@ public class ClipGridPane extends BorderPane {
 	}
 
 	/**
-	 * Layout all the clips. 
+	 * Layout all the clips in order of their gridID flag. 
 	 */
+	@SuppressWarnings("unchecked")
 	public void layoutClips(){
-		for (PamClipPane clip: currentPamClips) {
-			this.tilePane.getChildren().add(clip); 
+		//make sure that all the clips are cleared
+		tilePane.getChildren().clear();
+		
+		//we need to find all the clips in order of their clip ID. Sort the list so 
+		//grid ID's are in ascending order.
+		Collections.sort(currentPamClips);
+		
+		//now simply add to the pane. 
+		for (int i=0; i<currentPamClips.size(); i++) {
+			this.tilePane.getChildren().add(currentPamClips.get(i)); 
 		}
 	}
 

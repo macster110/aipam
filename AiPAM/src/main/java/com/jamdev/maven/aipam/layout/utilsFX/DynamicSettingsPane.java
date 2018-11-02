@@ -2,8 +2,6 @@ package com.jamdev.maven.aipam.layout.utilsFX;
 
 import java.util.ArrayList;
 
-import com.jamdev.maven.aipam.utils.SettingsPane;
-
 /**
  * A dynamic settings is a settings pane which allows users to change settings instantly. i.e. when a control
  * is pressed the setting is instantly changed rather than, for example, an OK button being pressed and all settings then saving. 

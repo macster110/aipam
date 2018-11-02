@@ -6,7 +6,7 @@ import com.jamdev.maven.aipam.clustering.ClusterParams;
 import com.jamdev.maven.aipam.clustering.ClusteringAlgorithm;
 import com.jamdev.maven.aipam.clustering.FingerPrintManager;
 import com.jamdev.maven.aipam.clustering.StandardTrainingListener;
-import com.jamdev.maven.aipam.utils.SettingsPane;
+import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 import com.jamdev.maven.clips.PAMClip;
 import com.jujutsu.tsne.TSneConfiguration;
 import com.jujutsu.tsne.barneshut.BHTSne;
@@ -69,7 +69,7 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 			
 			for (int i=0; i<pamClips.size(); i++) {
 				//fingerprints[i] =ArrayUtil.flatten(pamClips.get(i).getSpectrogram());
-				fingerprints[i] = FingerPrintManager.simpleSpectrogramFingerPrint(pamClips.get(i).getSpectrogram(), 100); 
+				fingerprints[i] = FingerPrintManager.simpleSpectrogramFingerPrint(pamClips.get(i).getSpectrogram(), -1); 
 				//System.out.println("The size of fingerprint is: " + fingerprints[i].length);
 			}
 			

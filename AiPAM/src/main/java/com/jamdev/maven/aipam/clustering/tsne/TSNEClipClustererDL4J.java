@@ -10,7 +10,7 @@ import com.jamdev.maven.aipam.clustering.ClusterParams;
 import com.jamdev.maven.aipam.clustering.ClusteringAlgorithm;
 import com.jamdev.maven.aipam.clustering.FingerPrintManager;
 import com.jamdev.maven.aipam.clustering.StandardTrainingListener;
-import com.jamdev.maven.aipam.utils.SettingsPane;
+import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 import com.jamdev.maven.clips.PAMClip;
 
 /**

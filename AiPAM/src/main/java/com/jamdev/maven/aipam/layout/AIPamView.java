@@ -12,13 +12,15 @@ import com.jamdev.maven.aipam.layout.clips.ClipGridPane;
 import com.jamdev.maven.aipam.layout.clips.ClipSelectionManager;
 import com.jamdev.maven.aipam.layout.clustering.ClusterGraphPane;
 import com.jamdev.maven.aipam.layout.utilsFX.HidingPane;
+import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
-import com.jamdev.maven.aipam.utils.SettingsPane;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.binding.DoubleBinding;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
@@ -120,7 +122,17 @@ public class AIPamView extends BorderPane {
 	/**
 	 * User prompts 
 	 */
-	private UserPrompts userPrompts; 
+	private UserPrompts userPrompts;
+
+	/**
+	 * Pane which shows user prompts
+	 */
+	private BorderPane userPromptPane;
+
+	/**
+	 * Holds the center stakc of nodes
+	 */
+	private StackPane centerStackPane; 
 
 	public AIPamView(AiPamController aiPamControl, Stage primaryStage) {
 
@@ -131,6 +143,12 @@ public class AIPamView extends BorderPane {
 		});
 		
 		userPrompts = new UserPrompts(this); 
+		
+		userPromptPane = new BorderPane(); 
+		userPromptPane.setMaxHeight(20);
+		userPromptPane.setPadding(new Insets(5,50,5,5));
+		//userPromptPane.setStyle("-fx-background-color: BACKGROUND_TRANS;"); 
+		//labelSettings.prefWidthProperty().bind(holder.widthProperty());
 		
 		controlPane= new ControlPane(this); 
 		//set the current params here. Otherwise on getParams default values on controls will be returned...
@@ -162,13 +180,13 @@ public class AIPamView extends BorderPane {
 		settingsHolder = new BorderPane();
 		
 		//GaussianBlur blur = new GaussianBlur(20);       
-		settingsHolder.setPrefWidth(300);
+		settingsHolder.setPrefWidth(350);
 		settingsHolder.setStyle("-fx-background-color: BACKGROUND_TRANS;"); 
 		//settingsHolder.setEffect(blur);
 		settingsHolder.setPadding(new Insets(5,5,5,10));
 
-		StackPane pane = new StackPane(); 
-		hidingPane=new HidingPane(Side.LEFT, settingsHolder,  pane, true);
+		centerStackPane = new StackPane(); 
+		hidingPane=new HidingPane(Side.LEFT, settingsHolder,  centerStackPane, true);
 		hidingPane.setPrefWidth(100);
 		//hidingPane.setStyle("-fx-background-color: blue;");
 		hidingPane.showingProperty().addListener((obsVal, oldVal, newVal)->{
@@ -177,11 +195,16 @@ public class AIPamView extends BorderPane {
 				controlPane.setMenuDeselected();
 			}
 		});
-		pane.getChildren().add(tabPane);
-		pane.getChildren().add(hidingPane); 
+		
+		
+		centerStackPane.getChildren().add(tabPane);
+		centerStackPane.getChildren().add(userPromptPane); 
+		StackPane.setAlignment(userPromptPane, Pos.TOP_RIGHT);
+		//hiding pane must be above the prompt pane or we can;t close it!
+		centerStackPane.getChildren().add(hidingPane); 
 		StackPane.setAlignment(hidingPane, Pos.TOP_LEFT);
 
-		centerPane.setCenter(pane);
+		centerPane.setCenter(centerStackPane);
 
 		setCenter(centerPane);
 		setLeft(controlPaneHolder);
@@ -195,10 +218,13 @@ public class AIPamView extends BorderPane {
 	 */
 	private void showProgressPane(boolean show) {
 		if (show) {
+			centerStackPane.getChildren().remove(userPromptPane);
 			centerPane.setTop(progressPane= new ProgressBarPane(this));
 		}
 		else {
-			centerPane.setTop(null);
+			centerStackPane.getChildren().add(userPromptPane);
+			hidingPane.toFront(); //myust be above everything. 
+			centerPane.setTop(null); //replace with user promtp pane. 
 		}
 	}
 
@@ -246,6 +272,7 @@ public class AIPamView extends BorderPane {
 		case AiPamController.END_FILE_LOAD:
 			showProgressPane(false); 
 			this.generateSpectrogramClips(); 
+			checkSettings();
 			break; 
 		case AiPamController.CANCELLED_IMAGE_LOAD:
 			showProgressPane(false); 
@@ -253,6 +280,7 @@ public class AIPamView extends BorderPane {
 		case AiPamController.END_IMAGE_LOAD:
 			showProgressPane(false); 
 			//System.out.println("Tile pane: " + clipPane.getTilePane().getChildren().size());
+			checkSettings();
 			break; 
 		case AiPamController.START_CLUSTERING_ALGORITHM:			
 			showProgressPane(true); 
@@ -261,18 +289,21 @@ public class AIPamView extends BorderPane {
 		case AiPamController.END_CLUSTERING_ALGORITHM:
 			showProgressPane(false); 
 			clusterGraphPane.update(aiPamContol.getPAMClips()); 
+			clipPane.layoutClips(); //layout the clips. 
+			checkSettings();
 			break; 
 		case AiPamController.END_FILE_HEADER_LOAD:
 			showProgressPane(false); 
 			controlPane.getAudioImportPane().notifyUpdate(AiPamController.END_FILE_HEADER_LOAD, null);
+			checkSettings();
 			break;
 		case AiPamController.NO_AUDIO_DIRECTORY:
 			showProgressPane(false); 
 			this.showSettingsPane(controlPane.getAudioImportPane());
+			checkSettings();
 			break;
 		} 
 		
-		checkSettings();
 	}
 
 
@@ -452,8 +483,13 @@ public class AIPamView extends BorderPane {
 	 */
 	public void checkSettings() {
 		//ArrayList<Integer> toDoFlags = checkLastSettings(); 
-		ArrayList<UserPrompt> userPromptsA = userPrompts.checkLastSettings();
-		controlPane.setUserPrompts(userPrompts.getUserPromptPane(userPromptsA)); 
+		ArrayList<UserPrompt> userPromptsA = userPrompts.checkLastSettings();		
+		//set the message in the user prompt pane. 
+		this.userPromptPane.setRight(userPrompts.getUserPromptPane(userPromptsA)); 
+		
+		//now lets try an highlight some control buttons
+		this.controlPane.setUserPrompt(userPromptsA);
+		
 	}
 
 	/**
@@ -470,6 +506,12 @@ public class AIPamView extends BorderPane {
 	public void browseAndCheckAudio() {
 		openAudioFolder(); 
 		showSettingsPane(controlPane.getAudioImportPane());
+	}
+
+
+	public EventHandler<ActionEvent> exportAnnotations() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

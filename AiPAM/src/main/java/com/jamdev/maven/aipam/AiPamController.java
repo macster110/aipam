@@ -150,12 +150,11 @@ public class AiPamController {
 	 */
 	public void loadAudioData(File selectedDirectory, boolean loadClips) {
 
-		if (loadClips) {
-			this.lastAiParams = aiPamParams.clone(); 
-			this.lastAiParams.clusterParams = null; //indicates no clusterring has taken placesince last audio import. 
-		}
-
-
+		this.lastAiParams = aiPamParams.clone(); 
+		this.lastAiParams.clusterParams = null; //indicates no clustering has taken place since last audio import. 
+		if (!loadClips) lastAiParams.decimatorSR=null; //so that the algorithm know stuff has not been loaded yet. 
+				
+				
 		Task<Integer> task = pamClipManager.importClipsTask(selectedDirectory, this.aiPamParams, loadClips);
 		updateMessageListeners(START_FILE_LOAD, task); 
 
@@ -214,7 +213,9 @@ public class AiPamController {
 	public void clusterClips() {
 
 		//keep a copy of the last settings
-		this.lastAiParams.clusterParams = aiPamParams.clusterParams.clone();
+		if (lastAiParams!=null) {
+			this.lastAiParams.clusterParams = aiPamParams.clusterParams.clone();
+		}
 
 		Task<Integer> task = pamClusterManager.clusterDataTask(pamClipManager.getCurrentClips(), this.aiPamParams); 
 		updateMessageListeners(START_CLUSTERING_ALGORITHM, task); 

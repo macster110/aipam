@@ -9,13 +9,7 @@ import com.jamdev.maven.clips.PAMClip;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 
 /**
  * Pane which holds a single spectrogram clip This pane also handles interactions with 
@@ -24,7 +18,7 @@ import javafx.scene.paint.Color;
  * @author Jamie Macaulay
  *
  */
-public class PamClipPane extends StackPane {
+public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 	
 	/**
 	 * The pmaClip; 
@@ -99,8 +93,10 @@ public class PamClipPane extends StackPane {
 	}
 
 	/**
-	 * Set the clip selection mamaner. 
-	 * @param clipSelectionManager
+	 * Set the clip selection manager. This manages single and multi-clip selections. Mouse
+	 * behaviours of clips need to be passed to the selection manager so it can handle 
+	 * appropriate multi clip responses. 
+	 * @param clipSelectionManager - the clip selection manager.
 	 */
 	public void setSelectionManager(ClipSelectionManager clipSelectionManager) {
 		this.clipSelectionManager = clipSelectionManager; 
@@ -113,6 +109,20 @@ public class PamClipPane extends StackPane {
 	 */
 	public AudioPlay getAudioPlay() {
 		return clip.getAudioPlay(); 
+	}
+
+	@Override
+	public int compareTo(PamClipPane comparePane) {
+		//when comparing clips want to sort by their grid ID. 
+		return clip.getGridID() - comparePane.getPamClip().getGridID();
+	}
+
+	/**
+	 * Get the pam clip the pane is hswoing.m 
+	 * @return the pam clip. 
+	 */
+	private PAMClip getPamClip() {
+		return clip;
 	}
 
 }

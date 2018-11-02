@@ -54,7 +54,7 @@ public class ClipSelectionManager {
 	}
 
 	/**
-	 * Called whenever a clip is selected with a multi clip behaviour e.g. dragging or control button down. 
+	 * Called whenever a clip is selected with a multi-clip behaviour e.g. dragging or control button down. 
 	 * @param pamClipPane - the currently selected PamClipPane. 
 	 */
 	public void selectMultiClip(PamClipPane pamClipPane) {

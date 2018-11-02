@@ -2,6 +2,9 @@ package com.jamdev.maven.aipam.layout;
 
 
 
+import java.util.ArrayList;
+
+import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 
 import de.jensd.fx.glyphs.GlyphIcons;
@@ -10,6 +13,9 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.utils.MaterialDesignIconFactory;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.Transition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -18,10 +24,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 /**
  * 
@@ -39,17 +50,22 @@ public class MasterControlPane {
 	/**
 	 * Import acoustic button
 	 */
-	private Button importAcoustic;
+	private Button importClipsButton;
 
 	/**
 	 * The cluster button
 	 */
-	private Button cluster;
+	private Button clusterButton;
 
 	/**
 	 * Browse to clips
 	 */
-	private Button browseButton; 
+	private Button browseButton;
+
+	/**
+	 * Button animation showing highlighting. 
+	 */
+	private Animation currentAnimation; 
 	
 	public MasterControlPane(AIPamView aiPamView) {
 		this.aiPamView = aiPamView; 
@@ -81,44 +97,45 @@ public class MasterControlPane {
 		});
 
 		
-		importAcoustic = new Button("Import Clips"); 
-		importAcoustic.getStyleClass().add("fluent-menu-button");
-		AIPamView.setButtonIcon(importAcoustic, FontAwesomeIcon.TH); 
-		importAcoustic.prefWidthProperty().bind(holder.widthProperty());
-		importAcoustic.setTooltip(new Tooltip(
+		importClipsButton = new Button("Import Clips"); 
+		importClipsButton.getStyleClass().add("fluent-menu-button");
+		AIPamView.setButtonIcon(importClipsButton, FontAwesomeIcon.TH); 
+		importClipsButton.prefWidthProperty().bind(holder.widthProperty());
+		importClipsButton.setTooltip(new Tooltip(
 				"Start importing clips"));
 		
-		importAcoustic.setOnAction((action)->{
+		importClipsButton.setOnAction((action)->{
 			aiPamView.importAcoustic(); 
 		});
 
 		
-		cluster = new Button("Cluster Clips"); 
-		cluster.getStyleClass().add("fluent-menu-button");
+		clusterButton = new Button("Cluster Clips"); 
+		clusterButton.getStyleClass().add("fluent-menu-button");
 		ImageView icon = UtilsFX.whitenImage(new ImageView(aiPamView.getClusterIcon())); 
-		cluster.setGraphic(icon);
-		cluster.setAlignment(Pos.CENTER_LEFT);
-		cluster.setGraphicTextGap(15);
-		cluster.prefWidthProperty().bind(holder.widthProperty());
-		cluster.setTooltip(new Tooltip(
+		clusterButton.setGraphic(icon);
+		clusterButton.setAlignment(Pos.CENTER_LEFT);
+		clusterButton.setGraphicTextGap(15);
+		clusterButton.prefWidthProperty().bind(holder.widthProperty());
+		clusterButton.setTooltip(new Tooltip(
 				"Start the clustering algorithm"));
 		
-		cluster.setOnAction((action)->{
+		clusterButton.setOnAction((action)->{
 			aiPamView.cluster();
 		});
 		
 		
 		HBox controlBox = new HBox(); 
 		controlBox.prefWidthProperty().bind(holder.widthProperty());
-		controlBox.getChildren().addAll(importAcoustic, cluster); 
+		controlBox.getChildren().addAll(importClipsButton, clusterButton); 
 		
 		//holder.setSpacing(5);
-		holder.getChildren().addAll(labelHome, browseButton,  importAcoustic, cluster); 
+		holder.getChildren().addAll(labelHome, browseButton,  importClipsButton, clusterButton); 
 		
 		//holder.setAlignment(Pos.BASELINE_LEFT);
 
 		return holder; 
 	}
+	
 	
 	/**
 	 * 
@@ -163,11 +180,91 @@ public class MasterControlPane {
 //		}
 		return text2; 
 	}
-
 	
+  
+	
+	/**
+	 * Highlight a button
+	 * @param button - the button to highlight
+	 */
+	private void highLightButton(Button button) {
+		
+		final Animation animation = new Transition() {
+
+	        {
+	            setCycleDuration(Duration.millis(3000));
+	            setInterpolator(Interpolator.EASE_OUT);
+	            setAutoReverse(true);
+	            setCycleCount(Animation.INDEFINITE);
+	        }
+
+	        @Override
+	        protected void interpolate(double frac) {
+	            Color vColor = new Color(38/255., 194/255., 35/255., (1 - frac)*0.7);
+	            button.setBackground(new Background(new BackgroundFill(vColor, CornerRadii.EMPTY, Insets.EMPTY)));
+	        }
+	    };
+	    
+	    this.currentAnimation = animation;
+	    animation.play();
+		
+	}
+	
+	/**
+	 * Undo highlighting of button
+	 * @param button - the button to de-highlight
+	 */
+	private void deHighLight(Button button) {
+		if (currentAnimation!=null) currentAnimation.stop(); 
+		button.setBackground(null);
+	}
+	
+	/**
+	 * Undo highlighting on all buttons
+	 */
+	private void deHighLightButtons() {
+		deHighLight(browseButton);
+		deHighLight(importClipsButton);
+		deHighLight(clusterButton);
+
+	}
+
+	/**
+	 * Get the main pane.
+	 * @return the main pane
+	 */
 	public Pane getPane() {
-		// TODO Auto-generated method stub
 		return mainPane;
+	}
+
+	public void setUserPrompts(ArrayList<UserPrompt> userPromptsA) {
+		deHighLightButtons() ;
+
+		if (userPromptsA==null || userPromptsA.size()==0) {
+			return;
+		}
+		
+		UserPrompt userPrompt = userPromptsA.get(0); 
+		switch (userPrompt) {
+		case IMPORT_AGAIN:
+			highLightButton(importClipsButton);
+			break;
+		case NOTHING_CLUSTERED_YET:
+			highLightButton(clusterButton);
+			break;
+		case NOTHING_IMPORTED_YET:
+			highLightButton(browseButton);
+			break;
+		case RECREATE_IMAGES:
+			break;
+		case RE_CLUSTER:
+			highLightButton(clusterButton);
+			break;
+		default:
+			break;
+		}
+		
+		
 	}
 
 

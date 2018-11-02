@@ -3,9 +3,6 @@ package com.jamdev.maven.clips;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.datavec.audio.Wave;
-
 import com.jamdev.maven.aipam.AIPamParams;
 
 /**

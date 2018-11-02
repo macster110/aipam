@@ -1,4 +1,4 @@
-package com.jamdev.maven.aipam.utils;
+package com.jamdev.maven.aipam.layout.utilsFX;
 
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;

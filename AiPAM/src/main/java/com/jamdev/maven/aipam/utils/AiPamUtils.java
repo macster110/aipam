@@ -29,7 +29,7 @@ public class AiPamUtils {
 		// get all the files from a directory
 		File[] fList = directory.listFiles();
 		resultList.addAll(Arrays.asList(fList));
-		
+
 		List<File> wavList = new ArrayList<File>(); 
 		for (File file : fList) {
 			//System.out.println("Wav: " + getExtension(file.getName()));
@@ -40,8 +40,8 @@ public class AiPamUtils {
 				wavList.addAll(listFiles(file.getAbsolutePath(),type));
 			}
 		}
-		
-		
+
+
 		//System.out.println(fList);
 		return wavList;
 	} 
@@ -67,25 +67,25 @@ public class AiPamUtils {
 		else
 			return fileName.substring(dotInd+1).toLowerCase();
 	}
-	
-	
+
+
 	/**
 	 * Convert a colour to a hex value. 
 	 * @param color - the colour to convert
 	 * @return hex string of the colour. 
 	 */
 	public static String color2Hex(Color color){
-        int r =  (int) (color.getRed() * 255);
-        int g =  (int) (color.getGreen() * 255);
-        int b =  (int) (color.getBlue() * 255);
-        String str = String.format("#%02X%02X%02X;", r, g, b);
-        return str; 
+		int r =  (int) (color.getRed() * 255);
+		int g =  (int) (color.getGreen() * 255);
+		int b =  (int) (color.getBlue() * 255);
+		String str = String.format("#%02X%02X%02X;", r, g, b);
+		return str; 
 	}
 
 	/**
 	 * Finds the minimum value of a matrix
-	 * @param cc
-	 * @return
+	 * @param cc - the array to find minimum value in
+	 * @return the minimum value in the array 
 	 */
 	public static double min(double[] numbers) {
 		double minValue = numbers[0];
@@ -96,5 +96,65 @@ public class AiPamUtils {
 		}
 		return minValue;
 	}
+
+	/**
+	 * Finds the maximum value of an array
+	 * @param cc - the array to find maximum value in
+	 * @return the maximum value in the array 
+	 */
+	public static double max(double[] numbers) {
+		double maxValue = numbers[0];
+		for(int i=1;i<numbers.length;i++){
+			if(numbers[i] > maxValue){
+				maxValue = numbers[i];
+			}
+		}
+		return maxValue;
+	}
+
+	/**
+	 * Finds the maximum value of a matrix
+	 * @param cc - the array to find maximum value in
+	 * @return the maximum value in the array 
+	 */
+	public static double max(double[][] numbers) {
+		double maxValue = numbers[0][0];
+		for(int i=0;i<numbers.length;i++){
+			for(int j=1;j<numbers[i].length;j++){
+				if(numbers[i][j] > maxValue){
+					maxValue = numbers[i][j];
+				}
+			}
+		}
+		return maxValue;
+	}
+
+	/**
+	 * Normalise an array of points. Rewrite the input array
+	 * @param normalise constant to normalise to. 
+	 * @return the normalised array. 
+	 */
+	public static void normalise(double[] normalise, double normaliseTo) {
+		double max = max(normalise); 
+		for (int i=0; i<normalise.length; i++) {
+			normalise[i]=normaliseTo*(normalise[i]/max); 
+		}
+	}
+
+
+	/**
+	 * Normalise a 2D matrix of points. Rewrite the input array
+	 * @param normalise constant to normalise to. 
+	 * @return the normalised array. 
+	 */
+	public static void normalise(double[][] normalise, double normaliseTo) {
+		double max = max(normalise); 
+		for (int i=0; i<normalise.length; i++) {
+			for(int j=1;j<normalise[i].length;j++){
+				normalise[i][j]=normaliseTo*(normalise[i][j]/max); 
+			}
+		}
+	}
+
 
 }

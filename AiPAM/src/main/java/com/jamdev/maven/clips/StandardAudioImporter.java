@@ -11,14 +11,12 @@ import java.util.stream.Collectors;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.utils.AiPamUtils;
 import com.jamdev.maven.aipam.utils.ArrayScaler;
 import com.jamdev.maven.aipam.utils.WavFile;
-import com.jamdev.maven.aipam.utils.WavFileException;
 
 import uk.me.berndporr.iirj.Butterworth;
 /**
