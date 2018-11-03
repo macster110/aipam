@@ -30,6 +30,16 @@ A good graphics card is recommended.
 
 There are multiple libraries usedc in AIPAM without whihc the program would simply not be feasible to build. 
 
+
+
+A fast and native Java [implementation of the t-SNE algorithm](https://github.com/lejon/T-SNE-Java)
+
+The excellent [controlsfx](http://fxexperience.com/controlsfx/) library for extra JavaFX bits and pieces. 
+
+[JMetro](https://github.com/JFXtras/jfxtras-styles) for styling the app with fluent design theme
+
+[Apache Commons Math 3](http://commons.apache.org/proper/commons-math/) for the fast fourier transform and plenty of other useful functions
+
 [alg4](https://github.com/kevin-wayne/algs4) for the solving the assignment problem, i.e. taking clustered points from t-SNE and assigning them to a grid. 
 
 [MatFileRW](https://github.com/diffplug/matfilerw) for writing and reading .mat files. This allows integration of the Java code with MATLAB/Octave
