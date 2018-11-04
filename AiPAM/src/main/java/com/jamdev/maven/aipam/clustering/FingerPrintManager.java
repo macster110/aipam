@@ -1,6 +1,8 @@
 package com.jamdev.maven.aipam.clustering;
 
-import org.nd4j.linalg.util.ArrayUtil;
+import com.jamdev.maven.aipam.utils.AiPamUtils;
+
+//import org.nd4j.linalg.util.ArrayUtil;
 
 import com.jamdev.maven.aipam.utils.DownSampleImpl;
 
@@ -10,7 +12,8 @@ import com.jamdev.maven.aipam.utils.DownSampleImpl;
  * <p>
  * Fingerprint are representation of the audio data which can be 
  * used by machine learning algorithms. They could be simple spectrogram flattened
- * to be a 1D array or a more advanced peak finding method.   
+ * to be a 1D array or a more advanced peak finding method, or noise reduced spectrgrams, or
+ * wigner plots, or anything really. 
  * 
  * 
  * @author Jamie Macaulay
@@ -34,12 +37,16 @@ public class FingerPrintManager {
 		else {
 			data = DownSampleImpl.largestTriangleThreeBuckets(spectrogram, compression);
 		}
+		
+		
 		//		for (int i=0; i<data.length; i++) {
 		//			for (int j=0; j<data[0].length; j++) {
 		//				data[i][j]=20*Math.log10(data[i][j]); 
 		//			}
 		//		}
-		return ArrayUtil.flattenDoubleArray(data);
+		
+		
+		return AiPamUtils.flattenDoubleArray(data);
 	}
 
 }

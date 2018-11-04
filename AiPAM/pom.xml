@@ -65,39 +65,6 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.nd4j</groupId>
-			<!-- Use nd4j-native-platform for CPU and nd4j-cuda-8.0-platform or nd4j-cuda-9.2-platform 
-				for GPU -->
-			<!-- Note: Some use-cases (like Word2Vec work better with CPU) -->
-			<artifactId>nd4j-native-platform</artifactId>
-			<version>${dl4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.deeplearning4j</groupId>
-			<artifactId>deeplearning4j-core</artifactId>
-			<version>${dl4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.deeplearning4j</groupId>
-			<artifactId>deeplearning4j-ui_2.10</artifactId>
-			<version>${dl4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.datavec</groupId>
-			<artifactId>datavec-api</artifactId>
-			<version>1.0.0-beta2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.datavec</groupId>
-			<artifactId>datavec-data-audio</artifactId>
-			<version>1.0.0-beta2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.21</version>
-		</dependency>
 		<!-- Controls FX library -->
 		<dependency>
 			<groupId>org.controlsfx</groupId>
@@ -136,7 +103,7 @@
 			<artifactId>fontawesomefx-fontawesome</artifactId>
 			<version>4.7.0-5</version>
 		</dependency>
-		<!-- MATL RW for writing .mat files for settings files -->
+		<!-- MAatFileRW for writing .mat files for settings files -->
 		<dependency>
 			<groupId>com.diffplug.matsim</groupId>
 			<artifactId>matfilerw</artifactId>

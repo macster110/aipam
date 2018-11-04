@@ -2,8 +2,6 @@ package com.jamdev.maven.aipam.clustering;
 
 import java.util.ArrayList;
 
-import org.deeplearning4j.optimize.api.TrainingListener;
-
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.clustering.snapToGrid.ClusterSnapGrid;
 import com.jamdev.maven.aipam.clustering.tsne.TSNEClipClustererYK;
@@ -79,10 +77,10 @@ public class PamClusterManager {
 				//start snapping to gird.
 				updateMessage("Snapping the cluster points to a grid...this can also take some time"); 
 				if (clusterSnapGrid.getListener()!=null) {
-					clusterSnapGrid.getListener().lapjvProgressProperty().addListener((obsval, oldval, newval)->{
+					clusterSnapGrid.getListener().assigmentProgressProperty().addListener((obsval, oldval, newval)->{
 						updateProgress(newval.doubleValue(), 1);
 					});
-					clusterSnapGrid.getListener().lapjvMessageProperty().addListener((obsval, oldval, newval)->{
+					clusterSnapGrid.getListener().assignmentMessageProperty().addListener((obsval, oldval, newval)->{
 						updateMessage("Snapping to grid: " + newval);
 					});
 				}

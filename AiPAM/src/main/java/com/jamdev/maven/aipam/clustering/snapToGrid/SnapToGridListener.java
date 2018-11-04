@@ -54,7 +54,7 @@ public class SnapToGridListener implements AssignmentListener {
 	 * The LAPJV algorithm progress property.
 	 * @return
 	 */
-	public SimpleDoubleProperty lapjvProgressProperty() {
+	public SimpleDoubleProperty assigmentProgressProperty() {
 		return progressProperty;
 	}
 	
@@ -63,7 +63,7 @@ public class SnapToGridListener implements AssignmentListener {
 	 * The message property for updates. 
 	 * @return
 	 */
-	public StringProperty lapjvMessageProperty() {
+	public StringProperty assignmentMessageProperty() {
 		return messageProperty;
 	}
 

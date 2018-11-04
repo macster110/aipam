@@ -40,12 +40,12 @@ public class AIPamParams implements Cloneable  {
 	/**
 	 * The fft length for clip spectrograms. 
 	 */
-	public int fttLength = 1024; 
+	public int fttLength = 512; 
 
 	/**
 	 * The fft hop for clip spectrograms
 	 */
-	public int fftHop = 512;
+	public int fftHop = 256;
 
 	/**
 	 * The colour array type for the clip spectrograms. 

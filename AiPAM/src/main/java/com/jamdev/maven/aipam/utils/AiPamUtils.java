@@ -3,6 +3,7 @@ package com.jamdev.maven.aipam.utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import javafx.scene.paint.Color;
@@ -67,6 +68,133 @@ public class AiPamUtils {
 		else
 			return fileName.substring(dotInd+1).toLowerCase();
 	}
+
+	/** 
+	 * Convert an arbitrary-dimensional rectangular double array to flat vector.<br>
+	 * Can pass double[], double[][], double[][][], etc.
+	 */
+	public static double[] flattenDoubleArray(Object doubleArray) {
+		if (doubleArray instanceof double[])
+			return (double[]) doubleArray;
+
+		LinkedList<Object> stack = new LinkedList<>();
+		stack.push(doubleArray);
+
+		int[] shape = arrayShape(doubleArray);
+		int length = prod(shape);
+		double[] flat = new double[length];
+		int count = 0;
+
+		while (!stack.isEmpty()) {
+			Object current = stack.pop();
+			if (current instanceof double[]) {
+				double[] arr = (double[]) current;
+				for (int i = 0; i < arr.length; i++)
+					flat[count++] = arr[i];
+			} else if (current instanceof Object[]) {
+				Object[] o = (Object[]) current;
+				for (int i = o.length - 1; i >= 0; i--)
+					stack.push(o[i]);
+			} else
+				throw new IllegalArgumentException("Base array is not double[]");
+		}
+
+		if (count != flat.length)
+			throw new IllegalArgumentException("Fewer elements than expected. Array is ragged?");
+		return flat;
+	}
+
+
+	/** Calculate the shape of an arbitrary multi-dimensional array. Assumes:<br>
+	 * (a) array is rectangular (not ragged) and first elements (i.e., array[0][0][0]...) are non-null <br>
+	 * (b) First elements have > 0 length. So array[0].length > 0, array[0][0].length > 0, etc.<br>
+	 * Can pass any Java array opType: double[], Object[][][], float[][], etc.<br>
+	 * Length of returned array is number of dimensions; returned[i] is size of ith dimension.
+	 */
+	public static int[] arrayShape(Object array) {
+		int nDimensions = 0;
+		Class<?> c = array.getClass().getComponentType();
+		while (c != null) {
+			nDimensions++;
+			c = c.getComponentType();
+		}
+
+
+		int[] shape = new int[nDimensions];
+		Object current = array;
+		for (int i = 0; i < shape.length - 1; i++) {
+			shape[i] = ((Object[]) current).length;
+			current = ((Object[]) current)[0];
+		}
+
+		if (current instanceof Object[]) {
+			shape[shape.length - 1] = ((Object[]) current).length;
+		} else if (current instanceof double[]) {
+			shape[shape.length - 1] = ((double[]) current).length;
+		} else if (current instanceof float[]) {
+			shape[shape.length - 1] = ((float[]) current).length;
+		} else if (current instanceof long[]) {
+			shape[shape.length - 1] = ((long[]) current).length;
+		} else if (current instanceof int[]) {
+			shape[shape.length - 1] = ((int[]) current).length;
+		} else if (current instanceof byte[]) {
+			shape[shape.length - 1] = ((byte[]) current).length;
+		} else if (current instanceof char[]) {
+			shape[shape.length - 1] = ((char[]) current).length;
+		} else if (current instanceof boolean[]) {
+			shape[shape.length - 1] = ((boolean[]) current).length;
+		} else if (current instanceof short[]) {
+			shape[shape.length - 1] = ((short[]) current).length;
+		} else
+			throw new IllegalStateException("Unknown array opType"); //Should never happen
+		return shape;
+	}
+
+	/**
+	 * Product of an int array
+	 * @param mult the elements
+	 *            to calculate the sum for
+	 * @return the product of this array
+	 */
+	public static int prod(List<Integer> mult) {
+		if (mult.size() < 1)
+			return 0;
+		int ret = 1;
+		for (int i = 0; i < mult.size(); i++)
+			ret *= mult.get(i);
+		return ret;
+	}
+
+	/**
+	 * Product of an int array
+	 * @param mult the elements
+	 *            to calculate the sum for
+	 * @return the product of this array
+	 */
+	public static long prodLong(List<? extends Number> mult) {
+		if (mult.size() < 1)
+			return 0;
+		long ret = 1;
+		for (int i = 0; i < mult.size(); i++)
+			ret *= mult.get(i).longValue();
+		return ret;
+	}
+	
+	/**
+     * Product of an int array
+     * @param mult the elements
+     *            to calculate the sum for
+     * @return the product of this array
+     */
+    public static int prod(int... mult) {
+        if (mult.length < 1)
+            return 0;
+        int ret = 1;
+        for (int i = 0; i < mult.length; i++)
+            ret *= mult[i];
+        return ret;
+}
+
 
 
 	/**

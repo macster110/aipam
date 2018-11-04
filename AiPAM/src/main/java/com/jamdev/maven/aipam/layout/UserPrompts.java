@@ -157,7 +157,7 @@ public class UserPrompts {
 
 	private Pane nothingClusterredYet() {
 		return iconLabelPane(clusterImage, 
-				 "Nothing lcusterred yet: Press ", "Cluster to start algorithm" ); 
+				 "Nothing clustered yet: Press ", "Cluster to start algorithm" ); 
 	}
 
 
@@ -223,14 +223,14 @@ public class UserPrompts {
 	
 		button.setGraphic(specImage);	
 		
-		Label label = new Label("Need to recalc spectrogram images: Press");
+		Label label = new Label("Need to recalculate spectrogram images: Press");
 		label.setTextFill(textColor);;
 		
 		button.setOnAction((action)->{
 			aiPamView.reCalcImages();
 		});
 
-		return 	iconLabelPane(button, "Need to recalc spectrogram images: Press", "to recalculate now" )
+		return 	iconLabelPane(button, "Need to recalculate spectrogram images: Press", "to recalculate now" )
 ;
 	}
 

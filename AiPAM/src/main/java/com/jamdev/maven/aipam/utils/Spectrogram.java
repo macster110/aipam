@@ -8,8 +8,9 @@ import org.apache.commons.math3.transform.TransformType;
 import com.jamdev.maven.clips.ClipWave;
 
 /**
- * Bespoke spectrrogmra class 
- * @author macst
+ * Bespoke spectrogram class inspired by DeepLearning4j Spectrogram class. 
+ * 
+ * @author Jamie Macaulay
  *
  */
 public class Spectrogram {
