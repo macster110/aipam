@@ -7,7 +7,6 @@ import org.controlsfx.control.PopOver;
 import com.jamdev.maven.aipam.layout.AIPamView;
 import com.jamdev.maven.aipam.layout.clips.SpectrogramImage;
 import com.jamdev.maven.clips.PAMClip;
-import com.sun.javafx.geom.Rectangle;
 
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;

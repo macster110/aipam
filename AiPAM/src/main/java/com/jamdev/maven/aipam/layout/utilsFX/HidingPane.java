@@ -6,6 +6,8 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 import com.jamdev.maven.aipam.layout.AIPamView;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.control.Button;
@@ -225,40 +227,43 @@ public class HidingPane extends StackPane {
 	 * @param button-button to style
 	 */
 	private void styleHideButton(Button button){
+		FontAwesomeIcon fontAwesomeIcon = null;
 		switch (side){
 		case RIGHT:
 			//button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Resources/SidePanelShow2.png"))));
-			button.setGraphic(getFontAwesome().create(FontAwesome.Glyph.CHEVRON_RIGHT)); 
+			fontAwesomeIcon = FontAwesomeIcon.CHEVRON_RIGHT;
 			//button.getStyleClass().add("close-button-right");
 			break;
 		case LEFT:
 			//button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Resources/SidePanelHide2.png"))));
-			button.setGraphic(getFontAwesome().create(FontAwesome.Glyph.CHEVRON_LEFT)); 
+			fontAwesomeIcon = FontAwesomeIcon.CHEVRON_LEFT;
+
+			
 			//button.getStyleClass().add("close-button-left");
 			break;
 		case TOP:
 			//button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Resources/SidePanelUp2.png"))));
+			fontAwesomeIcon = FontAwesomeIcon.CHEVRON_UP;
+
 			
-			button.setGraphic(getFontAwesome().create(FontAwesome.Glyph.CHEVRON_UP)); 
+			
+
 			//button.setPrefWidth(60); //horizontal buttons are slightly wider
 			//button.getStyleClass().add("close-button-top");
 			break;
 		case BOTTOM:
 			//utton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Resources/SidePanelDown2.png"))));
-			button.setGraphic(getFontAwesome().create(FontAwesome.Glyph.CHEVRON_DOWN)); 
+			fontAwesomeIcon = FontAwesomeIcon.CHEVRON_DOWN;
 			//button.setPrefWidth(60); //horizontal buttons are slightly wider
 			//button.getStyleClass().add("close-button-bottom");
 			break;
 		}
+		FontAwesomeIconView iconViewSettings = new FontAwesomeIconView(fontAwesomeIcon); 
+		iconViewSettings.setGlyphSize(AIPamView.iconSize);
+		iconViewSettings.setFill(AIPamView.defaultTitleColour);
+		button.setGraphic(iconViewSettings); 
 	}
 	
-	private GlyphFont getFontAwesome() {
-		if (fontAwesome==null) {
-			fontAwesome = GlyphFontRegistry.font("FontAwesome");
-		}
-		return fontAwesome;
-	}
-
 
 	/**
 	 * Set the default expanded size for the hiding panel. If the pane has a preferred size then uses this but if not then uses

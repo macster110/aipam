@@ -50,7 +50,7 @@
  ******************************************************************************/
 
 .fluent-menu-button {
-    -fx-skin: "com.jamdev.maven.aipam.layout.utilsFX.FluentButtonSkin";
+   /* -fx-skin: "com.jamdev.maven.aipam.layout.utilsFX.FluentButtonSkin";*/
     -fx-padding: 0.4em 0.4em 0.4em 0.4em; /*3 20 3 20*/
 
     -fx-font: 16px "Segoe UI";

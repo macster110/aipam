@@ -505,7 +505,7 @@ public class LAPJV implements AssignmentProblemAlgorithm
 					{
 						str.append( ' ' );
 					}
-					str.append( 'Ã¸' );
+					str.append( '¸' );
 					for ( int k = 0; k < rowWidth - rowWidth / 2 - 1; k++ )
 					{
 						str.append( ' ' );

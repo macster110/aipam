@@ -27,6 +27,8 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utils
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\App.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\ColourArray.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\clips\PAMClip.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\annotation\Annotation.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\annotation\SimpleAnnotation.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\clips\ClipSelectionManager.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\SimpleLAPJVListener.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utilsFX\FluentButtonSkin.java
@@ -56,6 +58,7 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\AIMessageLis
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\clips\WavClipWave.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\SnapToGridListener.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\WindowFunction.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\ClusterListener.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\AIPamApp.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\StandardTrainingListener.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\PlayBackPane.java

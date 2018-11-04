@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="1" failures="0" name="org.jamdev.maven.aipam.AppTest" time="0.005" errors="0" skipped="0">
+<testsuite tests="1" failures="0" name="org.jamdev.maven.aipam.AppTest" time="0.004" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.8.0_131\jre\bin"/>
@@ -27,7 +27,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="user.variant" value=""/>
     <property name="os.name" value="Windows 10"/>
-    <property name="classworlds.conf" value="C:\Users\macst\pamsne\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf6242737294139528397.tmp"/>
+    <property name="classworlds.conf" value="C:\Users\macst\pamsne\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf5153155541643732723.tmp"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
     <property name="java.library.path" value="C:\Program Files\Java\jdk1.8.0_131\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Program Files/Java/jre1.8.0_121/bin/server;C:/Program Files/Java/jre1.8.0_121/bin;C:/Program Files/Java/jre1.8.0_121/lib/amd64;C:\Program Files\Java\openjdk\jdk-11.0.1\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\MATLAB\R2017b\bin;C:\Program Files\MATLAB\R2017a\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Gradle\gradle-3.5\bin\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\TortoiseGit\bin;C:\Program Files\Git\cmd;C:\Users\macst\apache-maven-3.5.4\bin;C:\Users\macst\scoop\apps\openjdk\current\bin;C:\Users\macst\scoop\shims;C:\Users\macst\AppData\Local\Microsoft\WindowsApps;C:\Users\macst\AppData\Local\Microsoft\WindowsApps;;C:\Users\macst\eclipse\java-2018-09\eclipse;;."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -61,5 +61,5 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.jamdev.maven.aipam.AppTest" name="testApp" time="0.005"/>
+  <testcase classname="org.jamdev.maven.aipam.AppTest" name="testApp" time="0.004"/>
 </testsuite>
