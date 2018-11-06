@@ -5,7 +5,7 @@ import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
 
-import com.jamdev.maven.clips.ClipWave;
+import com.jamdev.maven.aipam.clips.ClipWave;
 
 /**
  * Bespoke spectrogram class inspired by DeepLearning4j Spectrogram class. 

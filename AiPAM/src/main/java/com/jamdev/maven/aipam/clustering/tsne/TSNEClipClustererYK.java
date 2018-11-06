@@ -2,12 +2,13 @@ package com.jamdev.maven.aipam.clustering.tsne;
 
 import java.util.ArrayList;
 
+import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.clustering.ClusterParams;
 import com.jamdev.maven.aipam.clustering.ClusteringAlgorithm;
 import com.jamdev.maven.aipam.clustering.FingerPrintManager;
 import com.jamdev.maven.aipam.clustering.StandardTrainingListener;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
-import com.jamdev.maven.clips.PAMClip;
+import com.jmatio.types.MLStructure;
 import com.jujutsu.tsne.TSneConfiguration;
 import com.jujutsu.tsne.barneshut.BHTSne;
 import com.jujutsu.tsne.barneshut.BarnesHutTSne;
@@ -123,6 +124,23 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 
 	@Override
 	public StandardTrainingListener getTrainingListener() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getCLusterType() {
+		return "tsneYK";
+	}
+
+	@Override
+	public void struct2ClusterParams(MLStructure mlStruct) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public MLStructure clusterParams2Struct() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -3,10 +3,11 @@ package com.jamdev.maven.aipam;
 import java.io.File;
 import java.util.ArrayList;
 
-import com.jamdev.maven.aipam.clustering.PamClusterManager;
-import com.jamdev.maven.clips.AudioInfo;
-import com.jamdev.maven.clips.PAMClip;
-import com.jamdev.maven.clips.PAMClipManager;
+import com.jamdev.maven.aipam.annotation.AnnotationManager;
+import com.jamdev.maven.aipam.clips.AudioInfo;
+import com.jamdev.maven.aipam.clips.PAMClip;
+import com.jamdev.maven.aipam.clips.PAMClipManager;
+import com.jamdev.maven.aipam.clustering.ClipClusterManager;
 
 import javafx.concurrent.Task;
 
@@ -81,12 +82,17 @@ public class AiPamController {
 	/**
 	 * The cluster manager
 	 */
-	private PamClusterManager pamClusterManager; 
+	private ClipClusterManager pamClusterManager; 
 
 	/**
 	 * Manages importing audio clips. 
 	 */
 	private PAMClipManager pamClipManager;
+	
+	/**
+	 * The annotation manager. 
+	 */
+	private AnnotationManager annotationManager; 
 
 	/**
 	 * The current parameters for the program. 
@@ -110,7 +116,8 @@ public class AiPamController {
 	public AiPamController() {
 		this.aiPamParams = new AIPamParams();
 		this.pamClipManager = new PAMClipManager(); 
-		this.pamClusterManager= new PamClusterManager(); 
+		this.pamClusterManager= new ClipClusterManager(); 
+		this.annotationManager= new AnnotationManager(this); 
 	}
 
 
@@ -255,6 +262,23 @@ public class AiPamController {
 			System.err.println("The file does not exist: " + aiPamParams.audioFolder);
 			updateMessageListeners(NO_AUDIO_DIRECTORY, null); 
 		}
+	}
+
+	/**
+	 * The annotations manager. 
+	 * @return the annotation manager
+	 */
+	public AnnotationManager getAnnotationManager() {
+		return this.annotationManager;
+	}
+
+
+	/**
+	 * Get the cluster manager
+	 * @return - the cluster manager. 
+	 */
+	public ClipClusterManager getClusterManager() {
+		return this.pamClusterManager;
 	}
 
 

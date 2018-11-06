@@ -2,7 +2,8 @@ package com.jamdev.maven.aipam.annotation;
 
 import java.util.List;
 
-import com.jamdev.maven.clips.PAMClip;
+import com.jamdev.maven.aipam.clips.PAMClip;
+import com.jmatio.types.MLStructure;
 
 import javafx.scene.Node;
 
@@ -12,6 +13,8 @@ import javafx.scene.Node;
  *
  */
 public interface Annotation {
+	
+
 	
 	/**
 	 * Get a list of clips associated with this annotation. 
@@ -42,4 +45,25 @@ public interface Annotation {
 	 * @return the unique ID for a group. 
 	 */
 	public int uniqueID();
+	
+	
+	/**
+	 * Get the annotation type. This is used to identify the annotation for 
+	 * import and export. 
+	 * @return the annotation type. 
+	 */
+	public String getAnnotaionType(); 
+	
+	/**
+	 * Convert the annotation to a structure. 
+	 * @return the annotation structure. 
+	 */
+	public MLStructure annotation2Struct(); 
+	
+	/**
+	 * Convert a MLStruct to an annotation i.e. takes the data from the MLStructure and 
+	 * fills out this annotation with it 
+	 * @param mlstruct - the ml structure containing annotation data
+	 */
+	public void struct2Annotion(MLStructure mlstruct); 
 }

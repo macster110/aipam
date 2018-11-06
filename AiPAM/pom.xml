@@ -108,7 +108,6 @@
 			<groupId>com.diffplug.matsim</groupId>
 			<artifactId>matfilerw</artifactId>
 			<version>3.0.1</version>
-			<type>pom</type>
 		</dependency>
 		<!-- The main UI them JMetro -->
 		<dependency>

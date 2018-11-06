@@ -3,9 +3,9 @@ package com.jamdev.maven.aipam.layout;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
+import com.jamdev.maven.aipam.clips.AudioInfo;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
-import com.jamdev.maven.clips.AudioInfo;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;

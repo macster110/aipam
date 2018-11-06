@@ -3,11 +3,11 @@ package com.jamdev.maven.aipam.layout.clips;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.clustering.snapToGrid.ClusterSnapGrid;
 import com.jamdev.maven.aipam.layout.AIPamView;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 import com.jamdev.maven.aipam.layout.utilsFX.ZoomableScrollPane;
-import com.jamdev.maven.clips.PAMClip;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;

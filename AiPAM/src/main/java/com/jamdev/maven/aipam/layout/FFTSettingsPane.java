@@ -5,7 +5,6 @@ import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
 import com.jamdev.maven.aipam.layout.utilsFX.ColourRangeSlider;
 import com.jamdev.maven.aipam.layout.utilsFX.DefaultSliderLabel;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
-import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -152,7 +151,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 
 	@Override
 	public AIPamParams getParams(AIPamParams paramsIn) {	
-		paramsIn.fttLength	=fftComboBox.getValue();
+		paramsIn.fftLength	=fftComboBox.getValue();
 		paramsIn.fftHop		=hopComboBox.getValue();
 		paramsIn.colourLims = new double[] {colourRangleSlider.getLowValue(), 
 				colourRangleSlider.getHighValue()}; 
@@ -163,7 +162,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 
 	@Override
 	public void setParams(AIPamParams params) {
-		fftComboBox.getSelectionModel().select(params.fttLength);
+		fftComboBox.getSelectionModel().select(params.fftLength);
 		hopComboBox.getSelectionModel().select(params.fftHop);
 		colourRangleSlider.setLowValue(params.colourLims[0]);
 		colourRangleSlider.setHighValue(params.colourLims[1]);

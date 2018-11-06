@@ -1,5 +1,9 @@
 package com.jamdev.maven.aipam;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.jamdev.maven.aipam.annotation.Annotation;
 import com.jamdev.maven.aipam.clustering.ClusterParams;
 import com.jamdev.maven.aipam.clustering.tsne.TSNEParams;
 import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
@@ -12,7 +16,7 @@ import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
 public class AIPamParams implements Cloneable  {
 
 	//Audio import settings
-
+	
 	/**
 	 * The maximum length of a clip in seconds.
 	 */
@@ -40,7 +44,7 @@ public class AIPamParams implements Cloneable  {
 	/**
 	 * The fft length for clip spectrograms. 
 	 */
-	public int fttLength = 512; 
+	public int fftLength = 512; 
 
 	/**
 	 * The fft hop for clip spectrograms
@@ -70,7 +74,12 @@ public class AIPamParams implements Cloneable  {
 	/**
 	 * The output annotation folder. This folder will hold all output data clips and automaticaly save settings. 
 	 */
-	private String outPutAnnotationFolder = "";  
+	public String outPutAnnotationFolder = "";  
+	
+	/**
+	 * List of current annotations. These can be loaded 
+	 */
+	public List<Annotation> annotations = new ArrayList<Annotation>();
 
 
 	//Clustering algorithm 

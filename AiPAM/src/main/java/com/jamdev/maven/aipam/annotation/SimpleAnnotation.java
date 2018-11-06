@@ -2,8 +2,9 @@ package com.jamdev.maven.aipam.annotation;
 
 import java.util.List;
 
+import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
-import com.jamdev.maven.clips.PAMClip;
+import com.jmatio.types.MLStructure;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -115,6 +116,23 @@ public class SimpleAnnotation implements Annotation {
 	 */
 	public StringProperty nameProperty() {
 		return this.annotationName;
+	}
+
+	@Override
+	public String getAnnotaionType() {
+		return "simple_annotation";
+	}
+
+	@Override
+	public MLStructure annotation2Struct() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void struct2Annotion(MLStructure mlstruct) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

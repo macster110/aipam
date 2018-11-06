@@ -3,12 +3,12 @@ package com.jamdev.maven.aipam.clustering.snapToGrid;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.clustering.snapToGrid.LAPJV1.LAPJV;
 import com.jamdev.maven.aipam.clustering.snapToGrid.LAPJV1.SparseCostMatrix;
 import com.jamdev.maven.aipam.clustering.snapToGrid.LAPJV2.LAPJV2;
 import com.jamdev.maven.aipam.clustering.snapToGrid.shortestPath.ShortestPath;
 import com.jamdev.maven.aipam.utils.AiPamUtils;
-import com.jamdev.maven.clips.PAMClip;
 
 /**
  * Snaps cluster points to a defined grid. i.e. defines the cluster points and figures out the 

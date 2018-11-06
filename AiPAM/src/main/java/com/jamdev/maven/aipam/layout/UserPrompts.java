@@ -94,7 +94,7 @@ public class UserPrompts {
 
 		boolean reimport = false; 
 		if (aiPamContol.getLastAiParams().fftHop!=aiPamContol.getParams().fftHop) reimport = true;
-		if (aiPamContol.getLastAiParams().fttLength!=aiPamContol.getParams().fttLength) reimport = true;
+		if (aiPamContol.getLastAiParams().fftLength!=aiPamContol.getParams().fftLength) reimport = true;
 
 		if (aiPamContol.getLastAiParams().maximumClipLength!=aiPamContol.getParams().maximumClipLength) reimport = true;
 		if (aiPamContol.getLastAiParams().decimatorSR!=aiPamContol.getParams().decimatorSR) reimport = true;

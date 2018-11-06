@@ -7,7 +7,7 @@ import java.util.Map;
 //import org.deeplearning4j.optimize.api.TrainingListener;
 //import org.nd4j.linalg.api.ndarray.INDArray;
 
-import com.jamdev.maven.aipam.clustering.PamClusterManager.ClusterTask;
+import com.jamdev.maven.aipam.clustering.ClipClusterManager.ClusterTask;
 import com.jamdev.maven.aipam.clustering.tsne.TSNEClipClustererDL4J;
 
 import javafx.beans.property.DoubleProperty;

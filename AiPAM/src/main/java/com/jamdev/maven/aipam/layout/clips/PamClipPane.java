@@ -2,9 +2,9 @@ package com.jamdev.maven.aipam.layout.clips;
 
 import java.io.File;
 
+import com.jamdev.maven.aipam.clips.AudioPlay;
+import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.layout.ColourArray;
-import com.jamdev.maven.clips.AudioPlay;
-import com.jamdev.maven.clips.PAMClip;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Tooltip;
