@@ -2,21 +2,26 @@ Lots of problems trying to get AIPam to work with Java11
 
 Need to ass extra arguments for JavaFX eclipse/Maven bug and tio allow access to Skin classes
 
+```
 -Djava.library.path=C:/
 --add-opens=javafx.controls/javafx.scene.control.skin=ALL-UNNAMED
 --add-exports=javafx.controls/com.sun.javafx.scene.control.inputmap=ALL-UNNAMED
+```
 
 - tsne does not have a valied name for modules so has to be an external jar file.
 
 - controlsfx range slider does now work with exception...
 
+```
 Caused by: java.lang.IllegalAccessError: class impl.org.controlsfx.version.VersionChecker (in module controlsfx) cannot access class com.sun.javafx.runtime.VersionInfo (in module javafx.base) because module javafx.base does not export com.sun.javafx.runtime to module controlsfx
 	at controlsfx@9.0.0/impl.org.controlsfx.version.VersionChecker.<clinit>(VersionChecker.java:50)
 	at controlsfx@9.0.0/org.controlsfx.control.ControlsFXControl.<init>(ControlsFXControl.java:35)
 	at controlsfx@9.0.0/org.controlsfx.control.RangeSlider.<init>(RangeSlider.java:175)
+```
 
 - style class error caused by JMetro most likely in CSS
 
+```
 Caused by: java.lang.NoClassDefFoundError: com/sun/javafx/scene/control/skin/ButtonSkin
 	at java.base/java.lang.ClassLoader.defineClass1(Native Method)
 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1016)
@@ -109,3 +114,4 @@ Caused by: java.lang.ClassNotFoundException: com.sun.javafx.scene.control.skin.B
 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:521)
 	... 85 more
 Exception running application com.jamdev.maven.aipam.AIPamApp
+```
