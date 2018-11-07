@@ -8,6 +8,8 @@ import com.jamdev.maven.aipam.clips.AudioInfo;
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.clips.PAMClipManager;
 import com.jamdev.maven.aipam.clustering.ClipClusterManager;
+import com.jmatio.types.MLArray;
+import com.jmatio.types.MLStructure;
 
 import javafx.concurrent.Task;
 
@@ -111,6 +113,13 @@ public class AiPamController {
 	private AIPamParams lastAiParams;
 
 	/**
+	 * The settings import and exporter. 
+	 */
+	private SettingsImportExport settingsImportExport;
+
+	private Task<Integer> clusterTask;
+
+	/**
 	 * The main controller. 
 	 */
 	public AiPamController() {
@@ -118,6 +127,7 @@ public class AiPamController {
 		this.pamClipManager = new PAMClipManager(); 
 		this.pamClusterManager= new ClipClusterManager(); 
 		this.annotationManager= new AnnotationManager(this); 
+		this.settingsImportExport = new SettingsImportExport(this);
 	}
 
 
@@ -223,20 +233,25 @@ public class AiPamController {
 		if (lastAiParams!=null) {
 			this.lastAiParams.clusterParams = aiPamParams.clusterParams.clone();
 		}
+		
+		//cancel the cluster task
+		if (clusterTask!=null) {
+			clusterTask.cancel(true);
+		}
+		
+		clusterTask = pamClusterManager.clusterDataTask(pamClipManager.getCurrentClips(), this.aiPamParams); 
+		updateMessageListeners(START_CLUSTERING_ALGORITHM, clusterTask); 
 
-		Task<Integer> task = pamClusterManager.clusterDataTask(pamClipManager.getCurrentClips(), this.aiPamParams); 
-		updateMessageListeners(START_CLUSTERING_ALGORITHM, task); 
-
-		task.setOnCancelled((value)->{
+		clusterTask.setOnCancelled((value)->{
 			//send notification when 
-			updateMessageListeners(CANCEL_CLUSTERING_ALGORITHM, task); 
+			updateMessageListeners(CANCEL_CLUSTERING_ALGORITHM, clusterTask); 
 		});
-		task.setOnSucceeded((value)->{
+		clusterTask.setOnSucceeded((value)->{
 			//
-			updateMessageListeners(END_CLUSTERING_ALGORITHM, task); 
+			updateMessageListeners(END_CLUSTERING_ALGORITHM, clusterTask); 
 		});
 
-		Thread th = new Thread(task);
+		Thread th = new Thread(clusterTask);
 		th.setDaemon(true);
 		th.start(); 
 	}
@@ -279,6 +294,24 @@ public class AiPamController {
 	 */
 	public ClipClusterManager getClusterManager() {
 		return this.pamClusterManager;
+	}
+
+
+	/**
+	 * Save settings to a file. 
+	 * @param file - the file to save to (should be *.mat)
+	 */
+	public void saveSettings(File file) {
+		MLStructure struct = settingsImportExport.settingsToStruct(this.aiPamParams); 
+		ArrayList<MLArray> results = new ArrayList<MLArray>(); 
+		results.add(struct); 
+		settingsImportExport.saveMTFile(file, results);
+	}
+
+
+	public void loadSettings(File file) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

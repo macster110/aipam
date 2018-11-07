@@ -1,18 +1,18 @@
 package com.jamdev.maven.aipam.clustering;
 
-import java.util.List;
-import java.util.Map;
+//import java.util.List;
+//import java.util.Map;
 
 //import org.deeplearning4j.nn.api.Model;
 //import org.deeplearning4j.optimize.api.TrainingListener;
 //import org.nd4j.linalg.api.ndarray.INDArray;
 
 import com.jamdev.maven.aipam.clustering.ClipClusterManager.ClusterTask;
-import com.jamdev.maven.aipam.clustering.tsne.TSNEClipClustererDL4J;
+//import com.jamdev.maven.aipam.clustering.tsne.TSNEClipClustererDL4J;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ObservableValue;
+//import javafx.beans.property.SimpleDoubleProperty;
+//import javafx.beans.value.ObservableValue;
 
 /**
  * Standard listener for clustering progress. 
@@ -25,6 +25,7 @@ public class StandardTrainingListener implements ClusterListener {
 	/**
 	 * Reference to the task running the algorithm  
 	 */
+	@SuppressWarnings("unused")
 	private ClusterTask task;
 
 	/**

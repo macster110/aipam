@@ -65,5 +65,5 @@ public interface Annotation {
 	 * fills out this annotation with it 
 	 * @param mlstruct - the ml structure containing annotation data
 	 */
-	public void struct2Annotion(MLStructure mlstruct); 
+	public void struct2Annotation(MLStructure mlstruct); 
 }

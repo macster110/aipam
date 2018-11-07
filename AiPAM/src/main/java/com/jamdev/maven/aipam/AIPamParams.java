@@ -72,7 +72,7 @@ public class AIPamParams implements Cloneable  {
 	//Annotation settings
 	
 	/**
-	 * The output annotation folder. This folder will hold all output data clips and automaticaly save settings. 
+	 * The output annotation folder. This folder will hold all output data clips and automatically save settings. 
 	 */
 	public String outPutAnnotationFolder = "";  
 	

@@ -1,14 +1,23 @@
 package com.jamdev.maven.aipam;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jamdev.maven.aipam.annotation.Annotation;
 import com.jamdev.maven.aipam.clustering.ClusterParams;
 import com.jamdev.maven.aipam.layout.ColourArray;
+import com.jmatio.io.MatFileReader;
+import com.jmatio.io.MatFileWriter;
+import com.jmatio.types.MLArray;
 import com.jmatio.types.MLChar;
 import com.jmatio.types.MLDouble;
 import com.jmatio.types.MLInt32;
 import com.jmatio.types.MLStructure;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 /**
  * Handles importing and exporting settings files 
@@ -34,10 +43,99 @@ public class SettingsImportExport {
 	}
 	
 	
+	/**
+	 * Save the MT file. 
+	 * @param file - the file
+	 * @param mlArray - the mlArray to save. 
+	 */
+	@SuppressWarnings("unused")
+	public void saveMTFile(File file, ArrayList<MLArray> mlArray) {
+		try {
+			//this autiomatically writes the file 
+			MatFileWriter filewrite=new MatFileWriter(file.getAbsolutePath(), mlArray);
+		} catch (IOException e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("File save failed");
+			alert.setHeaderText("Failure saving the file");
+			alert.setContentText("There was a proible trying to save the last prob_det results as a .mat file");
+
+			alert.showAndWait();
+			e.printStackTrace();
+		}
+	}
 	
+	
+	/**
+	 * Convert settings to a MATLAB struct for export
+	 * @param aiPamParam - the params to convert to a struct
+	 * @return a MATLAB structure containing program settings, annotations etc. 
+	 */
 	public MLStructure settingsToStruct(AIPamParams aiPamParam) {
 		
-		return null; 	
+		MLStructure mlStruct = new MLStructure("settings", new int[] {1,1});
+
+		//the audio settings
+		MLDouble maxClipLength= mlDouble(aiPamParam.maximumClipLength);
+		MLInt32 channel=mlInt(aiPamParam.channel); 
+		MLInt32 decimatorSR=mlInt(aiPamParam.decimatorSR); 
+		
+
+		//the FFT settings
+		MLInt32 fftLength=mlInt(aiPamParam.fftLength);
+		MLInt32 fftHop=mlInt(aiPamParam.fftHop);
+		MLChar colourArrayType=new MLChar(null, ColourArray.getName(aiPamParam.spectrogramColour)); 
+		MLDouble colourLimits=new MLDouble(null, aiPamParam.colourLims , 2); 
+		
+		//playback
+		MLDouble volume=mlDouble(aiPamParam.volume);
+
+		MLChar outputFolder=new MLChar(null, aiPamParam.outPutAnnotationFolder); 
+		
+		//the annotation data
+		MLStructure annotationStruct = aiPamControl.getAnnotationManager().annotation2Struct(); 
+		
+		// the cluster params
+		MLStructure clusterParams = aiPamParam.clusterParams.clusterParams2Struct();
+
+		mlStruct.setField("maxcliplength", maxClipLength,0);
+		mlStruct.setField("channel", channel,0);
+		mlStruct.setField("decimatorfs",decimatorSR ,0);
+		mlStruct.setField("fftlength",fftLength ,0);
+		mlStruct.setField("ffthop",fftHop ,0);
+		mlStruct.setField("colourarraytype", colourArrayType,0);
+		mlStruct.setField("colourlimits", colourLimits,0);
+		mlStruct.setField("playbackvolume", volume ,0);
+		mlStruct.setField("outputfolder",outputFolder ,0);
+		mlStruct.setField("annotations", annotationStruct ,0);
+		mlStruct.setField("clustersettings", clusterParams,0);
+
+		
+		return mlStruct; 	
+	}
+	
+	/**
+	 * Import a settings file from a file.
+	 * @param file - the file to load. 
+	 */
+	public AIPamParams loadSettingsFile(File file) {
+		MatFileReader mfr = null; 
+		try {
+			if (file ==null) {
+				System.err.println("The imported file is null");
+				return null;
+			}
+			
+			mfr = new MatFileReader(file);
+			
+			//get array of a name "my_array" from file
+			MLStructure mlArrayRetrived = (MLStructure) mfr.getMLArray( "settings" );
+			AIPamParams aiPamParams = structToSettings(mlArrayRetrived);
+			return aiPamParams; 
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return null; 
+		}
 	}
 
 	
@@ -80,7 +178,6 @@ public class SettingsImportExport {
 			//cluster parameters
 			MLStructure clusterParams = (MLStructure) mlArrayRetrived.getField("clustersettings");
 
-			
 			//now set all the stuff in the new params class.
 			AIPamParams aiPamParams = new AIPamParams(); 
 			//audio settings
@@ -94,18 +191,18 @@ public class SettingsImportExport {
 			aiPamParams.colourLims = new double[]{colourLimits.get(0), colourLimits.get(1)}; 
 			aiPamParams.spectrogramColour= ColourArray.getColorArrayType(colourArrayType.getString(0)) ;
 			
-			//playback
+			//play back
 			aiPamParams.volume = volume.get(0);
 
 			//annotations
 			aiPamParams.outPutAnnotationFolder = outputFolder.getString(0);
+			
 			//import all the annotations
 			aiPamParams.annotations = aiPamControl.getAnnotationManager().struct2Annotations(annotations); 
 			
 			//cluster parameters
 			aiPamParams.clusterParams = aiPamControl.getClusterManager().struct2ClusterParams(clusterParams); 
 			
-
 			/***Print this stuff out***/
 			System.out.println("maxcliplength: " + maxClipLength.get(0)); 
 			System.out.println("channel: " + channel.get(0)); 
@@ -131,6 +228,25 @@ public class SettingsImportExport {
 
 
 		return null; 
+	}
+	
+	
+	/**
+	 * Single double value in MATLAB
+	 * @param value - the value  
+	 * @return MLDouble value
+	 */
+	public static MLDouble mlDouble(double value) {
+		return new MLDouble(null, new double[]{value}, 1);
+	}
+	
+	/**
+	 * Single int value in MATLAB
+	 * @param value - the int value  
+	 * @return MLInt value
+	 */
+	public static MLInt32 mlInt(int value) {
+		return new MLInt32(null, new int[]{value}, 1);
 	}
 
 

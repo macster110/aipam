@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
+import com.jamdev.maven.aipam.annotation.AnnotationManager;
 import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
 import com.jamdev.maven.aipam.layout.clips.ClipGridPane;
 import com.jamdev.maven.aipam.layout.clips.ClipSelectionManager;
@@ -19,8 +20,6 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.binding.DoubleBinding;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
@@ -32,10 +31,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 /**
- * The main view for AIPam. This controls the GUI components and recievers messages from the 
+ * The main view for AIPam. This controls the GUI components and receivers messages from the 
  * controller. 
  * 
  * @author Jamie Macaulay
@@ -141,15 +142,15 @@ public class AIPamView extends BorderPane {
 		this.aiPamContol.addSensorMessageListener((flag, dataObject)->{
 			notifyUpdate(flag, dataObject); 
 		});
-		
+
 		userPrompts = new UserPrompts(this); 
-		
+
 		userPromptPane = new BorderPane(); 
 		userPromptPane.setMaxHeight(20);
 		userPromptPane.setPadding(new Insets(5,50,5,5));
 		//userPromptPane.setStyle("-fx-background-color: BACKGROUND_TRANS;"); 
 		//labelSettings.prefWidthProperty().bind(holder.widthProperty());
-		
+
 		controlPane= new ControlPane(this); 
 		//set the current params here. Otherwise on getParams default values on controls will be returned...
 		controlPane.setParams(aiPamContol.getParams()); 
@@ -178,7 +179,7 @@ public class AIPamView extends BorderPane {
 		tabPane.getTabs().addAll(tabClip, tabCluster); 
 
 		settingsHolder = new BorderPane();
-		
+
 		//GaussianBlur blur = new GaussianBlur(20);       
 		settingsHolder.setPrefWidth(350);
 		settingsHolder.setStyle("-fx-background-color: BACKGROUND_TRANS;"); 
@@ -195,8 +196,8 @@ public class AIPamView extends BorderPane {
 				controlPane.setMenuDeselected();
 			}
 		});
-		
-		
+
+
 		centerStackPane.getChildren().add(tabPane);
 		centerStackPane.getChildren().add(userPromptPane); 
 		StackPane.setAlignment(userPromptPane, Pos.TOP_RIGHT);
@@ -208,7 +209,7 @@ public class AIPamView extends BorderPane {
 
 		setCenter(centerPane);
 		setLeft(controlPaneHolder);
-		
+
 	}
 
 
@@ -241,7 +242,7 @@ public class AIPamView extends BorderPane {
 			//do nothing
 			return;
 		}
-		
+
 		aiPamContol.loadAudioData(selectedDirectory, false);
 	}
 
@@ -303,7 +304,14 @@ public class AIPamView extends BorderPane {
 			checkSettings();
 			break;
 		} 
-		
+	}
+	
+	/**
+	 * Set the control buttons to disabled so users can;t start multiple threads at once. 
+	 * @param disable - true to disable. 
+	 */
+	private void setControlButtonDisable(boolean disable) {
+		this.controlPane.setControlButtonDisable(disable); 
 	}
 
 
@@ -333,7 +341,7 @@ public class AIPamView extends BorderPane {
 		th.setDaemon(true);
 		th.start(); 
 	}
-	
+
 	/**
 	 * Recalculate the spectrogram images. 
 	 */
@@ -403,7 +411,7 @@ public class AIPamView extends BorderPane {
 	public static void setButtonIcon(Labeled button, FontAwesomeIcon icon) {
 		setButtonIcon(button, icon, Pos.BASELINE_LEFT); 
 	}
-	
+
 	/**
 	 * Set an icon on a button
 	 * @param button - the button to set icon on. 
@@ -428,7 +436,7 @@ public class AIPamView extends BorderPane {
 	public Image getSpectrogramIcon() {
 		return getIcon("Audio.svg"); 
 	}
-	
+
 	public Image getClusterIcon(int size) {
 		return UtilsFX.scale(getIcon("Cluster.svg"), size, size, true); 
 	}
@@ -475,8 +483,8 @@ public class AIPamView extends BorderPane {
 	}
 
 
-	
-	
+
+
 	/**
 	 * Check that the last settings used to import clips and/or cluster are the same
 	 * If not then presents a message to the user indicating that files need re imported etc. 
@@ -486,10 +494,10 @@ public class AIPamView extends BorderPane {
 		ArrayList<UserPrompt> userPromptsA = userPrompts.checkLastSettings();		
 		//set the message in the user prompt pane. 
 		this.userPromptPane.setRight(userPrompts.getUserPromptPane(userPromptsA)); 
-		
+
 		//now lets try an highlight some control buttons
 		this.controlPane.setUserPrompt(userPromptsA);
-		
+
 	}
 
 	/**
@@ -509,9 +517,58 @@ public class AIPamView extends BorderPane {
 	}
 
 
-	public EventHandler<ActionEvent> exportAnnotations() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Exports annotation clips and organise into different folders.  
+	 */
+	public void exportAnnotations() {
+		// TODO Auto-generated method stuff;
+	}
+
+	/**
+	 * Save settings.
+	 */
+	public void saveSettings() {
+		FileChooser fileChooser = new FileChooser();
+		configureFileChooser(fileChooser);
+		// Show open file dialog
+		File file = fileChooser.showSaveDialog(primaryStage);
+		if (file != null) {
+			aiPamContol.saveSettings(file); 
+		}
+	}
+
+	/**
+	 * Load settings from a file. 
+	 */
+	public void loadSettings() {
+		FileChooser fileChooser = new FileChooser();
+		configureFileChooser(fileChooser);
+		// Show open file dialog
+		File file = fileChooser.showOpenDialog(primaryStage);
+		if (file != null) {
+			aiPamContol.loadSettings(file); 
+		}
+	}
+
+	/**
+	 * Configures the file chooser for .mat files
+	 * @param fileChooser - the file chooser to set
+	 */
+	private static void configureFileChooser(final FileChooser fileChooser){                           
+		fileChooser.setTitle("Settings file");
+		ExtensionFilter extensionFilter = new ExtensionFilter("MAT", "*.mat"); 
+		fileChooser.getExtensionFilters().add(extensionFilter);
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.home"))); 
+	}
+
+
+	/**
+	 * Convenience function to get the annotation manager from the AiPamController. 
+	 * This handles annotations
+	 * @return the annotations manager. 
+	 */
+	public AnnotationManager getAnnotationsManager() {
+		return this.aiPamContol.getAnnotationManager();
 	}
 
 

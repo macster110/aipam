@@ -182,14 +182,20 @@ public class ControlPane extends BorderPane {
 		saveSettings.setTooltip(new Tooltip(
 				"Save a settings file. This can be opened iby a new instance of the \n"
 				+ "program to restore the current settings."));
+		saveSettings.setOnAction((actiom)->{
+			this.aiPamView.saveSettings(); 
+		});
 		
-		importSettings = new Button("Import Settings"); 
+		importSettings = new Button("Load Settings"); 
 		importSettings.getStyleClass().add("fluent-menu-button");
 		AIPamView.setButtonIcon(importSettings, FontAwesomeIcon.DOWNLOAD); 
 		importSettings.prefWidthProperty().bind(holderPane.widthProperty());
 		importSettings.setTooltip(new Tooltip(
 				"Import settings from a .mat settings file."));
-		
+		importSettings.setOnAction((actiom)->{
+			this.aiPamView.loadSettings(); 
+
+		});
 		
 		//add save stuff. 
 		holderPane.getChildren().add(saveSettings);
@@ -306,6 +312,11 @@ public class ControlPane extends BorderPane {
 	 */
 	public void setUserPrompt(ArrayList<UserPrompt> userPromptsA) {
 		masterControlPane.setUserPrompts(userPromptsA); 
+		
+	}
+
+	public void setControlButtonDisable(boolean disable) {
+		// TODO Auto-generated method stub
 		
 	}
 

@@ -7,8 +7,6 @@ import com.jamdev.maven.aipam.clustering.ClusterParams;
 import com.jamdev.maven.aipam.clustering.ClusteringAlgorithm;
 import com.jamdev.maven.aipam.clustering.FingerPrintManager;
 import com.jamdev.maven.aipam.clustering.StandardTrainingListener;
-import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
-import com.jmatio.types.MLStructure;
 import com.jujutsu.tsne.TSneConfiguration;
 import com.jujutsu.tsne.barneshut.BHTSne;
 import com.jujutsu.tsne.barneshut.BarnesHutTSne;
@@ -23,6 +21,7 @@ import com.jujutsu.utils.TSneUtils;
  * @author Jamie Macaulay
  *
  */
+@SuppressWarnings("deprecation")
 public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 	/**
 	 * The perplexity 
@@ -116,11 +115,7 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 		return Y;
 	}
 
-	@Override
-	public SettingsPane getSettingsPane() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	@Override
 	public StandardTrainingListener getTrainingListener() {
@@ -131,18 +126,6 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 	@Override
 	public String getCLusterType() {
 		return "tsneYK";
-	}
-
-	@Override
-	public void struct2ClusterParams(MLStructure mlStruct) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public MLStructure clusterParams2Struct() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

@@ -9,10 +9,7 @@ import java.util.ArrayList;
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.clustering.ClusterParams;
 import com.jamdev.maven.aipam.clustering.ClusteringAlgorithm;
-import com.jamdev.maven.aipam.clustering.FingerPrintManager;
 import com.jamdev.maven.aipam.clustering.StandardTrainingListener;
-import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
-import com.jmatio.types.MLStructure;
 
 /**
  * Algorithm which clusters clips based on TSNE high dimensional clustering algorithm. 
@@ -22,18 +19,13 @@ import com.jmatio.types.MLStructure;
  * @author Jamie Macaulay
  *
  */
+@SuppressWarnings("deprecation")
 public class TSNEClipClustererDL4J implements ClusteringAlgorithm{
 
 	@Override
 	public void cluster(ArrayList<PAMClip> pamClips, ClusterParams clusterParams) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public SettingsPane getSettingsPane() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -44,18 +36,6 @@ public class TSNEClipClustererDL4J implements ClusteringAlgorithm{
 
 	@Override
 	public String getCLusterType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void struct2ClusterParams(MLStructure mlStruct) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public MLStructure clusterParams2Struct() {
 		// TODO Auto-generated method stub
 		return null;
 	}

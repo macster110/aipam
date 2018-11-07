@@ -3,8 +3,6 @@ package com.jamdev.maven.aipam.clustering.snapToGrid;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
-
 /**
  * Listener for LAPJV algorithm  
  * @author Jamie Macaulay 

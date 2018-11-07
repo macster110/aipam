@@ -9,6 +9,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,13 +56,6 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 
 	private TableView<SimpleAnnotation> table; 
 
-	/**
-	 * List of simple annotations. 
-	 */
-	private final ObservableList<SimpleAnnotation> data =
-			FXCollections.observableArrayList(
-					new SimpleAnnotation(1));
-
 	public AnnotationPane(AIPamView aiPamView) {
 		this.aiPamView= aiPamView; 
 		this.mainPane = createPane();
@@ -89,7 +83,7 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 		//create the table
 		table = new TableView<SimpleAnnotation>(); 
 		table.setEditable(true);
-		table.setItems(data);
+		table.setItems(aiPamView.getAnnotationsManager().getAnnotationsList());
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //stop the annoying extra column
 
 		//first column of the table allows users to pick the colour. 
@@ -107,6 +101,7 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 		colorColumn.setCellFactory(col -> {
 			TableCell<SimpleAnnotation, StringProperty> c = new TableCell<>();
 			final ComboBox<String> comboBox = createColorComboBox();
+			
 			c.itemProperty().addListener((observable, oldValue, newValue) -> {
 				if (oldValue != null) {
 					comboBox.valueProperty().unbindBidirectional(oldValue);
@@ -114,20 +109,32 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 				if (newValue != null) {
 					comboBox.valueProperty().bindBidirectional(newValue);
 				}
+				
 			});
+			comboBox.valueProperty().addListener((observable, oldValue, newValue)->{
+				System.out.println("Hello: combo changed");
+				c.commitEdit(new SimpleStringProperty(newValue));
+			});
+			
+			
 			c.graphicProperty().bind(Bindings.when(c.emptyProperty()).
 					then((Node) null).otherwise(comboBox));
 			return c;
 		});
+		colorColumn.setOnEditCommit((t)-> {
+			System.out.println("I'm committing a colour thing..."+ t.getNewValue().get());
+			SimpleAnnotation annot = (SimpleAnnotation) t.getTableView().getItems().get(t.getTablePosition().getRow()); 
+			annot.colorProperty.setValue(t.getNewValue().get());
+		});
 
 		
-		TableColumn<SimpleAnnotation, String> nameProperty =
+		TableColumn<SimpleAnnotation, String> nameColumn =
 				new TableColumn<SimpleAnnotation, String> ("Name");
-		nameProperty.setEditable(true);
+		nameColumn.setEditable(true);
 		//nameProperty.setMinWidth(110);
-		nameProperty.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-		nameProperty.setCellFactory(TextFieldTableCell.forTableColumn());
-		nameProperty.setOnEditCommit((t)-> {
+		nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+		nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		nameColumn.setOnEditCommit((t)-> {
 		            ((SimpleAnnotation) t.getTableView().getItems().get(
 		                t.getTablePosition().getRow())
 		                ).nameProperty().set(t.getNewValue());});
@@ -137,22 +144,20 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 		numClipsColumn.setPrefWidth(60);
 		numClipsColumn.setCellValueFactory(cellData -> cellData.getValue().numClipsProperty().asObject());
 
-		table.setItems(data);
-		table.getColumns().addAll(colorColumn, nameProperty, numClipsColumn);
+		table.getColumns().addAll(colorColumn, nameColumn, numClipsColumn);
 
 		//add button
 		Button buttonAdd = new Button("Add"); 
 		buttonAdd.setOnAction((action)->{
-			data.add(new SimpleAnnotation(data.size()+1)); 
+			aiPamView.getAnnotationsManager().add(new SimpleAnnotation(aiPamView.getAnnotationsManager().getNAnnotations()+1)); 
 			//update the remove menu button
 		});
 		MenuButton buttonRemove = new MenuButton("Remove"); 
 		buttonRemove.setOnAction((action)->{
-			
+			//TODO
 		});	
 		
-		
-		
+	
 		HBox buttonHolder = new HBox(); 
 		buttonHolder.setSpacing(5);
 		buttonHolder.getChildren().addAll(buttonAdd,buttonRemove);

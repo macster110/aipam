@@ -2,14 +2,20 @@ package com.jamdev.maven.aipam.annotation;
 
 import java.util.List;
 
+import com.jamdev.maven.aipam.SettingsImportExport;
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
+import com.jmatio.types.MLChar;
+import com.jmatio.types.MLInt32;
 import com.jmatio.types.MLStructure;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener.Change;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -24,6 +30,11 @@ import javafx.scene.shape.Circle;
 public class SimpleAnnotation implements Annotation {
 	
 	/**
+	 * List of pamClips which belong to this annotation
+	 */
+	private ObservableList<PAMClip> pamClips; 
+	
+	/**
 	 * The annotation name 
 	 */
     private final SimpleStringProperty annotationName;
@@ -36,7 +47,7 @@ public class SimpleAnnotation implements Annotation {
     /**
      * The number of clips. 
      */
-    private final IntegerProperty numPamClips; 
+    private final SimpleIntegerProperty numPamClips; 
     
     /**
      * The unique ID for the annotation
@@ -60,23 +71,30 @@ public class SimpleAnnotation implements Annotation {
     public SimpleAnnotation(int uniqueID) {
     	this.uniqueID=uniqueID;
     	annotationName= new SimpleStringProperty("Group: " + uniqueID); 
-    	colorProperty= new SimpleStringProperty(UtilsFX.toRGBCode(Color.color(Math.random(), Math.random(), Math.random()))); 
+    	
+    	colorProperty= new SimpleStringProperty(UtilsFX.toRGBCode(Color.color(Math.random(), Math.random(), Math.random())));
+    	colorProperty.addListener((obsValue, oldValue, newValue)->{
+        	symbol.setFill(Color.web(colorProperty.get()));
+    	});
     	
     	numPamClips = new SimpleIntegerProperty(); 
-    	symbol= new Circle();
+    	pamClips= FXCollections.observableArrayList(); 
+    	pamClips.addListener((Change<? extends PAMClip> c) -> {
+    		numPamClips.set(pamClips.size());
+    	});
+    	
+    	symbol= new Circle(10);
     	symbol.setFill(Color.web(colorProperty.get()));
     }
 
 	@Override
 	public List<PAMClip> getPamClips() {
-		// TODO Auto-generated method stub
-		return null;
+		return pamClips;
 	}
 
 	@Override
 	public String clipAnnotaitonString(PAMClip pamClip) {
-		// TODO Auto-generated method stub
-		return null;
+		return ""; // no extra information for pamclips 
 	}
 
 	@Override
@@ -86,7 +104,7 @@ public class SimpleAnnotation implements Annotation {
 
 	@Override
 	public Node getAnnotationGroupSymbol() {
-		return null;
+		return symbol;
 	}
 	
 	/**
@@ -125,14 +143,39 @@ public class SimpleAnnotation implements Annotation {
 
 	@Override
 	public MLStructure annotation2Struct() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		MLStructure annotationStruct = new MLStructure("simpleannotation", new int[] {1,1});
+		
+		MLInt32 uniqueId= SettingsImportExport.mlInt(this.uniqueID);
+		MLChar name= new MLChar(null, getAnnotationGroupName()); 
+		
+		annotationStruct.setField("uniqueid", uniqueId);
+		annotationStruct.setField("name", name);
+		
+		MLStructure clips = new MLStructure("clips", new int[] { getPamClips().size(),1});
+		for (int i=0; i< getPamClips().size(); i++) {
+			clips.setField("clipID", new MLChar(null, getPamClips().get(i).getID()), i);
+			clips.setField("clipgridID", SettingsImportExport.mlInt(getPamClips().get(i).getGridID()), i); 
+		}
+		
+		annotationStruct.setField("clips", clips);
+
+		return annotationStruct;
 	}
 
 	@Override
-	public void struct2Annotion(MLStructure mlstruct) {
+	public void struct2Annotation(MLStructure mlstruct) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	/**
+	 * Add a clip to the annotation group. 
+	 * @param clip
+	 */
+	public void addClip(PAMClip clip) {
+		this.pamClips.add(clip); 	
+		clip.setAnnotation(this); //se the clips parent annotation. 
 	}
 
 }

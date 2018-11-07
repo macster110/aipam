@@ -48,7 +48,6 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 		this.clip=clip; 
 		//create the pane 
 		this.getChildren().add(imageCanvas = new Canvas(width, height)); 
-		addMouseBeahviour(); //add the default mouse behaviours. 
 		generateSpecImage(colourArray, clims); 
 		//need the border so that the tile pane does not change size when a highlight border is first set
 		this.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
@@ -69,28 +68,8 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 				0,0, specImage.getWidth(), specImage.getHeight());
 //		imageCanvas.getGraphicsContext2D().fillOval(2, 2, 10, 10); 
 	}
-	/**
-	 * Add mouse functionality. 
-	 */
-	private void addMouseBeahviour() {
-		
-		this.setOnMouseClicked((event)->{
-			if (event.isControlDown()) clipSelectionManager.selectMultiClip(PamClipPane.this); 
-			else clipSelectionManager.selectClip(PamClipPane.this); 
-		});		
-		
-//		this.setOnMouseDragOver((event)->{
-//			clipSelectionManager.selectMultiClip(PamClipPane.this); 
-//		});
-		
-		this.setOnMouseEntered((event)->{
-			//System.out.println("Mouse enterred: " + event);
-			if (event.isPrimaryButtonDown()) {
-				clipSelectionManager.selectMultiClip(PamClipPane.this); 
-			}
-		});
-		
-	}
+	
+
 
 	/**
 	 * Set the clip selection manager. This manages single and multi-clip selections. Mouse
@@ -100,7 +79,7 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 	 */
 	public void setSelectionManager(ClipSelectionManager clipSelectionManager) {
 		this.clipSelectionManager = clipSelectionManager; 
-		
+		clipSelectionManager.addMouseBeahviour(this); //add the default mouse behaviours. 
 	}
 
 	/**
@@ -121,7 +100,7 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 	 * Get the pam clip the pane is hswoing.m 
 	 * @return the pam clip. 
 	 */
-	private PAMClip getPamClip() {
+	public PAMClip getPamClip() {
 		return clip;
 	}
 

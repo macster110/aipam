@@ -8,7 +8,6 @@ import com.jamdev.maven.aipam.clustering.snapToGrid.ClusterSnapGrid;
 import com.jamdev.maven.aipam.clustering.tsne.TSNEClipClustererYK;
 import com.jmatio.types.MLStructure;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.ProgressBar;
 
