@@ -267,6 +267,12 @@ public class MasterControlPane {
 		
 	}
 
+	public void setControlButtonDisable(boolean disable) {
+		browseButton.setDisable(disable);
+		importClipsButton.setDisable(disable);
+		clusterButton.setDisable(disable);
+	}
+
 
 	
 	

@@ -262,6 +262,8 @@ public class HidingPane extends StackPane {
 		iconViewSettings.setGlyphSize(AIPamView.iconSize);
 		iconViewSettings.setFill(AIPamView.defaultTitleColour);
 		button.setGraphic(iconViewSettings); 
+		button.getStyleClass().add("fluent-menu-button");
+
 	}
 	
 

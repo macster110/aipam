@@ -73,8 +73,6 @@ public class ClipGridPane extends BorderPane {
 
 		// dont grow more than the preferred number of columns:
 		tilePane.setMaxWidth(Region.USE_PREF_SIZE);
-
-
 		//        ZoomableScrollPane sp = new ZoomableScrollPane(tilePane);
 		//        tilePane.setStyle("-fx-background-color: #1d1d1d; -fx-font: 12px Segoe; -fx-text-fill: white;");
 		//        sp.setFitToHeight(true);
@@ -161,6 +159,7 @@ public class ClipGridPane extends BorderPane {
 	 */
 	@SuppressWarnings("unchecked")
 	public void layoutClips(){
+		System.out.println("ClipGridPane: Layout clips: "); 
 		//make sure that all the clips are cleared
 		tilePane.getChildren().clear();
 		

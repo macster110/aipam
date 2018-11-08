@@ -36,8 +36,6 @@ public class UserPrompts {
 	 */
 	public enum UserPrompt {NOTHING_IMPORTED_YET, NOTHING_CLUSTERED_YET, IMPORT_AGAIN, RECREATE_IMAGES, RE_CLUSTER}
 
-	public Paint textColor = Color.YELLOW; 
-
 	/**
 	 * Reference to the controller. 
 	 */
@@ -179,10 +177,11 @@ public class UserPrompts {
 		hBox.setAlignment(Pos.CENTER_LEFT);
 		
 		Label label = new Label(labelBfr); 
-		label.setTextFill(textColor);
+		label.setStyle("-fx-text-fill: TEXT_USER_PROMPT"); 
+
 		
 		Label label2 = new Label(labelAftr); 
-		label2.setTextFill(textColor);
+		label2.setStyle("-fx-text-fill: TEXT_USER_PROMPT"); 
 		
 		hBox.getChildren().addAll(label, icon, label2);
 		
@@ -196,15 +195,15 @@ public class UserPrompts {
 	public Pane nothingImportedYet() {
 		FontAwesomeIconView iconViewSettings = new FontAwesomeIconView(FontAwesomeIcon.FOLDER_OPEN_ALT); 
 		iconViewSettings.setGlyphSize(iconSize);
-		iconViewSettings.setFill(textColor);
+		iconViewSettings.setGlyphStyle("-fx-fill: TEXT_USER_PROMPT"); 
 		
 		FontAwesomeIconView iconViewClips = new FontAwesomeIconView(FontAwesomeIcon.TH); 
 		iconViewClips.setGlyphSize(iconSize);
-		iconViewClips.setFill(textColor);
+		iconViewClips.setGlyphStyle("-fx-fill: TEXT_USER_PROMPT"); 
 		
 		FontAwesomeIconView audioFile = new FontAwesomeIconView(FontAwesomeIcon.FILE_AUDIO_ALT); 
 		audioFile.setGlyphSize(iconSize);
-		audioFile.setFill(textColor);
+		audioFile.setGlyphStyle("-fx-fill: TEXT_USER_PROMPT"); 
 		
 		Pane pane1=iconLabelPane(iconViewSettings, "No clips imported yet: select", "");
 		Pane pane2=iconLabelPane(iconViewClips, "and then ", " to import."); 
@@ -224,7 +223,7 @@ public class UserPrompts {
 		button.setGraphic(specImage);	
 		
 		Label label = new Label("Need to recalculate spectrogram images: Press");
-		label.setTextFill(textColor);;
+		label.setStyle("-fx-text-fill: TEXT_USER_PROMPT"); 
 		
 		button.setOnAction((action)->{
 			aiPamView.reCalcImages();
@@ -245,7 +244,7 @@ public class UserPrompts {
 
 		FontAwesomeIconView iconViewSettings = new FontAwesomeIconView(FontAwesomeIcon.TH); 
 		iconViewSettings.setGlyphSize(iconSize);
-		iconViewSettings.setFill(textColor);
+		iconViewSettings.setGlyphStyle("-fx-fill: TEXT_USER_PROMPT"); 
 		
 		return iconLabelPane(iconViewSettings, 
 				 "Need to reimport clips: Press ", "Import Clips to start import" ); 

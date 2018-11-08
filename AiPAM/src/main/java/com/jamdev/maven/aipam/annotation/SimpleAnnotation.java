@@ -68,11 +68,12 @@ public class SimpleAnnotation implements Annotation {
      * Create a simple annotation
      * @param annotationN - the annotation number
      */
-    public SimpleAnnotation(int uniqueID) {
+    public SimpleAnnotation(int uniqueID, String colour) {
     	this.uniqueID=uniqueID;
     	annotationName= new SimpleStringProperty("Group: " + uniqueID); 
     	
-    	colorProperty= new SimpleStringProperty(UtilsFX.toRGBCode(Color.color(Math.random(), Math.random(), Math.random())));
+//    	colorProperty= new SimpleStringProperty(UtilsFX.toRGBCode(Color.color(Math.random(), Math.random(), Math.random())));
+    	colorProperty = new SimpleStringProperty(colour); 
     	colorProperty.addListener((obsValue, oldValue, newValue)->{
         	symbol.setFill(Color.web(colorProperty.get()));
     	});
@@ -86,6 +87,10 @@ public class SimpleAnnotation implements Annotation {
     	symbol= new Circle(10);
     	symbol.setFill(Color.web(colorProperty.get()));
     }
+
+	public SimpleAnnotation(int uniqueID) {
+		this(uniqueID, UtilsFX.toRGBCode(Color.LAWNGREEN)); 
+	}
 
 	@Override
 	public List<PAMClip> getPamClips() {
@@ -176,6 +181,25 @@ public class SimpleAnnotation implements Annotation {
 	public void addClip(PAMClip clip) {
 		this.pamClips.add(clip); 	
 		clip.setAnnotation(this); //se the clips parent annotation. 
+	}
+
+	/**
+	 * Remove a clip form the annotation
+	 * @param pamClip - the clip to remove. 
+	 */
+	public void remove(PAMClip pamClip) {
+		this.pamClips.remove(pamClip);
+		pamClip.setAnnotation(null);
+	}
+
+	/**
+	 * Clear all clips from the annotaitons 
+	 */
+	public void clearClips() {
+		for (int i=0; i<this.pamClips.size(); i++) {
+			pamClips.get(i).setAnnotation(null);
+		}
+		pamClips.clear();
 	}
 
 }

@@ -67,7 +67,7 @@ public class UtilsFX {
 	 */
 	public static ImageView whitenImage(ImageView imageView) {
 		ColorAdjust colorAdjust = new ColorAdjust();
-		colorAdjust.setBrightness(1);
+		colorAdjust.setBrightness(0.8);
 		imageView.setEffect(colorAdjust);
 		return imageView;
 	}

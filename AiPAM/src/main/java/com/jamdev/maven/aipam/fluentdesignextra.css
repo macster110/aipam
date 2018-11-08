@@ -7,6 +7,8 @@
     BACKGROUND_PRESSED_MENU: rgba(100,100,100,0.5);
     BACKGROUND: #1d1d1d; /*dark background*/
     BACKGROUND_TRANS: rgb(29, 29, 29, 0.96);
+    TEXT_FILL: white;
+    TEXT_USER_PROMPT: yellow;
 
     /*Override JMetro*/
     ACCENT_COLOR: #26C223; /*For high lights, toggle buttons etc.**/
@@ -23,13 +25,13 @@
 
  .label-title1 {
     -fx-font: 20px "Segoe UI Semibold";
-    -fx-text-fill: white;
+    -fx-text-fill: TEXT_FILL;
     -fx-font-weight: bold
 }
 
 .label-title2 {
     -fx-font: 16px "Segoe UI Semibold";
-    -fx-text-fill: white;
+    -fx-text-fill: TEXT_FILL;
     /*-fx-font-weight: bold;*/
 }
 
@@ -80,18 +82,66 @@
 }
 
 
-
 /*******************************************************************************
  *                                                                             *
  * Pane for holding menu side pane buttons in.                                       *
  *                                                                             *
  ******************************************************************************/
 
-.fluent-menu-button:focused
-{
-    -fx-border-color: BACKGROUND_PRESSED_MENU;
-    -fx-background-color: BACKGROUND_PRESSED_MENU;
+.menu-button {
+    -fx-padding: 5 22 5 22;   
+    -fx-border-color: #e2e2e2;
+    -fx-border-width: 2;
+
+    -fx-background-radius: 0;
+
+    -fx-background-color: BACKGROUND;
+  
+     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 11pt;
+    -fx-text-fill: #d8d8d8;
 }
+
+.menu-button .label {
+       -fx-text-fill: #d8d8d8;
+}
+
+ .menu-button:hover{
+    -fx-background-color: #3a3a3a;
+}
+
+.menu-button:pressed, .menu-button:default:hover:pressed
+{
+  -fx-background-color: white;
+  -fx-text-fill: BACKGROUND;
+}
+
+.menu-button:focused
+{
+    -fx-border-color: white, white;
+    -fx-border-width: 1, 1;
+    -fx-border-style: solid, segments(1, 1);
+    -fx-border-radius: 0, 0;
+    -fx-border-insets: 1 1 1 1, 0;
+}
+
+.menu-button:disabled, .menu-button:default:disabled
+{
+    -fx-opacity: 0.4;
+    -fx-background-color: BACKGROUND;
+    -fx-text-fill: TEXT_FILL;
+}
+
+.menu-button:default
+{
+    -fx-background-color: #008287;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-button:default:hover{
+    -fx-background-color: #219297;
+}
+
 
 /*******************************************************************************
  *                                                                             *
@@ -161,7 +211,6 @@
     /*It is important to have border here to fill in a bottom gap*/
     -fx-border-color: derive(BACKGROUND_MENU, 50%);;
     -fx-border-width: 2;
-
 }
 
 
@@ -176,15 +225,15 @@
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {
-    -fx-text-fill: white;
+    -fx-text-fill: TEXT_FILL;
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:hover > .tab-container > .tab-label {
-    -fx-text-fill: white;
+    -fx-text-fill: TEXT_FILL;
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:selected:hover > .tab-container > .tab-label {
-    -fx-text-fill: white;
+    -fx-text-fill: TEXT_FILL;
 }
 
 

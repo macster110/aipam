@@ -3,10 +3,12 @@ package com.jamdev.maven.aipam.annotation;
 import java.util.List;
 
 import com.jamdev.maven.aipam.AiPamController;
+import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 import com.jmatio.types.MLStructure;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.paint.Color;
 
 /**
  * The annotation manager manages annotation tasks.
@@ -24,7 +26,7 @@ public class AnnotationManager {
 	 */
 	private final ObservableList<SimpleAnnotation> data =
 			FXCollections.observableArrayList(
-					new SimpleAnnotation(1));
+					new SimpleAnnotation(1, UtilsFX.toRGBCode(Color.ORANGE)));
 	
 	/**
 	 * Reference to the controller. 

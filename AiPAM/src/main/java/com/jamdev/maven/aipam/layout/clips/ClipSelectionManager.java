@@ -3,16 +3,8 @@ package com.jamdev.maven.aipam.layout.clips;
 import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.layout.AIPamView;
-import com.sun.glass.events.MouseEvent;
-
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Color;
 
 /**
  * Manages which clips are selected by the user
@@ -54,7 +46,7 @@ public class ClipSelectionManager {
 	 * @param pamClipPane - the currently selected PamClipPane. 
 	 */
 	public void selectClip(PamClipPane pamClipPane) {
-		clearSelectedClips(); 
+		repaintAllClips(); 
 		pamClipPane.setStyle("-fx-border-color: ACCENT_COLOR; -fx-border-width: 3px;");
 		pamClipPane.getAudioPlay().getVolumePropery().bind(aiPamView.volumeProperty());
 		pamClipPane.getAudioPlay().playClipAudio();
@@ -82,7 +74,7 @@ public class ClipSelectionManager {
 	/**
 	 * Clear all currently selected clips. 
 	 */
-	private void clearSelectedClips() {
+	private void repaintAllClips() {
 		for (PamClipPane pamClipPane: selectedClips) {
 			pamClipPane.setStyle("-fx-border-color: transparent; -fx-border-width: 3px;");
 			pamClipPane.getAudioPlay().stopClipAudio();
@@ -96,13 +88,15 @@ public class ClipSelectionManager {
 	protected void addMouseBeahviour(PamClipPane pamClipPane) {
 
 		pamClipPane.setOnMouseClicked((event)->{
-
-			if (event.isSecondaryButtonDown() || event.isPopupTrigger()) {
-				showSelectionMenu(pamClipPane, event); 
-
-			}
-			else if (event.isControlDown()) selectMultiClip(pamClipPane); 
+			//pamClipPane.toFront(); //this creates big bug in the tile pane. moves all the clips to a differen location. 
+			
+			if (event.isControlDown()) selectMultiClip(pamClipPane); 
 			else selectClip(pamClipPane); 
+			
+			if (event.isSecondaryButtonDown() || event.isPopupTrigger()) {
+				showSelectionMenu(selectedClips, event); 
+			}
+			
 		});		
 
 		//		this.setOnMouseDragOver((event)->{
@@ -120,19 +114,19 @@ public class ClipSelectionManager {
 	/**
 	 * Show the selection menu. This has options for annotating clips etc. 
 	 */
-	private void showSelectionMenu(PamClipPane pamClipPane, javafx.scene.input.MouseEvent event) {
+	private void showSelectionMenu(ArrayList<PamClipPane> selectedClips, javafx.scene.input.MouseEvent event) {
 
 		if (selectionMenu==null) {
 			selectionMenu = new SelectionMenu(this.aiPamView.getAIControl()); 
 		}
 
-		ArrayList<MenuItem> menuItems = selectionMenu.getMenu(pamClipPane); 
+		ArrayList<MenuItem> menuItems = selectionMenu.getMenu(selectedClips); 
 
 		System.out.println("Hello selection menu: " +  menuItems.size());
 
 		final ContextMenu cm = new ContextMenu();
 		cm.getItems().addAll(menuItems); 
-		cm.show(pamClipPane, event.getScreenX(), event.getScreenY());
+		cm.show(selectedClips.get(selectedClips.size()-1), event.getScreenX(), event.getScreenY());
 
 	}
 

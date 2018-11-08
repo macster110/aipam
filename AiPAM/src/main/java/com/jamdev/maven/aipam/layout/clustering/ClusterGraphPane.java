@@ -2,18 +2,17 @@ package com.jamdev.maven.aipam.layout.clustering;
 
 import java.util.ArrayList;
 
-import org.controlsfx.control.PopOver;
-
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.layout.AIPamView;
+import com.jamdev.maven.aipam.layout.ColourArray;
+import com.jamdev.maven.aipam.layout.clips.PamClipPane;
 import com.jamdev.maven.aipam.layout.clips.SpectrogramImage;
+import com.jamdev.maven.aipam.layout.utilsFX.ZoomableScrollPane;
 
 import javafx.scene.Node;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -48,12 +47,18 @@ public class ClusterGraphPane extends BorderPane {
 	 * points to reset highligted nodes. 
 	 */
 	private Node lastClicked = null; 
+	
+	public double specImageSize = 30; 
 
 
 	public ClusterGraphPane(AIPamView aiPamView) {
 		this.aiPamView=aiPamView;
 		mainPane = createPane();
-		this.setCenter(mainPane);
+		this.setCenter(new ZoomableScrollPane(mainPane));
+		//need to set an explicit height if in a scroll pane
+		mainPane.setPrefWidth(1000);
+		mainPane.setPrefHeight(1000);
+
 	}
 
 	
@@ -70,7 +75,7 @@ public class ClusterGraphPane extends BorderPane {
         scatterChart = 
                 new ScatterChart<Number,Number>(xAxis,yAxis);
                 
-        scatterChart.setTitle("Clustering");
+        //scatterChart.setTitle("Clustering");
         
         
         BorderPane mainPane = new BorderPane(); 
@@ -89,35 +94,41 @@ public class ClusterGraphPane extends BorderPane {
 		scatterChart.getData().clear();
 		
         XYChart.Series series = new XYChart.Series();
-        SpectrogramImage image;
+        PamClipPane image;
 		for (int i=0; i<pamClips.size(); i++) {
 			
 			XYChart.Data dataPoint = new XYChart.Data(pamClips.get(i).getClusterPoint()[0],
 					 pamClips.get(i).getClusterPoint()[1]);
 			
-			image = new SpectrogramImage(pamClips.get(i).getSpectrogram(), 
-        			aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
+			
+			image = new PamClipPane(pamClips.get(i), 30, 30, aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
+			image.setSelectionManager(aiPamView.getClipSelectionManager());
+//			image = new SpectrogramImage(pamClips.get(i).getSpectrogram(), 
+//        			aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
         	//toolTip.setGraphic(new ImageView(image.getSpecImage(100, 100)));
 			
-			ImageView imageView = new ImageView(image.getSpecImage(30, 30));
-		    BorderPane imageViewWrapper = new BorderPane(imageView); //need a wrapper for border effects. 
-		    imageViewWrapper.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
-
-		    imageViewWrapper.setOnMouseClicked((event)->{
-				//reset last clicks to transparent. 
-				if (lastClicked!=null) lastClicked.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
-
-				//set new one to have highlighted border
-				imageViewWrapper.setStyle("-fx-border-color: ACCENT_COLOR; -fx-border-width: 2px;");
-
-				//brinf to front
-				imageViewWrapper.toFront();
-							    
-				//set as last clicked,. 
-				lastClicked=imageViewWrapper; 
-			});
+////			ImageView imageView = new ImageView(image.getSpecImage(30, 30));
+//		    BorderPane imageViewWrapper = new BorderPane(image); //need a wrapper for border effects. 
+//		    imageViewWrapper.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
+//
+//		    imageViewWrapper.setOnMouseClicked((event)->{
+//				//reset last clicks to transparent. 
+//				if (lastClicked!=null) lastClicked.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
+//
+//				//set new one to have highlighted border
+//				imageViewWrapper.setStyle("-fx-border-color: ACCENT_COLOR; -fx-border-width: 2px;");
+//
+//				//brinf to front
+//				imageViewWrapper.toFront();
+//							    
+//				//set as last clicked,. 
+//				lastClicked=imageViewWrapper; 
+//				
+//			});
+		    
+		    
         	
-			dataPoint.setNode(imageViewWrapper);
+			dataPoint.setNode(image);
 						
 			series.getData().add(dataPoint); 
 			
@@ -152,6 +163,13 @@ public class ClusterGraphPane extends BorderPane {
 //            }
 //        }
 
+	}
+
+	/**
+	 * Clear the scatter chart. 
+	 */
+	public void clearGraph() {
+		scatterChart.getData().clear();
 	}
 	
 	

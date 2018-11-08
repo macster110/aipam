@@ -8,11 +8,7 @@ import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -21,10 +17,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -87,47 +83,94 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //stop the annoying extra column
 
 		//first column of the table allows users to pick the colour. 
-		TableColumn<SimpleAnnotation, StringProperty> colorColumn = new TableColumn<>("Symbol");
+		TableColumn<SimpleAnnotation, String> colorColumn = new TableColumn<>("Symbol");
 		//colorColumn.setMinWidth(110);
 		colorColumn.setStyle( "-fx-padding: 0em 0em 0em 0em;");
-		
-//		
-//		colorColumn.setCellValueFactory(i -> {
-//			final StringProperty value = i.getValue().colorProperty(); 
-//			// binding to constant value
-//			return Bindings.createObjectBinding(() -> value);
-//		});
+		colorColumn.setEditable(true);
+
+		//		ObservableList<String> colourList = FXCollections.observableArrayList();
+		//		colourList.addAll(
+		//		UtilsFX.toRGBCode(Color.ORANGE),
+		//		UtilsFX.toRGBCode(Color.DODGERBLUE),
+		//		UtilsFX.toRGBCode(Color.GOLDENROD),
+		//		UtilsFX.toRGBCode(Color.PURPLE),
+		//		UtilsFX.toRGBCode(Color.SPRINGGREEN),
+		//		UtilsFX.toRGBCode(Color.LIGHTBLUE),
+		//		UtilsFX.toRGBCode(Color.DARKRED),
+		//		UtilsFX.toRGBCode(Color.CYAN),
+		//		UtilsFX.toRGBCode(Color.RED),
+		//		UtilsFX.toRGBCode(Color.MEDIUMVIOLETRED),
+		//		UtilsFX.toRGBCode(Color.GREENYELLOW),
+		//		UtilsFX.toRGBCode(Color.LAWNGREEN));
+		//		
+		//		colorColumn.setCellFactory(param -> {
+		//			GraphicBoxTableCell<SimpleAnnotation, String> comboBoxTableCell = new GraphicBoxTableCell<>(colourList);
+		//			comboBoxTableCell.setListCell(new SymbolListCell()); 
+		//			
+		//			//comboBoxTableCell.setPickOnBounds(true);
+		//			//comboBoxTableCell.updateSelected(true);
+		//			
+		//			return comboBoxTableCell;
+		//		});
+		//		colorColumn.setCellValueFactory(v -> v.getValue().colorProperty);
+		//		
+		//		colorColumn.setOnEditCommit((t)-> {
+		//			System.out.println("I'm committing a colour thing..."+ t.getNewValue());
+		//			SimpleAnnotation annot = (SimpleAnnotation) t.getTableView().getItems().get(t.getTablePosition().getRow()); 
+		//			annot.colorProperty.setValue(t.getNewValue());
+		//		});
+
 
 		colorColumn.setCellFactory(col -> {
-			TableCell<SimpleAnnotation, StringProperty> c = new TableCell<>();
+			TableCell<SimpleAnnotation, String> c = new TableCell<SimpleAnnotation, String>();
+
 			final ComboBox<String> comboBox = createColorComboBox();
-			
+
 			c.itemProperty().addListener((observable, oldValue, newValue) -> {
+				//System.out.println("New value: ");
 				if (oldValue != null) {
-					comboBox.valueProperty().unbindBidirectional(oldValue);
+					comboBox.valueProperty().unbindBidirectional(new SimpleStringProperty(oldValue));
 				}
 				if (newValue != null) {
-					comboBox.valueProperty().bindBidirectional(newValue);
+					comboBox.valueProperty().bindBidirectional(new SimpleStringProperty(newValue));
 				}
-				
+
 			});
-			comboBox.valueProperty().addListener((observable, oldValue, newValue)->{
-				System.out.println("Hello: combo changed");
-				c.commitEdit(new SimpleStringProperty(newValue));
+
+			comboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+				//this a hack. When the combo box is selected the mouse action doe snot 
+				//pass to the table cell, which requires a double click anyway. So need to 
+				//make sure the cell is in edit mode otherwise no editsa will be committed and no chnages passed 
+				//to the menus. 
+				//table.requestFocus();
+				if (c.getTableRow()!=null) {
+					table.getSelectionModel().select(c.getTableRow().getIndex(), colorColumn);
+					table.getFocusModel().focus(c.getTableRow().getIndex(), colorColumn); 
+					table.edit(c.getTableRow().getIndex(), colorColumn);
+					c.requestFocus();
+				}
+
+				if (c.isEditing()) {
+					//System.out.println("Hello edit: ");
+					c.commitEdit(newValue);
+				}
 			});
-			
-			
+
 			c.graphicProperty().bind(Bindings.when(c.emptyProperty()).
 					then((Node) null).otherwise(comboBox));
+
 			return c;
 		});
+
+		colorColumn.setCellValueFactory(cellData -> cellData.getValue().colorProperty );
+
 		colorColumn.setOnEditCommit((t)-> {
-			System.out.println("I'm committing a colour thing..."+ t.getNewValue().get());
+			//System.out.println("I'm committing a colour thing..."+ t.getNewValue());
 			SimpleAnnotation annot = (SimpleAnnotation) t.getTableView().getItems().get(t.getTablePosition().getRow()); 
-			annot.colorProperty.setValue(t.getNewValue().get());
+			annot.colorProperty.setValue(t.getNewValue());
 		});
 
-		
+
 		TableColumn<SimpleAnnotation, String> nameColumn =
 				new TableColumn<SimpleAnnotation, String> ("Name");
 		nameColumn.setEditable(true);
@@ -135,9 +178,9 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 		nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
 		nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		nameColumn.setOnEditCommit((t)-> {
-		            ((SimpleAnnotation) t.getTableView().getItems().get(
-		                t.getTablePosition().getRow())
-		                ).nameProperty().set(t.getNewValue());});
+			((SimpleAnnotation) t.getTableView().getItems().get(
+					t.getTablePosition().getRow())
+					).nameProperty().set(t.getNewValue());});
 
 		TableColumn<SimpleAnnotation, Integer> numClipsColumn = 
 				new TableColumn<SimpleAnnotation, Integer>("No.\nClips");
@@ -145,19 +188,26 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 		numClipsColumn.setCellValueFactory(cellData -> cellData.getValue().numClipsProperty().asObject());
 
 		table.getColumns().addAll(colorColumn, nameColumn, numClipsColumn);
+		
+		
+		//remove items menu item
+		MenuButton buttonRemove = new MenuButton("Remove"); 
 
 		//add button
 		Button buttonAdd = new Button("Add"); 
 		buttonAdd.setOnAction((action)->{
-			aiPamView.getAnnotationsManager().add(new SimpleAnnotation(aiPamView.getAnnotationsManager().getNAnnotations()+1)); 
+			aiPamView.getAnnotationsManager().add(
+					new SimpleAnnotation(aiPamView.getAnnotationsManager().getNAnnotations()+1
+							, UtilsFX.toRGBCode(Color.LAWNGREEN))); 
+			
 			//update the remove menu button
+			populateRemoveMenu(buttonRemove);
 		});
-		MenuButton buttonRemove = new MenuButton("Remove"); 
-		buttonRemove.setOnAction((action)->{
-			//TODO
-		});	
-		
-	
+		buttonAdd.prefHeightProperty().bind(buttonRemove.heightProperty());
+
+		//make sure populated on start. 
+		populateRemoveMenu(buttonRemove);
+
 		HBox buttonHolder = new HBox(); 
 		buttonHolder.setSpacing(5);
 		buttonHolder.getChildren().addAll(buttonAdd,buttonRemove);
@@ -170,6 +220,28 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 
 		return vbox; 		
 	}
+	
+	/**
+	 * Populates the remove button menu
+	 */
+	private void populateRemoveMenu(MenuButton buttonRemove) {
+		//update the remove menu button
+		buttonRemove.getItems().clear();
+		MenuItem item; 
+		for (int i=0; i<table.getItems().size(); i++) {
+			item= new MenuItem(table.getItems().get(i).getAnnotationGroupName()); 
+			final int ii=i; 
+			item.setOnAction((action1)->{
+				//remove pam clips so they have null annotation reference
+				table.getItems().get(ii).clearClips(); 
+				//remove from list. 
+				table.getItems().remove(ii);
+				populateRemoveMenu(buttonRemove);
+			});
+			buttonRemove.getItems().add(item); 
+		}
+	}
+	
 
 	/**
 	 * Combo box with some colours. 
@@ -185,7 +257,7 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 				return new SymbolListCell();
 			};
 		});
-		
+
 		comboBoxColors.getItems().addAll(
 				UtilsFX.toRGBCode(Color.ORANGE),
 				UtilsFX.toRGBCode(Color.DODGERBLUE),
@@ -201,22 +273,23 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 				UtilsFX.toRGBCode(Color.LAWNGREEN)
 				); 
 
-		
-		comboBoxColors.getSelectionModel().select(	UtilsFX.toRGBCode(Color.ORANGE));
+
+		comboBoxColors.getSelectionModel().select(UtilsFX.toRGBCode(Color.ORANGE));
 
 		return comboBoxColors; 
 
 	}
-	
+
 	public class SymbolListCell extends ListCell<String> {
 
 		@Override protected void updateItem(String item, boolean empty) {
 			super.updateItem(item, empty);
-
 			if (item == null || empty) {
+				//.out.println("Hello: " + item);
 				setGraphic(null);
 				setText("");
 			} else {
+				//System.out.println("Hello: " + item);
 				Circle circle = new Circle(12); 
 				circle.setFill(Color.web(item));
 				setGraphic(circle);

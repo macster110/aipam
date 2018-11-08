@@ -33,7 +33,6 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\s
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utilsFX\FluentButtonSkin.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utilsFX\ZoomableScrollPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\AudioInfo.java
-C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\PamClusterManager.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\ControlPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utilsFX\FluentMenuPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\Spectrogram.java
@@ -59,6 +58,7 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\AudioP
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\SnapToGridListener.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\WindowFunction.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\ClusterListener.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\annotation\AnnotationManager.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\StandardAudioPlay.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\AIPamApp.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\StandardTrainingListener.java
@@ -71,6 +71,8 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\clips
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\LAPJV2\LAPJV2.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\clips\ClipGridPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\PLayBackParams.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\ClipClusterManager.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utilsFX\AcceptOnExitTableCell.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\shortestPath\AssignmentProblem.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utilsFX\AISVGDimensionProvider.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\ClipWave.java

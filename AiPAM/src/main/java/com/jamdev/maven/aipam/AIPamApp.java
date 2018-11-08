@@ -34,15 +34,17 @@ public class AIPamApp extends Application {
         SvgImageLoaderFactory.install(new AISVGDimensionProvider());
     	
         StackPane root = new StackPane();
-        root.setStyle("-fx-background: #1d1d1d; -fx-font: 12px Segoe; -fx-text-fill: white;");
+        //
         
-        //apply JMetro theme
-        new JMetro(JMetro.Style.DARK).applyTheme(root);
-        //add extra stylesheet for fluent design menu buttons and tab pane. . 
-        root.getStylesheets().add(getClass().getResource("fluentdesignextra.css").toExternalForm());
+//        //apply JMetro theme
+//        new JMetro(JMetro.Style.DARK).applyTheme(root);
+//        //add extra stylesheet for fluent design menu buttons and tab pane. . 
+//        root.getStylesheets().add(getClass().getResource("fluentdesignextra.css").toExternalForm());
+//       // root.setStyle("-fx-background: #1d1d1d; -fx-font: 12px Segoe; -fx-text-fill: white;");
+//        root.setStyle("-fx-background: BACKGROUND;");
 
         //create the view
-        AIPamView sensorView = new AIPamView(aiPamController, primaryStage); 
+        AIPamView sensorView = new AIPamView(aiPamController, primaryStage, root); 
                 
    
         root.getChildren().add(sensorView);

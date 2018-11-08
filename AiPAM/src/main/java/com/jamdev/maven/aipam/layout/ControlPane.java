@@ -315,9 +315,12 @@ public class ControlPane extends BorderPane {
 		
 	}
 
+	/**
+	 * Disables the main control menu buttons. 
+	 * @param disable - true to disable
+	 */
 	public void setControlButtonDisable(boolean disable) {
-		// TODO Auto-generated method stub
-		
+		masterControlPane.setControlButtonDisable(disable); 
 	}
 
 }

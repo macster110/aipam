@@ -65,6 +65,16 @@ public class SpectrogramImage {
 		
 		return specImage; 
 	}
+	
+	
+	/**
+	 * Create a an image of the spectrogram by applying a colour gradient to the surface data.
+	 * @return spectrogram image which is the same size in pixels as it is in data length
+	 */
+	public WritableImage getRawSpecImage() {
+		return writeImageData(spectrogram,  colourArray,  clims);
+	}
+	
 
 	
 	/**

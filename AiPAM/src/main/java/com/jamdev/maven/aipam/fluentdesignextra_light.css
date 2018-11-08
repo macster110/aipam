@@ -1,0 +1,16 @@
+/* 
+    Document   : controlStyle1
+*/
+
+{
+    BACKGROUND_MENU: #cccccc;
+    BACKGROUND_PRESSED_MENU: rgba(100,100,100,0.5);
+    BACKGROUND:  white; /*dark background*/
+    BACKGROUND_TRANS: rgb(255, 255, 255, 0.96);
+    TEXT_FILL: black;
+    TEXT_USER_PROMPT: blue;
+
+
+    /*Override JMetro*/
+    ACCENT_COLOR: #26C223; /*For high lights, toggle buttons etc.**/
+}

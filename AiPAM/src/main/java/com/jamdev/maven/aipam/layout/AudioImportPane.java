@@ -101,7 +101,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 		fileImportHolder.setSpacing(5);
 
 		Label label = new Label("Import Audio Files"); 
-		label.getStyleClass().add("label-title1");
+		label.getStyleClass().add("label-title2");
 
 		importButton = new Button("Browse"); 
 		//	Text iconText = new MaterialDesignIconView(MaterialDesignIcon.FOLDER_DOWNLOAD);
@@ -127,7 +127,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 		//clip length 
 		Label clipLength = new Label("Max. Clip Length"); 
-		clipLength.getStyleClass().add("label-title1");
+		clipLength.getStyleClass().add("label-title2");
 
 
 		ObservableList<Double> defaultClipTimes = FXCollections.observableArrayList(); 
@@ -146,7 +146,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 		});
 
 		Label decimatorLabel = new Label("Decimator"); 
-		decimatorLabel.getStyleClass().add("label-title1");
+		decimatorLabel.getStyleClass().add("label-title2");
 
 
 		decimatorBox = new ComboBox<Integer>(); 
@@ -162,7 +162,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 
 		Label channelLabel = new Label("Channel"); 
-		channelLabel.getStyleClass().add("label-title1");
+		channelLabel.getStyleClass().add("label-title2");
 
 		channelBox = new ComboBox<Integer>(); 
 		channelBox.setDisable(true);
@@ -204,7 +204,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 		}
 
 		else {
-			audioInfoLabel.setText(String.format("No. Files: % d Channels: %d Sample Rate: %.0f \n"
+			audioInfoLabel.setText(String.format("No. Files: % d \nChannels: %d \nSample Rate: %.0f \n"
 					+ "Press 'Generate Clips to import", 
 					audioInfo.nFiles, audioInfo.channels, audioInfo.sampleRate));
 			textField.setText(audioInfo.file); 

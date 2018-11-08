@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.AIPamParams;
+import com.jamdev.maven.aipam.AITheme;
 import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.annotation.AnnotationManager;
 import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
@@ -23,11 +24,14 @@ import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
@@ -133,11 +137,28 @@ public class AIPamView extends BorderPane {
 	/**
 	 * Holds the center stakc of nodes
 	 */
-	private StackPane centerStackPane; 
+	private StackPane centerStackPane;
 
-	public AIPamView(AiPamController aiPamControl, Stage primaryStage) {
+	/**
+	 * Root 
+	 */
+	private Pane root;
+
+	/**
+	 * The theme for the UI. 
+	 */
+	private AITheme theme; 
+
+	public AIPamView(AiPamController aiPamControl, Stage primaryStage, Pane root) {
 
 		this.primaryStage = primaryStage; 
+		this.root=root; 
+		
+		//apply the theme
+		theme = new AITheme();
+		theme.applyTheme(AITheme.JMETRO_DARK_THEME, root);
+		
+		//ai pam control. 
 		this.aiPamContol = aiPamControl; 
 		this.aiPamContol.addSensorMessageListener((flag, dataObject)->{
 			notifyUpdate(flag, dataObject); 
@@ -227,6 +248,8 @@ public class AIPamView extends BorderPane {
 			hidingPane.toFront(); //myust be above everything. 
 			centerPane.setTop(null); //replace with user promtp pane. 
 		}
+		setControlButtonDisable(show);  
+
 	}
 
 
@@ -260,9 +283,11 @@ public class AIPamView extends BorderPane {
 	 * @param updateType - the update type. 
 	 */
 	public void notifyUpdate(int updateType, Object data) {
-		//System.out.println("AIPamView: notifyUpdate: " +updateType + " " + data);
+		System.out.println("AIPamView: notifyUpdate: " +updateType + " " + data);
 		switch (updateType) {
 		case AiPamController.START_FILE_LOAD:
+			this.clipPane.clearSpecImages();
+			this.clusterGraphPane.clearGraph(); 
 			showProgressPane(true); 
 			this.progressPane.setTask((Task) data);
 			break;
@@ -569,6 +594,14 @@ public class AIPamView extends BorderPane {
 	 */
 	public AnnotationManager getAnnotationsManager() {
 		return this.aiPamContol.getAnnotationManager();
+	}
+
+	/**
+	 * Set the look and feel of the UI.
+	 * @param thetype - the theme type. e.g. AiTheme.JMETRO_LIGHT_THEME
+	 */
+	public void setTheme(int thetype) {
+		this.theme.applyTheme(thetype, root); 
 	}
 
 
