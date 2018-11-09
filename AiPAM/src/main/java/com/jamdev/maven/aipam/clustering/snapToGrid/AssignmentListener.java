@@ -14,6 +14,8 @@ public interface AssignmentListener {
 	public void augmentingRowReduction(int f0, int k, int count);
 
 	public void augmenting();
+	
+	public boolean isCancelled(); 
 
 
 }

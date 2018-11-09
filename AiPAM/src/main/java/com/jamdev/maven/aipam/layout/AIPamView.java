@@ -12,6 +12,7 @@ import com.jamdev.maven.aipam.annotation.AnnotationManager;
 import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
 import com.jamdev.maven.aipam.layout.clips.ClipGridPane;
 import com.jamdev.maven.aipam.layout.clips.ClipSelectionManager;
+import com.jamdev.maven.aipam.layout.clips.FullClipPane;
 import com.jamdev.maven.aipam.layout.clustering.ClusterGraphPane;
 import com.jamdev.maven.aipam.layout.utilsFX.HidingPane;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
@@ -24,8 +25,8 @@ import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
-import javafx.scene.Node;
-import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -148,16 +149,25 @@ public class AIPamView extends BorderPane {
 	 * The theme for the UI. 
 	 */
 	private AITheme theme; 
+	
+
+
+	/**
+	 * Pane which shows the full spectrogram of the clip and a few other controls. 
+	 */
+	private FullClipPane fullClipPane; 
 
 	public AIPamView(AiPamController aiPamControl, Stage primaryStage, Pane root) {
 
 		this.primaryStage = primaryStage; 
 		this.root=root; 
-		
+
 		//apply the theme
 		theme = new AITheme();
 		theme.applyTheme(AITheme.JMETRO_DARK_THEME, root);
 		
+		
+
 		//ai pam control. 
 		this.aiPamContol = aiPamControl; 
 		this.aiPamContol.addSensorMessageListener((flag, dataObject)->{
@@ -181,6 +191,7 @@ public class AIPamView extends BorderPane {
 		controlPaneHolder.setStyle("-fx-background-color: BACKGROUND_MENU");
 
 		clipPane= new ClipGridPane(this); 
+		fullClipPane = new FullClipPane(); //for viewing clips in seperate dialog
 
 		clipSelectionManager = new ClipSelectionManager(this); 
 
@@ -328,9 +339,19 @@ public class AIPamView extends BorderPane {
 			this.showSettingsPane(controlPane.getAudioImportPane());
 			checkSettings();
 			break;
+		case AiPamController.START_CLIP_EXPORT:
+			showProgressPane(true); 
+			this.progressPane.setTask((Task) data);
+			break; 
+		case AiPamController.CANCEL_CLIP_EXPORT:
+			showProgressPane(false); 
+			break;
+		case AiPamController.END_CLIP_EXPORT:
+			showProgressPane(false); 
+			break;
 		} 
 	}
-	
+
 	/**
 	 * Set the control buttons to disabled so users can;t start multiple threads at once. 
 	 * @param disable - true to disable. 
@@ -546,7 +567,12 @@ public class AIPamView extends BorderPane {
 	 * Exports annotation clips and organise into different folders.  
 	 */
 	public void exportAnnotations() {
-		// TODO Auto-generated method stuff;
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		directoryChooser.setTitle("Export annotations");
+		File file = directoryChooser.showDialog(primaryStage);
+		if (file != null) {
+			this.aiPamContol.exportAnnotations(file); 
+		}
 	}
 
 	/**
@@ -566,13 +592,21 @@ public class AIPamView extends BorderPane {
 	 * Load settings from a file. 
 	 */
 	public void loadSettings() {
-		FileChooser fileChooser = new FileChooser();
-		configureFileChooser(fileChooser);
-		// Show open file dialog
-		File file = fileChooser.showOpenDialog(primaryStage);
-		if (file != null) {
-			aiPamContol.loadSettings(file); 
-		}
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Alert");
+		alert.setHeaderText("This feature is not yet available");
+		String s ="Load settings is not yet available. Once available load settings will  "
+				+ "allow users to reimport their settings, annotation and cluster results";
+		alert.setContentText(s);
+		alert.show();
+
+		//		FileChooser fileChooser = new FileChooser();
+		//		configureFileChooser(fileChooser);
+		//		// Show open file dialog
+		//		File file = fileChooser.showOpenDialog(primaryStage);
+		//		if (file != null) {
+		//			aiPamContol.loadSettings(file); 
+		//		}
 	}
 
 	/**
@@ -603,8 +637,21 @@ public class AIPamView extends BorderPane {
 	public void setTheme(int thetype) {
 		this.theme.applyTheme(thetype, root); 
 	}
-
-
-
+	
+	/**
+	 * The full clip pane. Pane which shows the full spectrogram of the clip and a few other controls. 
+	 * @return the full clip pane
+	 */
+	public FullClipPane getFullClipPane() {
+		return fullClipPane;
+	}
+	
+	/**
+	 * Get the theme
+	 * @return the theme to get. 
+	 */
+	public AITheme getTheme() {
+		return theme;
+	}
 
 }

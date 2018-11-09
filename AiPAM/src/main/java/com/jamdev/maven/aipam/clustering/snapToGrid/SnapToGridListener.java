@@ -1,5 +1,7 @@
 package com.jamdev.maven.aipam.clustering.snapToGrid;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -20,6 +22,12 @@ public class SnapToGridListener implements AssignmentListener {
 	 * Simple string property for messages
 	 */
 	public StringProperty messageProperty = new SimpleStringProperty(); 
+	
+	/**
+	 * Cancelled property
+	 */
+	public BooleanProperty cancelledProperty = new SimpleBooleanProperty(); 
+
 
 
 	@Override
@@ -64,6 +72,21 @@ public class SnapToGridListener implements AssignmentListener {
 	public StringProperty assignmentMessageProperty() {
 		return messageProperty;
 	}
+	
+	/**
+	 * The cancelled property
+	 * @return the cancelled property
+	 */
+	public BooleanProperty cancelledProperty() {
+		return cancelledProperty;
+	}
+
+	@Override
+	public boolean isCancelled() {
+		return false;
+	}
+	
+	
 
 
 

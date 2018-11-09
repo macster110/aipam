@@ -11,8 +11,6 @@ public class SimpleLAPJVListener implements AssignmentListener {
 	@Override
 	public void reductionTransfer() {
 		System.out.println("reductionTransfer");
-
-		
 	}
 
 	@Override
@@ -23,7 +21,12 @@ public class SimpleLAPJVListener implements AssignmentListener {
 	@Override
 	public void augmentingRowReduction(int f0, int k, int count) {
 		System.out.println("augmentingRowReduction: k " + k + " f0: " + f0);
-		
+	}
+
+	@Override
+	public boolean isCancelled() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

@@ -17,6 +17,7 @@ public interface ClusteringAlgorithm {
 	 */
 	public String getCLusterType(); 
 	
+	
 	/**
 	 * Cluster audio clips. 
 	 * @param pamClips - list of clips to cluster. 

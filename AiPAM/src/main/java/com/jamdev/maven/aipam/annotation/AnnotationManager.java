@@ -1,5 +1,7 @@
 package com.jamdev.maven.aipam.annotation;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jamdev.maven.aipam.AiPamController;
@@ -20,23 +22,23 @@ import javafx.scene.paint.Color;
  *
  */
 public class AnnotationManager {
-	
+
 	/**
 	 * List of the current simple annotations. 
 	 */
 	private final ObservableList<SimpleAnnotation> data =
 			FXCollections.observableArrayList(
 					new SimpleAnnotation(1, UtilsFX.toRGBCode(Color.ORANGE)));
-	
+
 	/**
 	 * Reference to the controller. 
 	 */
 	private AiPamController aiPamControl;
-	
+
 	public AnnotationManager(AiPamController aiPamControl) {
 		this.aiPamControl=aiPamControl; 
 	}
-	
+
 	/**
 	 * Instatiate the correct annotation class for an annotation name. 
 	 * <p>
@@ -51,47 +53,47 @@ public class AnnotationManager {
 			annotation = new SimpleAnnotation(0); 
 			break; 
 		}
-		
+
 		return annotation; 
 	}
-	
+
 	/**
 	 * Converts a list of MATLAB structures to annotations. 
 	 * @param mlStrcut - the MATLAB structure to convert
 	 * @return a list of annotation from the MATLAB structure. 
 	 */
 	public List<Annotation> struct2Annotations(MLStructure mlStrcut){
-				
-//		MLStructure struct;
-//		for (int i=0; i<struct.getM(); i++) {
-//		
-//						
-//		}
-		
+
+		//		MLStructure struct;
+		//		for (int i=0; i<struct.getM(); i++) {
+		//		
+		//						
+		//		}
+
 		//TODO
-//				
+		//				
 		return null; 
 	} 
-	
-	
-	
+
+
+
 	/**
 	 * Converts a list of annotations to a multi element MATLAB structure
 	 * @param data2 - a lsit of annotations to convert to structures. 
 	 * @return a list structure containing a list of annotation structures
 	 */
 	public MLStructure annotation2Struct(ObservableList<SimpleAnnotation> data2){
-		
+
 		MLStructure mlStructure = new MLStructure("annotations", new int[] {data2.size(),1}); 
-		
+
 		MLStructure struct;
 		for (int i=0; i<data2.size(); i++) {
 			mlStructure.setField(data2.get(i).getAnnotaionType(), data2.get(i).annotation2Struct(), i);
 		}
-		
+
 		return mlStructure; 
 	} 
-	
+
 	/**
 	 * Re link annotations with the current set of clips. If annotations are imported 
 	 * they have the clip ID but they don;t have the clip object associated with them. 
@@ -113,13 +115,13 @@ public class AnnotationManager {
 	public ObservableList<SimpleAnnotation> getAnnotationsList() {
 		return data;
 	}
-	
+
 	/**
 	 * Add an annotation to the list. 
 	 * @param annotation - annotaion to add
 	 */
 	public void add(SimpleAnnotation annotation) {
-		 data.add(annotation); 
+		data.add(annotation); 
 	}
 
 
@@ -133,6 +135,41 @@ public class AnnotationManager {
 
 	public MLStructure annotation2Struct() {
 		return annotation2Struct(this.data);
+	}
+
+	/**
+	 * Get the file path for all annotated clip files
+	 * @return the file paths for all clips that are annoated.
+	 */
+	public ArrayList<String> getAnnotaedClipFiles() {
+		ArrayList<String> files= new ArrayList<String>(); 
+		for (int i=0; i<data.size(); i++) {
+			for (int j=0; j<data.get(i).getPamClips().size(); j++) {
+				files.add(data.get(i).getPamClips().get(j).getFileName());
+			}
+		}
+		return files;
+
+	}
+
+	/**
+	 * Get the export to file paths for all annotated clip organised by annotation
+	 * @param the parent directory to export clips to 
+	 * @return the new file paths for all clips that are annotated.
+	 */
+	public ArrayList<String> getAnnotatedExportFiles(File file) {
+		ArrayList<String> files= new ArrayList<String>(); 
+		for (int i=0; i<data.size(); i++) {
+			//create new file path
+			String folderName = data.get(i).getAnnotationGroupName();
+			//remove invalid characters
+			folderName = folderName.replaceAll("[^A-Za-z0-9()\\[\\]]", "");
+			String newfileDir = file.getPath()+"\\"+folderName;
+			for (int j=0; j<data.get(i).getPamClips().size(); j++) {
+				files.add(newfileDir + "\\" + data.get(i).getPamClips().get(j).getID());
+			}
+		}
+		return files;
 	}
 
 }

@@ -47,6 +47,11 @@ public class ClipClusterManager {
 		public ClusterTask(ArrayList<PAMClip> pamClips, AIPamParams params) {
 			this.params=params; 
 			this.pamClips=pamClips; 
+			this.setOnCancelled((hello)->{
+				clusterSnapGrid.getListener().cancelledProperty().set(true);
+				//should now exit gracefully. 
+			});
+
 		}
 
 		@Override
@@ -74,6 +79,7 @@ public class ClipClusterManager {
 				//cluster data is stored in the clips. 
 				clusterAlgorithm.cluster(pamClips,  params.clusterParams);
 				
+				
 				//start snapping to gird.
 				updateMessage("Snapping the cluster points to a grid...this can also take some time"); 
 				if (clusterSnapGrid.getListener()!=null) {
@@ -87,8 +93,7 @@ public class ClipClusterManager {
 
 				
 				clusterSnapGrid.snapToGrid(pamClips); 
-				
-				
+
 				//System.out.println("Hello: Finished!!!!");
 				return 1; 
 			}
@@ -103,9 +108,12 @@ public class ClipClusterManager {
 
 
 	public ClusterParams struct2ClusterParams(MLStructure clusterParams) {
-		// TODO Auto-generated method stub
+		clusterParams.getField("type"); 
+		
+		// TODO Auto-generated method stub -switch statwement here
 		return null;
 	}
+
 
 
 }

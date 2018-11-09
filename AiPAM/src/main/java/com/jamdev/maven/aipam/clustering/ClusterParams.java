@@ -23,11 +23,11 @@ public interface ClusterParams extends Cloneable {
 	 */
 	public ClusterParams clone();
 	
-	/**
-	 * Get the settings pane for the clustering algorithm 
-	 * @return the settings pane for the clustering algorithm. 
-	 */
-	public SettingsPane<?> getSettingsPane();
+//	/**
+//	 * Get the settings pane for the clustering algorithm 
+//	 * @return the settings pane for the clustering algorithm. 
+//	 */
+//	public SettingsPane<?> getSettingsPane();
 	
 	/**
 	 * Set the parameters of the cluster algorithm using a MATLAB structure

@@ -6,6 +6,7 @@ import java.util.List;
 import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.annotation.SimpleAnnotation;
 import com.jamdev.maven.aipam.clips.PAMClip;
+import com.jamdev.maven.aipam.layout.AIPamView;
 
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
@@ -28,10 +29,16 @@ public class SelectionMenu {
 	 * Reference to the controller. 
 	 */
 	private AiPamController aiPamController;
+	
+	/**
+	 * Reference to the view. 
+	 */
+	private AIPamView aiPamView;
+	
 
-
-	public SelectionMenu(AiPamController aiPamController) {
+	public SelectionMenu(AiPamController aiPamController, AIPamView aiPamView) {
 		this.aiPamController=aiPamController; 
+		this.aiPamView=aiPamView; 
 	}
 
 
@@ -203,8 +210,11 @@ public class SelectionMenu {
 		Dialog<String> dialog = new Dialog<>();
 		dialog.getDialogPane().getButtonTypes().add(closeButtonType);
 
+		aiPamView.getFullClipPane().setPamClip(pamClip);
+		dialog.getDialogPane().setContent(aiPamView.getFullClipPane());
 		
-		dialog.getDialogPane().setContent(new FullClipPane(pamClip));
+		//apply the current theme. 
+		aiPamView.getTheme().applyTheme(aiPamView.getTheme().getCurrentTheme(), dialog.getDialogPane());
 		//dialogPane.setContent(new Label("Hello"));
 
 		dialog.showAndWait();

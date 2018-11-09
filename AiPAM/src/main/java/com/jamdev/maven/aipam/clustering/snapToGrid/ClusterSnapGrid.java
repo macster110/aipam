@@ -22,13 +22,13 @@ public class ClusterSnapGrid {
 	 * The assignment algorithm 
 	 */
 	private AssignmentProblemAlgorithm lapjv;
-	
+
 	/**
 	 * Listener for the cluster snap to grid algorithm 
 	 */
 	private SnapToGridListener listener;
 
-	
+
 	public SnapToGridListener getListener() {
 		return listener;
 	}
@@ -47,18 +47,24 @@ public class ClusterSnapGrid {
 
 		//set the algorithm 
 		lapjv=new ShortestPath(spareseCostMatrix.toFullMatrix(), clusterPoints.length); 
-//		//an LAPJV algorithm
-//		lapjv=new LAPJV(spareseCostMatrix); 
-//		//the LAPJV2 algorithm<- a carbon copy of the C code. 
-//		lapjv=new LAPJV2(spareseCostMatrix.toFullMatrix()); 
+		//		//an LAPJV algorithm
+		//		lapjv=new LAPJV(spareseCostMatrix); 
+		//		//the LAPJV2 algorithm<- a carbon copy of the C code. 
+		//		lapjv=new LAPJV2(spareseCostMatrix.toFullMatrix()); 
 
 		lapjv.setListener(listener);
 		lapjv.process();
 
 		int[] result =  lapjv.getResult();
 
-		System.out.println("LAPJV complete. The cost is: " + result.length +
-				" and it took: " +  (lapjv.getProcessingTime()/1000.) + " seconds");
+		if (result!=null) {
+			System.out.println("LAPJV complete. The cost is: " + result.length +
+					" and it took: " +  (lapjv.getProcessingTime()/1000.) + " seconds");
+		}
+		else {
+			System.out.println("LAPJV cancelled");
+		}
+
 
 		return lapjv.getResult(); 		
 	}
@@ -96,7 +102,7 @@ public class ClusterSnapGrid {
 
 		//normalise the cluster points. 
 		//AiPamUtils.normalise(clusterPoints, 1);
-		
+
 		double[][] gridPoints = generateGrid(gridx, gridy, AiPamUtils.max(clusterPoints));
 		gridPoints= Arrays.copyOf(gridPoints, clusterPoints.length);
 
@@ -118,7 +124,7 @@ public class ClusterSnapGrid {
 			}
 			row[i] = rowk;
 		}
-		
+
 		//normalise the costs to 10000 to stop the LAPJV algorithm from potential looping...FOREVER/
 		//until it reaches floating point precision...
 		AiPamUtils.normalise(cost, 10000.);
@@ -131,7 +137,7 @@ public class ClusterSnapGrid {
 
 		return sparse;
 	}
-	
+
 
 	/**
 	 * Calculate the cost between a grid point and cluster 
@@ -171,9 +177,11 @@ public class ClusterSnapGrid {
 
 		//run the algorithm; 
 		int[] results = getClusterGrid(clusterPoints, gridSize[0], gridSize[1]); 
-		
-		for (int i=0; i<pamClips.size(); i++) {
-			pamClips.get(i).setGridID(results[i]); 
+
+		if (results!=null) {
+			for (int i=0; i<pamClips.size(); i++) {
+				pamClips.get(i).setGridID(results[i]); 
+			}
 		}
 		//now apply the results to the pamclips. 
 	}	
@@ -189,7 +197,7 @@ public class ClusterSnapGrid {
 		int grid = (int) Math.ceil(Math.sqrt(nClips)); 
 		return new int[] {grid, grid};
 	}
-	
+
 	/**
 	 * Get the listener for the algorithm.
 	 */

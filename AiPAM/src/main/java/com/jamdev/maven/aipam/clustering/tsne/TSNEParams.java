@@ -81,11 +81,6 @@ public class TSNEParams implements ClusterParams {
 		return !changed;
 	}
 
-	@Override
-	public SettingsPane<?> getSettingsPane() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public void struct2ClusterParams(MLStructure mlStruct) {

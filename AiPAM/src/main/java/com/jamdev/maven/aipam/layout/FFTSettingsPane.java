@@ -9,11 +9,13 @@ import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -78,7 +80,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 			len*=2; 
 		}
 		fftComboBox = new ComboBox<Integer>(fftLenList); 
-		fftComboBox.getSelectionModel().select(5);
+		fftComboBox.getSelectionModel().select(4);
 		fftComboBox.setOnAction((action)->{
 			notifySettingsListeners();
 		});
@@ -97,7 +99,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 
 		
 		hopComboBox  = new ComboBox<Integer>(FXCollections.observableArrayList(fftLenList)); 
-		hopComboBox.getSelectionModel().select(4);
+		hopComboBox.getSelectionModel().select(3);
 		hopComboBox.setTooltip(new Tooltip("The FFT hop is the amount the FFT Lengbth window slides along \n"
 				+ "the samples before a new FFT chunk is calculated. Often the hop is half the FFT length \n"));  
 		hopComboBox.setOnAction((action)->{
@@ -106,6 +108,18 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		
 		Label colourScale = new Label("Colour Scales");
 		colourScale.getStyleClass().add("label-title2");
+		
+		Button defaultHop = new Button("Default"); 
+		defaultHop.setTooltip(new Tooltip("The default FFT hop is 50% of the the FFT length")); 
+		defaultHop.setOnAction((action)->{
+			int index =fftComboBox.getSelectionModel().getSelectedIndex()-1;
+			if (index<0 || index> hopComboBox.getItems().size()-1) return;
+			hopComboBox.getSelectionModel().select(index);
+		});
+		
+		HBox hopBox = new HBox(); 
+		hopBox.setSpacing(5);
+		hopBox.getChildren().addAll(hopComboBox, defaultHop);
 
 		
 		final ColourArrayType[] colourTypes = ColourArrayType.values(); 
@@ -138,7 +152,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		VBox vBox = new VBox(); 
 		vBox.setSpacing(5);
 		vBox.getChildren().addAll(titleLabel, fftLabel, fftComboBox, fftHopLabel,
-				hopComboBox, colourScale,colorType,  colourRangleSlider); 
+				hopBox, colourScale,colorType,  colourRangleSlider); 
 		
 		return vBox;
 

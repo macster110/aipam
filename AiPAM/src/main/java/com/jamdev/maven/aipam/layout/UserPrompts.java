@@ -207,7 +207,7 @@ public class UserPrompts {
 		
 		Pane pane1=iconLabelPane(iconViewSettings, "No clips imported yet: select", "");
 		Pane pane2=iconLabelPane(iconViewClips, "and then ", " to import."); 
-		Pane pane3=iconLabelPane(audioFile, "Use ", "Audio for settings"); 
+		Pane pane3=iconLabelPane(audioFile, " Use ", "Audio for settings"); 
 
 		HBox vBox = new HBox(); 
 		vBox.getChildren().addAll(pane1, pane2, pane3); 

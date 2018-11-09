@@ -21,6 +21,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -70,7 +71,8 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 		Label label = new Label("Annotations");
 		label.getStyleClass().add("label-title1");
 
-		Button button = new Button("Export Data..."); 
+		Button button = new Button("Export Clips..."); 
+		button.setTooltip(new Tooltip("Exports annotated clips to folders named with the annotation group name"));
 		button.setOnAction((action) -> aiPamView.exportAnnotations());
 
 		Label labelEditAnno = new Label("Edit Annotations");

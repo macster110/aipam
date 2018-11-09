@@ -151,6 +151,11 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 		decimatorBox = new ComboBox<Integer>(); 
 		decimatorBox.setDisable(true);
+		decimatorBox.setTooltip(new Tooltip("The decimator allows users to down sample data \n"
+				+ "Decimated data is filtered first to prevent aliasing. It is then down sampled \n"
+				+ "to the desired sample rate. It is useful to deimate data if the features of \n"
+				+ "intertest are in lower frequency bands, e.g. baleen whales. This gives the \n"
+				+ "clusterring algorithm more relevent spectrogram images to analyse."));
 		decimatorBox.setOnAction((action)->{
 			notifySettingsListeners(); 
 		});

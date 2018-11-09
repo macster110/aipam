@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.annotation.AnnotationManager;
 import com.jamdev.maven.aipam.clips.AudioInfo;
+import com.jamdev.maven.aipam.clips.ClipExporter;
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.clips.PAMClipManager;
 import com.jamdev.maven.aipam.clustering.ClipClusterManager;
@@ -79,6 +80,22 @@ public class AiPamController {
 	 * End the file header load. 
 	 */
 	public static final int END_FILE_HEADER_LOAD = 11;
+	
+	/**
+	 * Start the clip export
+	 */
+	public static final int START_CLIP_EXPORT = 12; 
+	
+	/**
+	 * Cancel the clip export
+	 */
+	public static final int CANCEL_CLIP_EXPORT = 13; 
+	
+	/**
+	 * End the clip export
+	 */
+	public static final int END_CLIP_EXPORT = 14; 
+
 
 
 	/**
@@ -120,6 +137,16 @@ public class AiPamController {
 	private Task<Integer> clusterTask;
 
 	/**
+	 * Exports clips
+	 */
+	private ClipExporter clipExporter;
+
+	/**
+	 * Export clip task. 
+	 */
+	private Task<Integer> exportTask;
+
+	/**
 	 * The main controller. 
 	 */
 	public AiPamController() {
@@ -128,6 +155,7 @@ public class AiPamController {
 		this.pamClusterManager= new ClipClusterManager(); 
 		this.annotationManager= new AnnotationManager(this); 
 		this.settingsImportExport = new SettingsImportExport(this);
+		this.clipExporter = new ClipExporter(); 
 	}
 
 
@@ -311,6 +339,39 @@ public class AiPamController {
 
 	public void loadSettings(File file) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * Export clips to sub folders organised by annotation names. 
+	 * @param file - the directory to export to. 
+	 */
+	public void exportAnnotations(File file) {
+		
+		ArrayList<String> annotatedClips = this.annotationManager.getAnnotaedClipFiles(); 
+		ArrayList<String> exportedClips = this.annotationManager.getAnnotatedExportFiles(file); 
+		
+		//cancel the cluster task
+		if (exportTask!=null) {
+			exportTask.cancel(true);
+		}
+		
+		exportTask = 	this.clipExporter.exportClipTask(annotatedClips, exportedClips, this.aiPamParams); 
+		
+		updateMessageListeners(START_CLIP_EXPORT, exportTask); 
+
+		exportTask.setOnCancelled((value)->{
+			//send notification when 
+			updateMessageListeners(CANCEL_CLIP_EXPORT, exportTask); 
+		});
+		exportTask.setOnSucceeded((value)->{
+			//
+			updateMessageListeners(END_CLIP_EXPORT, exportTask); 
+		});
+
+		Thread th = new Thread(exportTask);
+		th.setDaemon(true);
+		th.start(); 
 		
 	}
 

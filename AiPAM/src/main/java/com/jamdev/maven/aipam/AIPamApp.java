@@ -10,7 +10,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import jfxtras.styles.jmetro8.JMetro;
 /**
  * The main FX application for AiPam.
  * 

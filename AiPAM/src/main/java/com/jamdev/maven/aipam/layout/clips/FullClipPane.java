@@ -11,7 +11,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
 /**
- * Pane which shows the full spectorgram of a clip. 
+ * Pane which shows the full spectorgram of a clip and has some
+ * additional controls. 
  * @author Jamie Macaulyay 
  *
  */
@@ -19,14 +20,23 @@ public class FullClipPane extends BorderPane {
 	
 	ColourArray colourArray = ColourArray.createFireArray(200); 
 	
-	double[] colourLims = new double[] {120,160};
+	double[] colourLims = new double[] {20, 100};  
+	
+	
 	
 	/**
 	 * Full clip pane 
 	 * @param pamClip - a pam clip 
 	 */
-	public FullClipPane(PAMClip pamClip) {
+	public FullClipPane() {
 		
+	}
+	
+	/**
+	 * Set the clip to view. 
+	 * @param pamClip
+	 */
+	public void setPamClip(PAMClip pamClip) {
 		SpectrogramImage image = new SpectrogramImage(pamClip.getSpectrogram(), 
 				colourArray, colourLims); 
 		

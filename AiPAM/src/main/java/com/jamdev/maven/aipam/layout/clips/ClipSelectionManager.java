@@ -90,8 +90,13 @@ public class ClipSelectionManager {
 		pamClipPane.setOnMouseClicked((event)->{
 			//pamClipPane.toFront(); //this creates big bug in the tile pane. moves all the clips to a differen location. 
 			
-			if (event.isControlDown()) selectMultiClip(pamClipPane); 
-			else selectClip(pamClipPane); 
+			if (event.isControlDown()) {
+				selectMultiClip(pamClipPane); 
+			}
+			else if (!(event.isSecondaryButtonDown() || event.isPopupTrigger())) {
+				//don't want multi clips to dissappear on right click. 
+				selectClip(pamClipPane); 
+			}
 			
 			if (event.isSecondaryButtonDown() || event.isPopupTrigger()) {
 				showSelectionMenu(selectedClips, event); 
@@ -117,7 +122,7 @@ public class ClipSelectionManager {
 	private void showSelectionMenu(ArrayList<PamClipPane> selectedClips, javafx.scene.input.MouseEvent event) {
 
 		if (selectionMenu==null) {
-			selectionMenu = new SelectionMenu(this.aiPamView.getAIControl()); 
+			selectionMenu = new SelectionMenu(this.aiPamView.getAIControl(), aiPamView); 
 		}
 
 		ArrayList<MenuItem> menuItems = selectionMenu.getMenu(selectedClips); 

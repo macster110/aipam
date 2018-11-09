@@ -100,7 +100,12 @@ public class AssignmentProblem {
 
         // add n edges to matching
         for (int k = 0; k < n; k++) {
-        	if (assignMentListener!=null) assignMentListener.augmentingRowReduction(n, k,1);
+        	if (assignMentListener!=null) {
+        		assignMentListener.augmentingRowReduction(n, k,1);
+        		if (assignMentListener.isCancelled()) {
+        			return false;
+        		}
+        	}
             assert isDualFeasible();
             assert isComplementarySlack();
             augment();
