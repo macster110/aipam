@@ -1,5 +1,3 @@
-Still in development: Not suitable for general use. Expected completion 19/11/2018
-
 # AIPAM
 
 A Java and JavaFX based program to visualise and cluster sound clips which can then be annotated and export by manual annotation. 
