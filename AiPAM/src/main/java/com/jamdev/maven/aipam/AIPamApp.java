@@ -8,6 +8,7 @@ import com.jamdev.maven.aipam.layout.utilsFX.AISVGDimensionProvider;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 /**
@@ -33,7 +34,15 @@ public class AIPamApp extends Application {
         SvgImageLoaderFactory.install(new AISVGDimensionProvider());
     	
         StackPane root = new StackPane();
-        //
+        
+//		primaryStage.getIcons().add(new Image("file:Cluster_sml.png"));
+//		primaryStage.getIcons().getClass().getResource("Cluster_sml.png");
+		
+//		primaryStage.getIcons().add( new Image(AIPamApp.class.getResourceAsStream("Cluster_sml.png"))); 
+		primaryStage.getIcons().add( new Image(AIPamApp.class.getResourceAsStream("Cluster_med.png"))); 
+		primaryStage.getIcons().add( new Image(AIPamApp.class.getResourceAsStream("Cluster.png"))); 
+		
+		primaryStage.setTitle("Sound Sort");
         
 //        //apply JMetro theme
 //        new JMetro(JMetro.Style.DARK).applyTheme(root);
@@ -44,8 +53,7 @@ public class AIPamApp extends Application {
 
         //create the view
         AIPamView sensorView = new AIPamView(aiPamController, primaryStage, root); 
-                
-   
+    
         root.getChildren().add(sensorView);
         
 //        root.getStylesheets().add(darkStyle);

@@ -333,7 +333,7 @@ public class AssignmentProblem {
     
     /**
      * Get the assignment listener for the algorithm
-     * @return the assigment listener
+     * @return the assignment listener
      */
     public AssignmentListener getAssignMentListener() {
 		return assignMentListener;
@@ -341,7 +341,7 @@ public class AssignmentProblem {
 
     /**
      * Set the assignment listener for the algorithm
-     * @return the assigment listener to set. 
+     * @return the assignment listener to set. 
      */
 	public void setAssignMentListener(AssignmentListener assignMentListener) {
 		this.assignMentListener = assignMentListener;

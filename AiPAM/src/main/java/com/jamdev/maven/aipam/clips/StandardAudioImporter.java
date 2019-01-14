@@ -217,8 +217,8 @@ public class StandardAudioImporter implements AudioImporter {
 
 		AudioInfo audioInfo = new AudioInfo();
 
-		System.out.println(chnnlListElements);
-		System.out.println(srListElements);
+//		System.out.println(chnnlListElements);
+//		System.out.println(srListElements);
 
 		if (chnnlListElements.size()==1) audioInfo.isSameChannels=true;
 		if (srListElements.size()==1) audioInfo.isSameSampleRate=true;

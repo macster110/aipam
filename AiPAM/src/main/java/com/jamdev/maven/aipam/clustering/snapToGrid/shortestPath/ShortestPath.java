@@ -18,7 +18,7 @@ public class ShortestPath implements  AssignmentProblemAlgorithm {
 	/**
 	 * The assignment problem solver. 
 	 */
-	private AssignmentProblem assignMentProblem; 
+	private AssignmentProblemDense assignMentProblem; 
 
 	/**
 	 * The weights
@@ -53,7 +53,7 @@ public class ShortestPath implements  AssignmentProblemAlgorithm {
 	public boolean process() {
 		long time1 = System.currentTimeMillis();
 		System.out.println("Start the shortest path algorithm");
-		assignMentProblem = new AssignmentProblem(weights); 
+		assignMentProblem = new AssignmentProblemDense(weights); 
 		assignMentProblem.setAssignMentListener(listener); 
 		assignMentProblem.process();
 		System.out.println("End of the shortest path algorithm");

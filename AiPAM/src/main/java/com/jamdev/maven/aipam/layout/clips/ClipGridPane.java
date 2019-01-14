@@ -102,6 +102,7 @@ public class ClipGridPane extends BorderPane {
 	public Task<Integer> generateSpecImagesTask(ArrayList<PAMClip> pamClips) {
 
 		int[] gridSize = ClusterSnapGrid.calcGridSize(pamClips.size());
+		
 		tilePane.setPrefColumns(gridSize[0]);
 //
 		currentPamClips= new ArrayList<PamClipPane>(); 

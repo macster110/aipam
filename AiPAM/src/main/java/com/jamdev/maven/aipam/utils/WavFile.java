@@ -316,7 +316,7 @@ public class WavFile extends AudioFileReader
 		int trimSamples=numSamples - maxSamples; 
 
 		byte[] trimByteChan = new byte[maxSamples*bytePerSample];
-		System.out.println();
+		//System.out.println();
 
 		int pointer=0; 
 		int n=0; 
@@ -325,6 +325,10 @@ public class WavFile extends AudioFileReader
 			for (int byteNumber = 0; byteNumber < bytePerSample; byteNumber++) {
 				// little endian
 				//amplitude |= (short) ((bytes[pointer++] & 0xFF) << (byteNumber * 8));
+				if (n>=trimByteChan.length || pointer>=bytes.length) {
+					System.err.println("Warning: Trim indices are wrong?: " + wavHeader.toString());
+					return trimByteChan; //FIXME- this sometimes occurs?
+				}
 				trimByteChan[n++]=bytes[pointer++]; 
 			}
 		}

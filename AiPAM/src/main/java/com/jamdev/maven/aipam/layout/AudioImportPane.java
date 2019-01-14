@@ -109,6 +109,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 		//	importButton.setGraphic(iconText);
 		importButton.setOnAction((action)->{
 			aiPamView.openAudioFolder(); 
+			
 			//do not notify settings listeners here. Need to check out the .wav  file first. 
 		});
 

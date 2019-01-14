@@ -161,11 +161,11 @@ public class AIPamView extends BorderPane {
 
 		this.primaryStage = primaryStage; 
 		this.root=root; 
-
+		
+	
 		//apply the theme
 		theme = new AITheme();
 		theme.applyTheme(AITheme.JMETRO_DARK_THEME, root);
-		
 		
 
 		//ai pam control. 

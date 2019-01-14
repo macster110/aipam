@@ -50,17 +50,19 @@ public class PAMClipManager {
 		Task<Integer> task = new Task<Integer>() {
 			@Override protected Integer call() throws Exception {
 				//progress is in intermediate mode. 
+				ArrayList<PAMClip> pamClips = new ArrayList<PAMClip>();
 				try {
 					this.updateTitle("Importing Audio Data");
 					
 					//first run checks. 
 					System.out.println("Starting the audio import");
 
-					ArrayList<PAMClip> pamClips = new ArrayList<PAMClip>();
-
 					List<File> files = audioImporter.listAudioFiles(selectedDirectory); 
+					
+					//print the files to the console
+					int n=0; 
 					for (File file:files) {
-						System.out.println(file.getAbsolutePath());
+						System.out.println(n + ": " +file.getAbsolutePath());
 					}
 					
 					this.updateProgress(-1, files.size());
@@ -78,7 +80,7 @@ public class PAMClipManager {
 					//now import each 
 					PAMClip pamClip; 
 					ArrayList<ClipWave> waveData; 
-					int n=0; 
+					n=0; 
 					for (File file:files) {
 						if (this.isCancelled()) {
 							currentClips=pamClips; 
@@ -106,6 +108,7 @@ public class PAMClipManager {
 					return pamClips.size();
 				}
 				catch (Exception e) {
+					System.out.println("There was an error in the pamClips: " + pamClips==null? "null":pamClips.size());
 					e.printStackTrace();
 					return -1; 
 				}
