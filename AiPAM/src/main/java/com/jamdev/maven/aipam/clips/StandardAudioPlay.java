@@ -3,8 +3,7 @@ package com.jamdev.maven.aipam.clips;
 import java.io.File;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.AudioClip;
 
 /**
  * Standard audio playing which simply stores a file path to play from. This
@@ -23,7 +22,7 @@ public class StandardAudioPlay implements AudioPlay {
 	/**
 	 * The Media player. 
 	 */
-	private MediaPlayer mediaPlayer; 
+	private AudioClip  mediaPlayer; 
 	
 	/**
 	 * Constructor for standard audio playing. 
@@ -35,13 +34,14 @@ public class StandardAudioPlay implements AudioPlay {
 
 	@Override
 	public void playClipAudio() {
+		System.out.println("Play: " + getMediaPlay().getSource()); 
 		getMediaPlay().play();		
 	}
 	
-	private MediaPlayer getMediaPlay() {
+	private AudioClip getMediaPlay() {
 		if (mediaPlayer==null) {
-			Media hit = new Media(audioFile.toURI().toString());
-			mediaPlayer = new MediaPlayer(hit);
+//			Media hit = new Media(audioFile.toURI().toString());
+			mediaPlayer = new AudioClip (audioFile.toURI().toString());
 		}
 		return mediaPlayer; 
 	}
@@ -57,6 +57,25 @@ public class StandardAudioPlay implements AudioPlay {
 	 */
 	public DoubleProperty getVolumePropery() {
 		return getMediaPlay().volumeProperty(); 
+	}
+	
+	/**
+	 * Tests audio playing 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		File audioFile = new File("E:\\Google Drive\\SMRU_research\\Tanzania 2019\\Blast Data - 2018-2019\\Blast WAV Files\\Maziwe\\Ish_Bomb20180616_092302_870.wav");
+		StandardAudioPlay standardAudioPlay = new StandardAudioPlay(audioFile); 
+		standardAudioPlay.getMediaPlay().volumeProperty().set(1);
+		System.out.println("Play audio: "); 
+		standardAudioPlay.playClipAudio();
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Finished audio: "); 
 	}
 	
 

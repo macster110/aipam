@@ -38,6 +38,7 @@ public class AIPamApp extends Application {
 //		primaryStage.getIcons().add(new Image("file:Cluster_sml.png"));
 //		primaryStage.getIcons().getClass().getResource("Cluster_sml.png");
 		
+        //need to use this method for images packaged in jar. 
 //		primaryStage.getIcons().add( new Image(AIPamApp.class.getResourceAsStream("Cluster_sml.png"))); 
 		primaryStage.getIcons().add( new Image(AIPamApp.class.getResourceAsStream("Cluster_med.png"))); 
 		primaryStage.getIcons().add( new Image(AIPamApp.class.getResourceAsStream("Cluster.png"))); 
