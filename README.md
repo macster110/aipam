@@ -56,7 +56,7 @@ There are multiple libraries used in AIPAM without which a program like this wou
 
 A fast and native Java [implementation of the t-SNE algorithm](https://github.com/lejon/T-SNE-Java). 
 
-[JavaFX](https://openjfx.io/) an impressive modern UI framework, perfect for an application like this which shows large number of images and requires a user friendly, modern design. 
+[JavaFX](https://openjfx.io/) is an impressive modern UI framework, perfect for an application like this which shows large number of images and requires a user friendly, modern design. 
 
 The excellent [controlsfx](http://fxexperience.com/controlsfx/) library for extra JavaFX bits and pieces. 
 
