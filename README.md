@@ -2,6 +2,8 @@
 
 A Java and JavaFX based program to visualise and cluster sound clips which can then be annotated and export by manual annotation. 
 
+SoundSort is still in beta. There may be bugs. Please take the time to report them here!
+
 # Introduction #
 
 In passive acoustic monitoring it is often relatively easy to make a <b>detector</b>, i.e. some algorithm which picks out all or a subset of interesting sounds e.g. all short transient sounds. However making a <b>classifier</b> which accurately picks out a very particular subset of sound types can be difficult, due to variations within species, different noise conditions etc. Machine learning is helping in this area however humans remain the best pattern recognition machines, we have initiative and can deal with unexpected constancies in datasets. 
