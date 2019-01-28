@@ -96,8 +96,7 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 			 setOverlayColour(); 
 		});
 		
-		
-		
+	
 		Tooltip tooltip = new Tooltip(
 				new File(clip.getFileName()).getName() +"\n"
 						+ "Cluster ID: " + clip.getGridID() + "\n"

@@ -127,11 +127,11 @@ public class ClipSelectionManager {
 
 		ArrayList<MenuItem> menuItems = selectionMenu.getMenu(selectedClips); 
 
-		System.out.println("Hello selection menu: " +  menuItems.size());
+		//System.out.println("Hello selection menu: " +  menuItems.size());
 
 		final ContextMenu cm = new ContextMenu();
 		cm.getItems().addAll(menuItems); 
-		cm.show(selectedClips.get(selectedClips.size()-1), event.getScreenX(), event.getScreenY());
+		cm.show(aiPamView.getPrimaryStage(), event.getScreenX(), event.getScreenY());
 
 	}
 
