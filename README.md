@@ -2,6 +2,8 @@
 
 A Java and JavaFX based program to visualise and cluster sound clips which can then be annotated and export by manual annotation. 
 
+SoundSort is still in beta. There may be bugs. Please take the time to report them here!
+
 # Introduction #
 
 In passive acoustic monitoring it is often relatively easy to make a <b>detector</b>, i.e. some algorithm which picks out all or a subset of interesting sounds e.g. all short transient sounds. However making a <b>classifier</b> which accurately picks out a very particular subset of sound types can be difficult, due to variations within species, different noise conditions etc. Machine learning is helping in this area however humans remain the best pattern recognition machines, we have initiative and can deal with unexpected constancies in datasets. 
@@ -31,7 +33,7 @@ Additional plugins to measure clip metrics on export e.g. power spectrum, peak f
 
 The assignment problem is solved using a shortest path algorithm for which the processing time scales with N^3logN. A [Jonker Volgenant algorithm](https://blog.sourced.tech/post/lapjv/) has the potential to be much faster but none of the Java implementations appear to as fast as would be expect (10 hours for 3000 clips) and much slower than shortest path. 
 
-It would be great to get this all worKing with Java and [JavaFX 11](https://openjfx.io/) but there are multiple issues moving from Java 8 including invlaid module names for t-SNE library, controlsFX version exception and issues with JMetro (I think). All solvable but for now it might be a case of waiting for other folks ot catch up with JavaFX 11. An attempt at JavaFX 11 POM file is in resources/java11.
+It would be great to get this all working with Java and [JavaFX 11](https://openjfx.io/) but there are multiple issues moving from Java 8 including invlaid module names for t-SNE library, controlsFX version exception and issues with JMetro (I think). All solvable but for now it might be a case of waiting for other folks ot catch up with JavaFX 11. An attempt at JavaFX 11 POM file is in resources/java11.
 
 # Installation #
 
@@ -56,7 +58,7 @@ There are multiple libraries used in AIPAM without which a program like this wou
 
 A fast and native Java [implementation of the t-SNE algorithm](https://github.com/lejon/T-SNE-Java). 
 
-[JavaFX](https://openjfx.io/) an impressive modern UI framework, perfect for an application like this which shows large number of images and requires a user friendly, modern design. 
+[JavaFX](https://openjfx.io/) is an impressive modern UI framework, perfect for an application like this which shows large number of images and requires a user friendly, modern design. 
 
 The excellent [controlsfx](http://fxexperience.com/controlsfx/) library for extra JavaFX bits and pieces. 
 
