@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.clustering.snapToGrid.ClusterSnapGrid;
+import com.jamdev.maven.aipam.clustering.snapToGrid.SnapToGridListener;
 import com.jamdev.maven.aipam.clustering.tsne.TSNEClipClustererYK;
 import com.jmatio.types.MLStructure;
 
@@ -25,6 +26,9 @@ public class ClipClusterManager {
 	 */
 	private ClusteringAlgorithm clusterAlgorithm = new TSNEClipClustererYK(); 
 	
+	/**
+	 * The snap to grid algorithm. 
+	 */
 	private ClusterSnapGrid clusterSnapGrid = new ClusterSnapGrid(); 
 
 	/**
@@ -46,12 +50,7 @@ public class ClipClusterManager {
 
 		public ClusterTask(ArrayList<PAMClip> pamClips, AIPamParams params) {
 			this.params=params; 
-			this.pamClips=pamClips; 
-			this.setOnCancelled((hello)->{
-				clusterSnapGrid.getListener().cancelledProperty().set(true);
-				//should now exit gracefully. 
-			});
-
+			this.pamClips=pamClips; 		
 		}
 
 		@Override
@@ -80,14 +79,25 @@ public class ClipClusterManager {
 				clusterAlgorithm.cluster(pamClips,  params.clusterParams);
 				
 				
+				clusterSnapGrid.setListener(new SnapToGridListener()); 
+				
 				//start snapping to gird.
 				updateMessage("Snapping the cluster points to a grid...this can also take some time"); 
 				if (clusterSnapGrid.getListener()!=null) {
 					clusterSnapGrid.getListener().assigmentProgressProperty().addListener((obsval, oldval, newval)->{
 						updateProgress(newval.doubleValue(), 1);
+						if (clusterSnapGrid.getListener()!=null && this.isCancelled()) {
+							clusterSnapGrid.getListener().setCancelled(true);
+							//should now exit gracefully. 
+						}
 					});
+					
 					clusterSnapGrid.getListener().assignmentMessageProperty().addListener((obsval, oldval, newval)->{
 						updateMessage("Snapping to grid: " + newval);
+						if (clusterSnapGrid.getListener()!=null && this.isCancelled()) {
+							clusterSnapGrid.getListener().setCancelled(true);
+							//should now exit gracefully. 
+						}
 					});
 				}
 
@@ -102,6 +112,15 @@ public class ClipClusterManager {
 				return -1; 
 			}
 		}
+		
+        @Override protected void cancelled() {
+            super.cancelled();
+			if (clusterSnapGrid.getListener()!=null) {
+				clusterSnapGrid.getListener().setCancelled(true);
+				//should now exit gracefully. 
+			}
+            updateMessage("Cancelled!");
+        }
 
 
 	}
@@ -110,7 +129,7 @@ public class ClipClusterManager {
 	public ClusterParams struct2ClusterParams(MLStructure clusterParams) {
 		clusterParams.getField("type"); 
 		
-		// TODO Auto-generated method stub -switch statwement here
+		// TODO Auto-generated method stub -switch statement here
 		return null;
 	}
 

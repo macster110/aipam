@@ -63,10 +63,11 @@ public class AssignmentProblemDense {
 	boolean process() {
 		// add N edges to matching
 		for (int k = 0; k < n; k++) {
-			System.out.println(k);
 			if (assignMentListener!=null) {
 				assignMentListener.augmentingRowReduction(n, k,1);
+				System.out.println("Snap " + k + " of " + n + "   " + assignMentListener.isCancelled());
 				if (assignMentListener.isCancelled()) {
+					
 					return false;
 				}
 			}
@@ -224,6 +225,8 @@ public class AssignmentProblemDense {
 	public void setAssignMentListener(AssignmentListener assignMentListener) {
 		this.assignMentListener = assignMentListener;
 	}
+	
+	
     public static void main(String[] args) {
 
         int n = Integer.parseInt(args[0]);

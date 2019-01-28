@@ -34,6 +34,8 @@ public interface SettingsPane<T> {
 	 */
 	public Node getIcon();
 	
+	
+	
 	/**
 	 * Get the title of the pane. 
 	 * @return the title of the pane. 

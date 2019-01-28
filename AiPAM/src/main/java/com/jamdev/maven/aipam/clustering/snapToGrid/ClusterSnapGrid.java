@@ -29,9 +29,16 @@ public class ClusterSnapGrid {
 	private SnapToGridListener listener;
 
 
+
+	/**
+	 * Get the snap to grid listener. This is called on updates and used to pass cancel messages to thread. 
+	 * @return the snap to grid listener
+	 */
 	public SnapToGridListener getListener() {
 		return listener;
 	}
+	
+	
 
 
 	/**
@@ -42,7 +49,7 @@ public class ClusterSnapGrid {
 	 * @return a list of points 
 	 */
 	public int[] getClusterGrid(double[][] clusterPoints, int gridx, int gridy) {
-
+	
 		SparseCostMatrix spareseCostMatrix = createCostMatrix(clusterPoints, gridx, gridy); 
 
 		//set the algorithm 
@@ -183,9 +190,8 @@ public class ClusterSnapGrid {
 				pamClips.get(i).setGridID(results[i]); 
 			}
 		}
-		//now apply the results to the pamclips. 
+		//now apply the results to the pam clips. 
 	}	
-
 
 
 	/**
@@ -198,11 +204,13 @@ public class ClusterSnapGrid {
 		return new int[] {grid, grid};
 	}
 
+	
 	/**
-	 * Get the listener for the algorithm.
+	 * Set the listener. 
+	 * @param snapToGridListener - the snap to grid listener. 
 	 */
-	public ClusterSnapGrid() {
-		listener = new SnapToGridListener(); 
+	public void setListener(SnapToGridListener snapToGridListener) {
+		this.listener=snapToGridListener;
 	}
 
 

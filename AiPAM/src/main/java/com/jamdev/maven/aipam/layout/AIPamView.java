@@ -323,6 +323,11 @@ public class AIPamView extends BorderPane {
 			showProgressPane(true); 
 			progressPane.setTask((Task) data);
 			break; 
+		case AiPamController.CANCEL_CLUSTERING_ALGORITHM:
+			showProgressPane(false); 
+			clusterGraphPane.update(aiPamContol.getPAMClips()); 
+			checkSettings();
+			break; 
 		case AiPamController.END_CLUSTERING_ALGORITHM:
 			showProgressPane(false); 
 			clusterGraphPane.update(aiPamContol.getPAMClips()); 
@@ -371,6 +376,11 @@ public class AIPamView extends BorderPane {
 
 		clipPane.clearSpecImages(); 
 		Task<Integer> task  = clipPane.generateSpecImagesTask(this.aiPamContol.getPAMClips());
+		if (task == null) {
+			System.out.println("There is no spectrogram clip task. The importer may have returned an error or was cancelled"); 
+			return; 
+		}
+		
 		task.setOnCancelled((value)->{
 			//send notification when 
 			notifyUpdate(AiPamController.CANCELLED_IMAGE_LOAD, null); 

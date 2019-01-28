@@ -28,15 +28,15 @@ public interface AudioImporter {
 	 * @param maxLen - the maximum length of the file allowed. 
 	 * @return a list of clips contained in the file. 
 	 */
-	public ArrayList<ClipWave> importAudio(File audioFile,  AIPamParams aiPamParams);
+	public ArrayList<ClipWave> importAudio(File audioFile,  AIPamParams aiPamParams, AudioImporterListener audioImporterListener);
 	
 	/**
 	 * Get the audio information on a directory of files. This is a first run which does not import the
-	 * audio but scans the directory for files an ensures some basic pre conditions are met. 
+	 * audio but scans the directory for files an ensures some basic pre-conditions are met. 
 	 * @param audioFile - the audio file directory  
 	 * @return the audio info class on the directory., 
 	 */
-	public AudioInfo getAudioInfo(File audioFileDirectory); 
+	public AudioInfo getAudioInfo(File audioFileDirectory, AudioImporterListener audioImporterListener); 
 
 	
 

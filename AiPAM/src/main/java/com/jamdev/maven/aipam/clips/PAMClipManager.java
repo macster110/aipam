@@ -48,15 +48,33 @@ public class PAMClipManager {
 	public Task<Integer> importClipsTask(File selectedDirectory, AIPamParams params, boolean load) {
 		
 		Task<Integer> task = new Task<Integer>() {
-			@Override protected Integer call() throws Exception {
+			
+			@Override
+			protected Integer call() throws Exception {
 				//progress is in intermediate mode. 
 				ArrayList<PAMClip> pamClips = new ArrayList<PAMClip>();
+				
+				StandardAudioImportListener standAudiListener = new StandardAudioImportListener(); 
+							
+				//add a listener to the progress files 
+				standAudiListener.progressProperty().addListener((obsval, oldval, newval)->{
+					updateProgress(newval.doubleValue(), 1);
+					//bit of a hack but meh
+					if (standAudiListener.getNFiles()>0) {
+						double memoryMB = Runtime.getRuntime().totalMemory()/1000./1000.; 
+
+						updateMessage(standAudiListener.getDescription()+ String.format(" %d of %d files | Memory usage: %.2f MB", 
+								standAudiListener.getFileN(), standAudiListener.getNFiles(), memoryMB)); 
+					}
+				});
+	
 				try {
 					this.updateTitle("Importing Audio Data");
 					
 					//first run checks. 
-					System.out.println("Starting the audio import");
+					System.out.println("Starting the audio import: Listing files");
 
+					this.updateProgress(-1, 0);
 					List<File> files = audioImporter.listAudioFiles(selectedDirectory); 
 					
 					//print the files to the console
@@ -65,18 +83,23 @@ public class PAMClipManager {
 						System.out.println(n + ": " +file.getAbsolutePath());
 					}
 					
-					this.updateProgress(-1, files.size());
-					this.updateMessage(String.format("Running checks on %d files: ", files.size()));
-
-					//run checks to make sure all sample rates are the same and there are no duplicate file names
-					currentAudioInfo = audioImporter.getAudioInfo(selectedDirectory); 
-					if (!checkAudio(audioImporter.getAudioInfo(selectedDirectory))) {
+					this.updateProgress(-1, 0);
+					standAudiListener.setDescription("Running checks on " );
+					//run checks to make sure all sample rates are the same and there are no duplicate file names. 
+					//standAudiListener handles progress updates., 
+					currentAudioInfo = audioImporter.getAudioInfo(selectedDirectory, standAudiListener); 
+					
+		
+					if (!checkAudio(currentAudioInfo)) {
 						//Send error to error reporter. 
 						return -1; 
 					} 
 					
 					if (!load) return files.size(); 
+					
+					standAudiListener.setDescription("Importing " );
 
+					
 					//now import each 
 					PAMClip pamClip; 
 					ArrayList<ClipWave> waveData; 
@@ -86,7 +109,7 @@ public class PAMClipManager {
 							currentClips=pamClips; 
 							return n; //cancel stuff
 						}
-						waveData = audioImporter.importAudio(file, params); 
+						waveData = audioImporter.importAudio(file, params, standAudiListener); 
 						if (waveData!=null) {
 							for (ClipWave wave:waveData) {
 								if (this.isCancelled()) {
@@ -98,10 +121,14 @@ public class PAMClipManager {
 								n++;
 							}
 						}
-						double memoryMB = Runtime.getRuntime().totalMemory()/1000./1000.; 
-						//System.out.println("Loaded " + n + " of " + files.size() + " wave: " + waveData.size() + " Memory usage: " + memoryMB + "MB");
-						this.updateProgress(n, files.size());
-						this.updateMessage(String.format("Importing %s | Memory usage: %.2f MB", file.getName(), memoryMB));
+						
+						//directly update progress.
+						standAudiListener.updateProgress((n/(double) files.size()), n, files.size());
+						
+//						double memoryMB = Runtime.getRuntime().totalMemory()/1000./1000.; 
+//						//System.out.println("Loaded " + n + " of " + files.size() + " wave: " + waveData.size() + " Memory usage: " + memoryMB + "MB");
+//						this.updateProgress(n, files.size());
+//						this.updateMessage(String.format("Importing %s | Memory usage: %.2f MB", file.getName(), memoryMB));
 					}
 					currentClips=pamClips; 
 
@@ -124,7 +151,7 @@ public class PAMClipManager {
 	 * @return audio info. 
 	 */
 	private boolean checkAudio(AudioInfo audioInfo) {
-		if (audioInfo.isSameChannels && audioInfo.isSameSampleRate) return true; 
+		if (audioInfo!=null && audioInfo.isSameChannels && audioInfo.isSameSampleRate) return true; 
 		return false;
 	}
 

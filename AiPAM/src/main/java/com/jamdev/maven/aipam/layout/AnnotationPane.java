@@ -34,7 +34,7 @@ import javafx.util.Callback;
 /**
  * Pane which allows users to edit annotations and export annotation data. 
  * <p>
- * 	Note that due the flexible nature of annotations this only supports SimpleAnnotions and 
+ * Note that due the flexible nature of annotations this only supports SimpleAnnotions and 
  * subclasses thereof. 
  * 
  * @author Jamie Macaulay

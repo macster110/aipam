@@ -1,7 +1,5 @@
 package com.jamdev.maven.aipam.clustering.snapToGrid;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -23,11 +21,16 @@ public class SnapToGridListener implements AssignmentListener {
 	 */
 	public StringProperty messageProperty = new SimpleStringProperty(); 
 	
+//	/**
+//	 * Cancelled property
+//	 */
+//	public BooleanProperty cancelledProperty = new SimpleBooleanProperty(); 
+	
 	/**
-	 * Cancelled property
+	 * Cancel flag so algorithm knows to stop. Note: the boolean property does not work
+	 * for this, even if set to volatile. Primitive volatile boolean used instead. 
 	 */
-	public BooleanProperty cancelledProperty = new SimpleBooleanProperty(); 
-
+	private volatile boolean cancelled = false; 
 
 
 	@Override
@@ -58,7 +61,7 @@ public class SnapToGridListener implements AssignmentListener {
 
 	/**
 	 * The LAPJV algorithm progress property.
-	 * @return
+	 * @return the progress property 0 to 1. 
 	 */
 	public SimpleDoubleProperty assigmentProgressProperty() {
 		return progressProperty;
@@ -73,17 +76,18 @@ public class SnapToGridListener implements AssignmentListener {
 		return messageProperty;
 	}
 	
-	/**
-	 * The cancelled property
-	 * @return the cancelled property
-	 */
-	public BooleanProperty cancelledProperty() {
-		return cancelledProperty;
-	}
 
 	@Override
 	public boolean isCancelled() {
-		return false;
+		return cancelled;
+	}
+
+	/**
+	 * Set a cancel flag to cancel the listener. 
+	 * @param  cancelled - true to cancel the algorithm. 
+	 */
+	public void setCancelled(boolean cancelled) {
+		this.cancelled=cancelled;
 	}
 	
 	

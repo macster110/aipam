@@ -27,7 +27,7 @@ import uk.me.berndporr.iirj.Butterworth;
 public class StandardAudioImporter implements AudioImporter {
 
 	@Override
-	public ArrayList<ClipWave> importAudio(File audioFile, AIPamParams aiPamParams) {
+	public ArrayList<ClipWave> importAudio(File audioFile, AIPamParams aiPamParams, AudioImporterListener audioImporterListener) {
 
 		//FIXME
 		//The Wave class is actually a bit naff but integrates with deeplearning4j so we 
@@ -176,17 +176,21 @@ public class StandardAudioImporter implements AudioImporter {
 
 
 	@Override
-	public AudioInfo getAudioInfo(File audioFileDirectory) {
+	public AudioInfo getAudioInfo(File audioFileDirectory, AudioImporterListener audioImporterListener) {
 
 		List<File> files  = AiPamUtils.listFiles(audioFileDirectory.getAbsolutePath(), "wav");
 
 		int unopenablefiles = 0; 
 		Integer[] channels = new Integer[files.size()];
 		Float[] sampleRate = new Float[files.size()];
-
+		
+		audioImporterListener.updateProgress(0, 0, files.size()); 
+		
 		for (int j=0; j<files.size(); j++) {
 			try {
-
+				if (audioImporterListener.isCancelled()) {
+					return null; 
+				}
 				WavFile wavFile = new  WavFile(files.get(j));
 				AudioFileFormat format = wavFile.getAudioFileFormat(); 
 				//				inputStream = new FileInputStream(files.get(j));
@@ -194,6 +198,8 @@ public class StandardAudioImporter implements AudioImporter {
 
 				channels[j]=format.getFormat().getChannels();
 				sampleRate[j] = (float) format.getFormat().getSampleRate();
+							
+				audioImporterListener.updateProgress((j/(double) files.size()), j, files.size()); 
 
 			} catch (IOException  | UnsupportedAudioFileException e) {
 				unopenablefiles++;; 

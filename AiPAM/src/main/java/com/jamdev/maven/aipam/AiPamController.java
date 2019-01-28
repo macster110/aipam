@@ -12,6 +12,7 @@ import com.jamdev.maven.aipam.clustering.ClipClusterManager;
 import com.jmatio.types.MLArray;
 import com.jmatio.types.MLStructure;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 
 /**
@@ -201,12 +202,14 @@ public class AiPamController {
 				
 				
 		Task<Integer> task = pamClipManager.importClipsTask(selectedDirectory, this.aiPamParams, loadClips);
+		
 		updateMessageListeners(START_FILE_LOAD, task); 
 
 		task.setOnCancelled((value)->{
 			//send notification when 
 			updateMessageListeners(CANCELLED_FILE_LOAD, task); 
 		});
+		
 		task.setOnSucceeded((value)->{
 			if (loadClips)
 				updateMessageListeners(END_FILE_LOAD, task); 
@@ -272,11 +275,15 @@ public class AiPamController {
 
 		clusterTask.setOnCancelled((value)->{
 			//send notification when 
-			updateMessageListeners(CANCEL_CLUSTERING_ALGORITHM, clusterTask); 
+			Platform.runLater(()->{
+				updateMessageListeners(CANCEL_CLUSTERING_ALGORITHM, clusterTask); 
+			});
 		});
 		clusterTask.setOnSucceeded((value)->{
 			//
-			updateMessageListeners(END_CLUSTERING_ALGORITHM, clusterTask); 
+			Platform.runLater(()->{
+				updateMessageListeners(END_CLUSTERING_ALGORITHM, clusterTask); 
+			});
 		});
 
 		Thread th = new Thread(clusterTask);

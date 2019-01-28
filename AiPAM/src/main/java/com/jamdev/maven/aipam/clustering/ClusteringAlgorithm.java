@@ -3,6 +3,7 @@ package com.jamdev.maven.aipam.clustering;
 import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.clips.PAMClip;
+import com.jamdev.maven.aipam.clustering.snapToGrid.SnapToGridListener;
 
 /**
  * Interface for any clustering algorithm.

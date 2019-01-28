@@ -19,7 +19,6 @@ import javafx.beans.property.DoubleProperty;
  * @author Jamie Macaulay
  *
  */
-@Deprecated
 public class StandardTrainingListener implements ClusterListener {
 
 	/**
@@ -34,7 +33,7 @@ public class StandardTrainingListener implements ClusterListener {
 	private double maxIterations;
 	
 	/**
-	 * The progress property betwen 0 and 1; 
+	 * The progress property between 0 and 1; 
 	 */
 	private DoubleProperty progressProperty; 
 
