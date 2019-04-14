@@ -1,8 +1,16 @@
 package com.jamdev.maven.aipam.layout.clips;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.jamdev.maven.aipam.AIPamParams;
+import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.layout.AIPamView;
+
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.concurrent.Task;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 
@@ -15,7 +23,6 @@ import javafx.scene.control.MenuItem;
  *
  */
 public class ClipSelectionManager {
-
 
 	/**
 	 * The AIPamView
@@ -30,9 +37,17 @@ public class ClipSelectionManager {
 	/**
 	 * The selection menu for annotating clips. 
 	 */
-	private SelectionMenu selectionMenu; 
+	private SelectionMenu selectionMenu;
 
+	/**
+	 * Auto playing boolean
+	 */
+	private SimpleBooleanProperty autoPlayProperty = new SimpleBooleanProperty();
 
+	/**
+	 * The current audio task
+	 */
+	private AutoPlayBackTask audioTask; 
 
 	/**
 	 * Constructor for the clip selection manager.
@@ -40,17 +55,31 @@ public class ClipSelectionManager {
 	public ClipSelectionManager(AIPamView aiPamView2) {
 		this.aiPamView = aiPamView2; 
 	}
+	
+	/**
+	 * Clear highlight a clip
+	 * @param pamClipPane
+	 */
+	private void highlightSelectClip(PamClipPane pamClipPane) {
+		pamClipPane.setStyle("-fx-border-color: ACCENT_COLOR; -fx-border-width: 3px;");
+		pamClipPane.getAudioPlay().getVolumePropery().bind(aiPamView.volumeProperty());
+	}
 
 	/**
 	 * Called whenever a clip is selected. 
 	 * @param pamClipPane - the currently selected PamClipPane. 
 	 */
 	public void selectClip(PamClipPane pamClipPane) {
+		 stopClipAutoPlay();
 		repaintAllClips(); 
-		pamClipPane.setStyle("-fx-border-color: ACCENT_COLOR; -fx-border-width: 3px;");
-		pamClipPane.getAudioPlay().getVolumePropery().bind(aiPamView.volumeProperty());
+		highlightSelectClip(pamClipPane); 
 		pamClipPane.getAudioPlay().playClipAudio();
+	
+		//add selected clip to the list. 
 		selectedClips.add(pamClipPane); 
+		
+		//send a notification that clips have been selected. 
+		aiPamView.notifyUpdate(AiPamController.NEW_CLIP_SELECTED, pamClipPane.getPamClip());
 	}
 
 	/**
@@ -58,6 +87,7 @@ public class ClipSelectionManager {
 	 * @param pamClipPane - the currently selected PamClipPane. 
 	 */
 	public void selectMultiClip(PamClipPane pamClipPane) {
+		 stopClipAutoPlay();
 		//need to stop playing audio.
 		for (PamClipPane pamClip: selectedClips) {
 			if (pamClip!=pamClipPane) pamClip.getAudioPlay().stopClipAudio();
@@ -67,7 +97,11 @@ public class ClipSelectionManager {
 			pamClipPane.setStyle("-fx-border-color: ACCENT_COLOR; -fx-border-width: 3px;");
 			pamClipPane.getAudioPlay().getVolumePropery().bind(aiPamView.volumeProperty());
 			pamClipPane.getAudioPlay().playClipAudio();
+			//add a clip to the list. 
 			selectedClips.add(pamClipPane); 
+			
+			//send a notification that clips have been selected. 
+			aiPamView.notifyUpdate(AiPamController.NEW_CLIP_SELECTED, pamClipPane.getPamClip());
 		}
 	}
 
@@ -83,12 +117,12 @@ public class ClipSelectionManager {
 	}
 
 	/**
-	 * Add mouse functionality to the pamclip 
+	 * Add mouse functionality to the pam clip 
 	 */
 	protected void addMouseBeahviour(PamClipPane pamClipPane) {
 
 		pamClipPane.setOnMouseClicked((event)->{
-			//pamClipPane.toFront(); //this creates big bug in the tile pane. moves all the clips to a differen location. 
+			//pamClipPane.toFront(); //this creates big bug in the tile pane. moves all the clips to a different location. 
 			
 			if (event.isControlDown()) {
 				selectMultiClip(pamClipPane); 
@@ -135,5 +169,107 @@ public class ClipSelectionManager {
 
 	}
 
+	/**
+	 * Auto play all clips. 
+	 * 
+	 * @param pamClip the pam clip to start play back from
+	 */
+	public void autoPlayClips(PamClipPane pamClip) {
+//		System.out.println("Auto play all the clips!!");
+		
+		List<PamClipPane> playPanes = aiPamView.getClipPane().getCurrentPamClips(); 
+		if (pamClip!=null) {
+			playPanes= playPanes.subList(playPanes.indexOf(pamClip), playPanes.size()-1); 
+		}
+
+		
+		Thread th = new Thread(audioTask= new AutoPlayBackTask(
+				playPanes, aiPamView.getAIParams()));
+		
+		th.setDaemon(true);
+		th.start(); 
+		autoPlayProperty.setValue(true);
+	}
+
+	/**
+	 * The auto play property to indicate when all clips are being played in order. 
+	 * @return the auto play boolean property. 
+	 */
+	public BooleanProperty autoPlayProperty() {
+		return this.autoPlayProperty;
+	}
+
+	/**
+	 * Stop auto playing clips. 
+	 */
+	public void stopClipAutoPlay() {
+		if (audioTask==null) return;
+		audioTask.cancel(false); 
+		autoPlayProperty.setValue(false);
+	}
+	
+	
+	/**
+	 * The audio play back task. 
+	 * 
+	 * @author Jamie Macaulay 
+	 */
+	public class AutoPlayBackTask extends Task<Integer> {
+
+		private List<PamClipPane> pamClips;
+		
+		private AIPamParams params;
+		
+		public AutoPlayBackTask(List<PamClipPane> pamClips, AIPamParams params) {
+			this.params=params; 
+			this.pamClips=pamClips; 		
+		}
+
+		@Override
+		protected Integer call() throws Exception {
+			//progress is in intermediate mode. 
+			try {
+				for (int i=0; i<pamClips.size(); i++) {
+					int ii=i; //make a new reference
+					Platform.runLater(()->{
+						clearClips();
+						highlightSelectClip(pamClips.get(ii)); 
+					}); 
+					Thread.sleep(500);
+//					System.out.println("Auto play clip: " + pamClips.get(i));
+					pamClips.get(i).getAudioPlay().playClipAudio();
+					while (pamClips.get(i).getAudioPlay().isPlaying()) {
+						if (this.isCancelled()) {
+							pamClips.get(i).getAudioPlay().stopClipAudio();
+							return -1; 
+						}
+						//do nothing until clip play back has finished
+						Thread.sleep(500); 
+					}
+				}
+				//System.out.println("Hello: Finished!!!!");
+				return 1; 
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				return -1; 
+			}
+		}
+		
+		private void clearClips() {
+    		for (int j=0; j<pamClips.size(); j++) {
+    			pamClips.get(j).setStyle("-fx-border-color: transparent; -fx-border-width: 3px;");
+    		}
+		}
+		
+        @Override 
+        protected void cancelled() {
+        	Platform.runLater(()->{
+        		clearClips();
+        	}); 
+            super.cancelled();
+        }
+
+	}
 
 }

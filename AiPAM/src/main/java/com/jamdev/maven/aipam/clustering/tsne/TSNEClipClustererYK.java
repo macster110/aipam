@@ -109,6 +109,11 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 		TSneConfiguration config = TSneUtils.buildConfig(X, 2, initial_dims, perplexity, maxIterations);
 		config.setTheta(theta);
 		config.setUsePca(usePCA);
+		
+		if (perplexity>X.length) {
+			System.err.println("Perplexity too large for the number of data points!");
+			return null; 
+		}
 				
 		double[][] Y = tsne.tsne(config); 
 

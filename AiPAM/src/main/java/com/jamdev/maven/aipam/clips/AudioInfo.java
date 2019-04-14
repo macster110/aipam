@@ -39,5 +39,8 @@ public class AudioInfo {
 	 */
 	public int nFilesCorrupt;
 
+	/**
+	 * The path to the audio file. 
+	 */
 	public String file; 
 }

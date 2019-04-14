@@ -111,6 +111,8 @@ public class ClusterSnapGrid {
 		//AiPamUtils.normalise(clusterPoints, 1);
 
 		double[][] gridPoints = generateGrid(gridx, gridy, AiPamUtils.max(clusterPoints));
+		
+		
 		gridPoints= Arrays.copyOf(gridPoints, clusterPoints.length);
 
 		//calculate the costs 

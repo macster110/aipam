@@ -24,6 +24,7 @@ import javafx.concurrent.Task;
 public class AiPamController {
 
 
+
 	public int verbose = 1; 
 
 	/**
@@ -96,8 +97,11 @@ public class AiPamController {
 	 * End the clip export
 	 */
 	public static final int END_CLIP_EXPORT = 14; 
-
-
+	
+	/**
+	 * A clip has been selected by the user. 
+	 */
+	public static final int NEW_CLIP_SELECTED = 15; 
 
 	/**
 	 * The cluster manager

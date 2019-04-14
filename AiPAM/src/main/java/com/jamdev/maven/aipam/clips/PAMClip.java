@@ -66,7 +66,16 @@ public class PAMClip {
 	 * The static grid ID. 
 	 */
 	private SimpleIntegerProperty staticGridID; 
-
+	
+	/**
+	 * The frequency limits in Hz. 
+	 */
+	private double[] freqLims = new double[2];
+	
+	/**
+	 * The length of the clip in seconds. 
+	 */
+	private double lengthClip;
 
 	public PAMClip(ClipWave wave, int gridID){
 		this(wave , DEFAULT_FFT_LEN, DEFUALT_FFT_HOP, gridID); 
@@ -76,6 +85,11 @@ public class PAMClip {
 
 		this.staticGridID = new SimpleIntegerProperty(gridID);  
 		this.gridID=new SimpleIntegerProperty(gridID); 
+		
+		freqLims[0]=0;
+		freqLims[1]=wave.getSampleRate()/2.;
+		
+		lengthClip = wave.getLengthInSeconds(); 
 
 		this.spectrogramClip=wave.getSpectrogram(fftLength, fftLength/fftHop).getAbsoluteSpectrogram();
 
@@ -214,6 +228,23 @@ public class PAMClip {
 	public String getFileName() {
 		return this.fileName.get();
 	}
+
+	/**
+	 * Get the frequency limits of the clip in Hz;
+	 * @return the freq limits. 
+	 */
+	public double[] getFreqLims() {
+		return this.freqLims;
+	}
+	
+	/**
+	 * Get the clip length in seconds
+	 * @return the clip length in seconds. 
+	 */
+	public double getClipLength() {
+		return this.lengthClip;
+	}
+
 
 
 }

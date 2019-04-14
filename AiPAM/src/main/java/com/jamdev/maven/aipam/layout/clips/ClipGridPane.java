@@ -38,6 +38,18 @@ public class ClipGridPane extends BorderPane {
 	 */
 	public ArrayList<PamClipPane> currentPamClips;
 
+	public ArrayList<PamClipPane> getCurrentPamClips() {
+		return currentPamClips;
+	}
+
+	/**
+	 * Get current clips. 
+	 * @return the current clips. 
+	 */
+	public ArrayList<PamClipPane> getCurrentClipPanes() {
+		return currentPamClips;
+	}
+
 	/**
 	 * Reference to the view.
 	 */

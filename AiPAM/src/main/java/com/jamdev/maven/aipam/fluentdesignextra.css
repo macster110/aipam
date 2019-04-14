@@ -237,8 +237,27 @@
     -fx-text-fill: TEXT_FILL;
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * Tab pane                              *
+ *                                                                             *
+ ******************************************************************************/
 
 
+.axis {
+     -fx-stroke: TEXT_FILL;
+}
+ 
+.axis-label {
+    -fx-stroke: TEXT_FILL;
+}
+ 
+.axis-tick-mark {
+    -fx-stroke: TEXT_FILL;
+}
+.axis-minor-tick-mark {
+    -fx-stroke: TEXT_FILL;
+}
 
 
 

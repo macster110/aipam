@@ -7,11 +7,12 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -28,7 +29,6 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 	
 	private Slider volume;
 	
-	
 	private Label volumeIconLabel; 
 	
 	private Label volumePercLabel;
@@ -41,7 +41,13 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 	/**
 	 * The main holder pane. 
 	 */
-	private VBox mainPane; 
+	private VBox mainPane;
+
+
+	private Button playAllButton;
+
+
+	private Button stopButton; 
 
 	
 	/**
@@ -57,7 +63,6 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 
 		volumePercLabel = new Label(); 
 		volumePercLabel.getStyleClass().add("label-title2");
-
 		
 		volume= new Slider(0.,100.,50.); 
 		volume.setValue(0.5);
@@ -77,12 +82,56 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 		
 		Label volumeTitle = new Label("Volume");
 		volumeTitle.getStyleClass().add("label-title1");
-		
-		
+
 
 		mainPane = new VBox(); 
 		mainPane.setSpacing(5); 
-		mainPane.getChildren().addAll(volumeTitle, holder);
+		mainPane.getChildren().addAll(volumeTitle, holder, allClipPlaybackPane() );
+	}
+	
+	/**
+	 * Create a pane which plays back all clips. 
+	 * @return a pane which plays back all clips. 
+	 */
+	private Pane allClipPlaybackPane() {
+		
+		Label label = new Label("Play all clips");
+		label.getStyleClass().add("label-title2");
+		
+		playAllButton = new Button(); 
+		playAllButton.setOnAction((action)->{
+			aiPamView.getClipSelectionManager().autoPlayClips(null);
+		});
+		playAllButton.setTooltip(new Tooltip("Play all the clips from the start"));
+		MaterialDesignIconView iconView = new MaterialDesignIconView(MaterialDesignIcon.PLAY); 
+		iconView.setGlyphSize(33);
+		iconView.setFill(Color.WHITE);
+		playAllButton.setGraphic(iconView);
+		playAllButton.disableProperty().bind(aiPamView.getClipSelectionManager().autoPlayProperty());
+
+		stopButton = new Button(); 
+		stopButton.setTooltip(new Tooltip("Stop auto playback of clips"));
+		stopButton.setOnAction((action)->{
+			aiPamView.getClipSelectionManager().stopClipAutoPlay();
+		});
+		iconView = new MaterialDesignIconView(MaterialDesignIcon.STOP); 
+		iconView.setGlyphSize(33);
+		iconView.setFill(Color.WHITE);
+		stopButton.setGraphic(iconView);
+		stopButton.disableProperty().bind(aiPamView.getClipSelectionManager().autoPlayProperty().not());
+	
+		
+		HBox playBackPane = new HBox(); 
+		playBackPane.setSpacing(5);
+		playBackPane.getChildren().addAll(playAllButton, stopButton); 
+		
+		volumeIconLabel.setGraphic(iconView);
+
+		VBox holder = new VBox(); 
+		holder.setSpacing(5);
+		holder.getChildren().addAll(label, playBackPane); 
+		
+		return holder; 
 	}
 
 	/**

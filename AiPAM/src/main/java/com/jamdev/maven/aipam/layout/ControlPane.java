@@ -3,13 +3,14 @@ package com.jamdev.maven.aipam.layout;
 import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.AIPamParams;
+import com.jamdev.maven.aipam.AiPamController;
+import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
 import com.jamdev.maven.aipam.layout.utilsFX.FluentMenuPane;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -17,7 +18,6 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -321,6 +321,19 @@ public class ControlPane extends BorderPane {
 	 */
 	public void setControlButtonDisable(boolean disable) {
 		masterControlPane.setControlButtonDisable(disable); 
+	}
+	
+	/**
+	 * Send update flag. 
+	 * @param flag - the flag. 
+	 * @param stuff - object containing data. 
+	 */
+	public void notifyUpdate(int flag, Object stuff) {
+		switch (flag) {
+		case AiPamController.NEW_CLIP_SELECTED:
+			fftPane.notifyUpdate(flag, stuff);
+			break;
+		}
 	}
 
 }

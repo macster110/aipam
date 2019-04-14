@@ -4,16 +4,13 @@ import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.layout.AIPamView;
-import com.jamdev.maven.aipam.layout.ColourArray;
 import com.jamdev.maven.aipam.layout.clips.PamClipPane;
-import com.jamdev.maven.aipam.layout.clips.SpectrogramImage;
 import com.jamdev.maven.aipam.layout.utilsFX.ZoomableScrollPane;
 
 import javafx.scene.Node;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
@@ -89,6 +86,7 @@ public class ClusterGraphPane extends BorderPane {
 	 * Update the cluster pane. 
 	 * @param pamClips - the cluster pane. 
 	 */
+	@SuppressWarnings("rawtypes")
 	public void update(ArrayList<PAMClip> pamClips) {
 		
 		scatterChart.getData().clear();
@@ -97,9 +95,14 @@ public class ClusterGraphPane extends BorderPane {
         PamClipPane image;
 		for (int i=0; i<pamClips.size(); i++) {
 			
+			if (pamClips.get(i).getClusterPoint()==null) {
+				System.err.println("clustering.ClusterGraphPane: The clip has a null cluster point");
+				continue; 
+			}
+			
+			@SuppressWarnings("unchecked")
 			XYChart.Data dataPoint = new XYChart.Data(pamClips.get(i).getClusterPoint()[0],
 					 pamClips.get(i).getClusterPoint()[1]);
-			
 			
 			image = new PamClipPane(pamClips.get(i), 30, 30, aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
 			image.setSelectionManager(aiPamView.getClipSelectionManager());
@@ -125,9 +128,7 @@ public class ClusterGraphPane extends BorderPane {
 //				lastClicked=imageViewWrapper; 
 //				
 //			});
-		    
-		    
-        	
+
 			dataPoint.setNode(image);
 						
 			series.getData().add(dataPoint); 

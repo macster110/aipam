@@ -65,6 +65,7 @@ public class AIPamView extends BorderPane {
 	 */
 	private ClipGridPane clipPane;
 
+
 	/**
 	 * The primary stage. 
 	 */
@@ -150,8 +151,6 @@ public class AIPamView extends BorderPane {
 	 */
 	private AITheme theme; 
 	
-
-
 	/**
 	 * Pane which shows the full spectrogram of the clip and a few other controls. 
 	 */
@@ -181,6 +180,9 @@ public class AIPamView extends BorderPane {
 		userPromptPane.setPadding(new Insets(5,50,5,5));
 		//userPromptPane.setStyle("-fx-background-color: BACKGROUND_TRANS;"); 
 		//labelSettings.prefWidthProperty().bind(holder.widthProperty());
+		
+		clipSelectionManager = new ClipSelectionManager(this); 
+
 
 		controlPane= new ControlPane(this); 
 		//set the current params here. Otherwise on getParams default values on controls will be returned...
@@ -192,8 +194,6 @@ public class AIPamView extends BorderPane {
 
 		clipPane= new ClipGridPane(this); 
 		fullClipPane = new FullClipPane(); //for viewing clips in seperate dialog
-
-		clipSelectionManager = new ClipSelectionManager(this); 
 
 		clusterGraphPane = new ClusterGraphPane(this); 
 
@@ -354,7 +354,11 @@ public class AIPamView extends BorderPane {
 		case AiPamController.END_CLIP_EXPORT:
 			showProgressPane(false); 
 			break;
+		case AiPamController.NEW_CLIP_SELECTED:
+			break;
 		} 
+		//update the control pane. 
+		controlPane.notifyUpdate(updateType, data);
 	}
 
 	/**
@@ -662,6 +666,14 @@ public class AIPamView extends BorderPane {
 	 */
 	public AITheme getTheme() {
 		return theme;
+	}
+	
+	/**
+	 * Get the clip pane. 
+	 * @return the clip pane. 
+	 */
+	public ClipGridPane getClipPane() {
+		return clipPane;
 	}
 
 }

@@ -56,21 +56,33 @@ public class SelectionMenu {
 		else {
 			menuItems=  getMultiMenu(selectedClips);
 		}
+		
+		//audio play back pane
+		if (selectedClips!=null && selectedClips.size()>0) {
+			menuItems.add(new SeparatorMenuItem()); 
+			MenuItem item= new MenuItem("Play all clips from here"); 
+			item.setOnAction((action)->{
+				aiPamView.getClipSelectionManager().autoPlayClips(selectedClips.get(0));
+			});
+			menuItems.add(item);
+		}
 
+		//show the full spectrogram
 		menuItems.add(new SeparatorMenuItem()); 
-		MenuItem item= new MenuItem("Show Full Spectrogram..."); 
-		item.setOnAction((action)->{
+		MenuItem item1= new MenuItem("Show Full Spectrogram..."); 
+		item1.setOnAction((action)->{
 			openSpecDialog(selectedClips.get(selectedClips.size()-1).getPamClip());
 		});
-		menuItems.add(item);
-
+		
+		//add to the menu
+		menuItems.add(item1);
+		
 		return menuItems; 
-
 	}
 
 
 	/**
-	 * Get the menu items when multiple clips are sleected 
+	 * Get the menu items when multiple clips are selected 
 	 * @param selectedClips - a single clip
 	 * @return the menu items for a single selected clip
 	 */

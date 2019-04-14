@@ -1,13 +1,18 @@
 package com.jamdev.maven.aipam.layout;
 
 import com.jamdev.maven.aipam.AIPamParams;
+import com.jamdev.maven.aipam.AiPamController;
+import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
+import com.jamdev.maven.aipam.layout.clips.FullClipPane;
+import com.jamdev.maven.aipam.layout.clips.SpectrogramImage;
 import com.jamdev.maven.aipam.layout.utilsFX.ColourRangeSlider;
 import com.jamdev.maven.aipam.layout.utilsFX.DefaultSliderLabel;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -15,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -52,7 +58,16 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 	 */
 	private ColourRangeSlider colourRangleSlider;
 
-	private AIPamView aiPamView; 
+	private AIPamView aiPamView;
+
+	private ImageView specImage;
+
+	/**
+	 * The current preview clip. Null if no clip selected. Aloows users to play with control settings. 
+	 */
+	private PAMClip currentPreviewClip;
+
+	private BorderPane clipPreviewHolder; 
 
 	/**
 	 * The FFT settings pane. 
@@ -95,9 +110,6 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		Label fftHopLabel = new Label("FFT Hop");
 		fftHopLabel.getStyleClass().add("label-title2");
 		
-
-
-		
 		hopComboBox  = new ComboBox<Integer>(FXCollections.observableArrayList(fftLenList)); 
 		hopComboBox.getSelectionModel().select(3);
 		hopComboBox.setTooltip(new Tooltip("The FFT hop is the amount the FFT Lengbth window slides along \n"
@@ -120,7 +132,6 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		HBox hopBox = new HBox(); 
 		hopBox.setSpacing(5);
 		hopBox.getChildren().addAll(hopComboBox, defaultHop);
-
 		
 		final ColourArrayType[] colourTypes = ColourArrayType.values(); 
 		ObservableList<String> colorTypeList  = FXCollections.observableArrayList();
@@ -132,6 +143,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 			//change the colour of the colour slider. 
 			colourRangleSlider.setColourArrayType(colourTypes[colorType.getSelectionModel().getSelectedIndex()]);
 			notifySettingsListeners();
+			updateSpecImage(this.currentPreviewClip);  //update the preview clips
 		});
 		colorType.getSelectionModel().select(3);
 
@@ -144,19 +156,58 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		colourRangleSlider.setLowLabelFormat(new DefaultSliderLabel());
 		colourRangleSlider.lowValueProperty().addListener((obsval, oldval, newval)->{
 			notifySettingsListeners();
+			updateSpecImage(this.currentPreviewClip);  //update the preview clips
 		});
 		colourRangleSlider.highValueProperty().addListener((obsval, oldval, newval)->{
 			notifySettingsListeners();
+			updateSpecImage(this.currentPreviewClip);  //update the preview clips
 		});
 		
 		VBox vBox = new VBox(); 
 		vBox.setSpacing(5);
 		vBox.getChildren().addAll(titleLabel, fftLabel, fftComboBox, fftHopLabel,
-				hopBox, colourScale,colorType,  colourRangleSlider); 
+				hopBox, colourScale,colorType,  colourRangleSlider, createClipPane()); 
 		
 		return vBox;
 
 	}
+	
+	/**
+	 * Shows a preview of the clip
+	 */
+	private Pane createClipPane() {
+		
+		specImage = new ImageView(); 
+		
+		clipPreviewHolder = new BorderPane(); 
+	
+		clipPreviewHolder.setCenter(specImage);
+		
+		Label colourScale = new Label("Clip Preview");
+		colourScale.getStyleClass().add("label-title2");
+		
+		clipPreviewHolder.setTop(colourScale);
+		clipPreviewHolder.setCenter(new Label("Select an imported clip to see a preview\nThis can be used to test colour scales"));
+
+
+		return clipPreviewHolder; 
+	}
+	
+	/**
+	 * Update the image in the spectrogram display
+	 * @param pamClip - the clips. 
+	 */
+	private void updateSpecImage(PAMClip pamClip) {
+		if (pamClip==null) return; 
+		SpectrogramImage image = new SpectrogramImage(pamClip.getSpectrogram(), 
+				this.aiPamView.getCurrentColourArray(), new double[] {colourRangleSlider.getLowValue(), 
+						colourRangleSlider.getHighValue()}); 
+		
+		specImage.setImage(image.getSpecImage(200, 200));	
+		
+		clipPreviewHolder.setLeft(FullClipPane.createFreqAxis(Side.LEFT,  pamClip)); 
+	}
+		
 	
 	@Override
 	public Pane getPane() {
@@ -205,8 +256,12 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 
 	@Override
 	public void notifyUpdate(int flag, Object stuff) {
-		// TODO Auto-generated method stub
-		
+		switch (flag) {
+		case AiPamController.NEW_CLIP_SELECTED:
+			this.currentPreviewClip = (PAMClip) stuff; 
+			updateSpecImage(currentPreviewClip);
+			break;
+		}
 	}
 
 }

@@ -26,5 +26,11 @@ public interface AudioPlay  {
 	 * @return the volume property. 
 	 */
 	public DoubleProperty getVolumePropery();
+	
+	/**
+	 * Check if the clip is playing. If playing then true. 
+	 * @return the playing property. 
+	 */
+	public boolean isPlaying();
 
 }

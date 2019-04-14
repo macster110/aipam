@@ -2,6 +2,7 @@ package com.jamdev.maven.aipam.clips;
 
 import java.io.File;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.media.AudioClip;
 
@@ -76,6 +77,11 @@ public class StandardAudioPlay implements AudioPlay {
 			e.printStackTrace();
 		}
 		System.out.println("Finished audio: "); 
+	}
+
+	@Override
+	public boolean isPlaying() {
+		return getMediaPlay() .isPlaying(); 
 	}
 	
 

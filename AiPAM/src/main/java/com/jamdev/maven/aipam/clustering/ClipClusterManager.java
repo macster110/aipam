@@ -113,7 +113,8 @@ public class ClipClusterManager {
 			}
 		}
 		
-        @Override protected void cancelled() {
+        @Override 
+        protected void cancelled() {
             super.cancelled();
 			if (clusterSnapGrid.getListener()!=null) {
 				clusterSnapGrid.getListener().setCancelled(true);
