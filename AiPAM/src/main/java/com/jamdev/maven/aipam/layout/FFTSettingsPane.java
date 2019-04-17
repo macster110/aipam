@@ -206,6 +206,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		specImage.setImage(image.getSpecImage(200, 200));	
 		
 		clipPreviewHolder.setLeft(FullClipPane.createFreqAxis(Side.LEFT,  pamClip)); 
+		clipPreviewHolder.setCenter(specImage); 
 	}
 		
 	
