@@ -1,4 +1,4 @@
-# SoundSort (AIPAM working name)
+# SoundSort (AIPAM working name - Java 8 archived version)
 
 A Java and JavaFX based program to visualise and cluster sound clips which can then be annotated and export by manual annotation. 
 
