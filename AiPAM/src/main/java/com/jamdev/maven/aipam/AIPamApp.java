@@ -6,6 +6,7 @@ import com.jamdev.maven.aipam.layout.AIPamView;
 import com.jamdev.maven.aipam.layout.utilsFX.AISVGDimensionProvider;
 
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import de.codecentric.centerdevice.javafxsvg.dimension.DefaultDimensionProvider;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -17,7 +18,6 @@ import javafx.stage.Stage;
  * @author Jamie Macaulay 
  *
  */
-@SuppressWarnings("restriction")
 public class AIPamApp extends Application {
 
 

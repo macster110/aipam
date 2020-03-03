@@ -1,7 +1,6 @@
 package com.jamdev.maven.aipam.layout.utilsFX;
 
 
-import com.sun.javafx.scene.control.skin.ButtonSkin;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -10,6 +9,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.scene.control.Button;
+import javafx.scene.control.skin.ButtonSkin;
 //import javafx.scene.control.skin.ButtonSkin;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.MouseEvent;

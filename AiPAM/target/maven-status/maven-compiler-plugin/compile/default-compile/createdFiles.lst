@@ -113,4 +113,5 @@ com\jamdev\maven\aipam\clips\AudioImporter.class
 com\jamdev\maven\aipam\layout\utilsFX\HidingPane$8.class
 com\jamdev\maven\aipam\AiPamController.class
 com\jamdev\maven\aipam\AIMessageListener.class
+com\jamdev\maven\aipam\AiPamAppGUIStarter.class
 com\jamdev\maven\aipam\clustering\FingerPrintManager.class

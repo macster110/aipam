@@ -1,7 +1,8 @@
 package com.jamdev.maven.aipam;
 
 import javafx.scene.layout.Pane;
-import jfxtras.styles.jmetro8.JMetro;
+import jfxtras.styles.jmetro.JMetro;
+import jfxtras.styles.jmetro.Style;
 
 public class AITheme extends AIPamApp {
 
@@ -39,14 +40,14 @@ public class AITheme extends AIPamApp {
 	switch (type) {
 	case JMETRO_DARK_THEME:
 		//apply JMetro theme
-		new JMetro(JMetro.Style.DARK).applyTheme(root);
+		new JMetro(Style.DARK).setScene(root.getScene());
 		//add extra style sheet for fluent design menu buttons and tab pane.
 		root.getStylesheets().add(getClass().getResource("/fluentdesignextra.css").toExternalForm());
 		root.setStyle("-fx-background: BACKGROUND;");
 		break;
 	case JMETRO_LIGHT_THEME:
 		//apply JMetro theme
-		new JMetro(JMetro.Style.LIGHT).applyTheme(root);
+		new JMetro(Style.LIGHT).setScene(root.getScene());
 		//add extra style sheet for fluent design menu buttons and tab pane.
 		root.getStylesheets().add(getClass().getResource("/fluentdesignextra.css").toExternalForm());
 		//just add extra background for dark. 
