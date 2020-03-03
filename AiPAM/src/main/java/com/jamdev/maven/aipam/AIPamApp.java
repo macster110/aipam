@@ -17,6 +17,7 @@ import javafx.stage.Stage;
  * @author Jamie Macaulay 
  *
  */
+@SuppressWarnings("restriction")
 public class AIPamApp extends Application {
 
 
@@ -40,6 +41,11 @@ public class AIPamApp extends Application {
 		
         //need to use this method for images packaged in jar. 
 //		primaryStage.getIcons().add( new Image(AIPamApp.class.getResourceAsStream("Cluster_sml.png"))); 
+        
+//        System.out.println("Image: 1" +  getClass().getResource(".") + "  ");
+//        System.out.println("Image: 2" + AIPamApp.class.getResourceAsStream("."));
+
+        
 		primaryStage.getIcons().add( new Image(AIPamApp.class.getResourceAsStream("Cluster_med.png"))); 
 		primaryStage.getIcons().add( new Image(AIPamApp.class.getResourceAsStream("Cluster.png"))); 
 		

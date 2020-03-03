@@ -10,13 +10,16 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\Audio
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\clips\PamClipPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\GeneralSettingsPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\WavFile.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\shortestPath\DenseDijkstraSP.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utilsFX\PamRangeSlider.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\shortestPath\BruteIndexMinPQ.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\shortestPath\ShortestPath.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\AiPamController.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\LAPJV2\EvalFunction.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\ClusterPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utilsFX\UtilsFX.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\LAPJV2\MatrixUtils.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\AudioImporterListener.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utilsFX\DynamicSettingsPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\ClusterSnapGrid.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\AIPamParams.java
@@ -25,8 +28,10 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utils
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\App.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\ColourArray.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\PAMClip.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\StandardAudioImportListener.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\annotation\Annotation.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\annotation\SimpleAnnotation.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\clips\FullClipPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\clips\ClipSelectionManager.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\WavClipWave.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\SimpleLAPJVListener.java
@@ -44,6 +49,7 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utils
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\FFTSettingsPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\UserPrompts.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\SparseCostMatrixTests.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\AITheme.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\AssignmentListener.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\AnnotationPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utilsFX\SettingsListener.java
@@ -56,6 +62,7 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\AIMessageLis
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\PAMClipError.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\AudioPlay.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\SnapToGridListener.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\ClipExporter.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\WindowFunction.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\ClusterListener.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\annotation\AnnotationManager.java
@@ -66,6 +73,7 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\PlayB
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\ProgressBarPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\AiPamUtils.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\SettingsImportExport.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\shortestPath\AssignmentProblemDense.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\LAPJV1\SparseCostMatrix.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\clips\SpectrogramImage.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\LAPJV2\LAPJV2.java

@@ -1,6 +1,7 @@
 package com.jamdev.maven.aipam.clustering.snapToGrid;
 /**
- * The assignment probelm for matching cluster points to a grid. 
+ * The assignment problem for matching cluster points to a grid. 
+ * 
  * @author Jamie Macaulay 
  *
  */
@@ -29,5 +30,4 @@ public interface AssignmentProblemAlgorithm {
 	 */
 	public long getProcessingTime(); 
 	
-
 }
