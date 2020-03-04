@@ -160,13 +160,7 @@ public class AIPamView extends BorderPane {
 
 		this.primaryStage = primaryStage; 
 		this.root=root; 
-		
 	
-		//apply the theme
-		theme = new AITheme();
-		theme.applyTheme(AITheme.JMETRO_DARK_THEME, root);
-		
-
 		//ai pam control. 
 		this.aiPamContol = aiPamControl; 
 		this.aiPamContol.addSensorMessageListener((flag, dataObject)->{
@@ -241,6 +235,10 @@ public class AIPamView extends BorderPane {
 
 		setCenter(centerPane);
 		setLeft(controlPaneHolder);
+		
+		//apply the theme
+		theme = new AITheme();
+		theme.applyTheme(AITheme.JMETRO_DARK_THEME, root);
 
 	}
 
@@ -255,6 +253,7 @@ public class AIPamView extends BorderPane {
 			centerPane.setTop(progressPane= new ProgressBarPane(this));
 		}
 		else {
+			centerStackPane.getChildren().remove(userPromptPane);
 			centerStackPane.getChildren().add(userPromptPane);
 			hidingPane.toFront(); //myust be above everything. 
 			centerPane.setTop(null); //replace with user promtp pane. 

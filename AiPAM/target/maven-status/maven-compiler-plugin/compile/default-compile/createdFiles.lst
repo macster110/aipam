@@ -46,6 +46,7 @@ com\jamdev\maven\aipam\layout\utilsFX\DefaultSliderLabel.class
 com\jamdev\maven\aipam\layout\AudioImportPane$ClipSizeConverter.class
 com\jamdev\maven\aipam\layout\utilsFX\HidingPane$5.class
 com\jamdev\maven\aipam\clustering\snapToGrid\SimpleLAPJVListener.class
+com\jamdev\maven\aipam\clips\JavaSoundAPITest.class
 com\jamdev\maven\aipam\layout\clips\FullClipPane.class
 com\jamdev\maven\aipam\clustering\snapToGrid\LAPJV2\ValueLocationStruct.class
 com\jamdev\maven\aipam\clips\StandardAudioImportListener.class
@@ -77,6 +78,7 @@ com\jamdev\maven\aipam\SettingsImportExport.class
 com\jamdev\maven\aipam\clustering\tsne\TSNEClipClustererDL4J.class
 com\jamdev\maven\aipam\utils\DownSampleImpl.class
 com\jamdev\maven\aipam\layout\utilsFX\FluentMenuPane.class
+com\jamdev\maven\aipam\clips\MediaPlayApplicationTest.class
 com\jamdev\maven\aipam\layout\ColourArray$1.class
 com\jamdev\maven\aipam\clustering\ClusterParams.class
 com\jamdev\maven\aipam\layout\clips\PamClipPane.class
@@ -110,6 +112,7 @@ com\jamdev\maven\aipam\layout\utilsFX\UtilsFX.class
 com\jamdev\maven\aipam\clustering\snapToGrid\SnapToGridListener.class
 com\jamdev\maven\aipam\layout\clips\ClipSelectionManager.class
 com\jamdev\maven\aipam\clips\AudioImporter.class
+com\jamdev\maven\aipam\clips\MediaPlayApplicationStarter.class
 com\jamdev\maven\aipam\layout\utilsFX\HidingPane$8.class
 com\jamdev\maven\aipam\AiPamController.class
 com\jamdev\maven\aipam\AIMessageListener.class

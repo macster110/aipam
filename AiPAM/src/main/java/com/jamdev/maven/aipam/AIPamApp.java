@@ -12,6 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import jfxtras.styles.jmetro.JMetro;
+import jfxtras.styles.jmetro.Style;
 /**
  * The main FX application for AiPam.
  * 
@@ -65,6 +67,10 @@ public class AIPamApp extends Application {
         
 //        root.getStylesheets().add(darkStyle);
         primaryStage.setScene(new Scene(root, 1000, 750));
+        
+        //need to apply theme after stage to get it to work with new version of JMetro
+        sensorView.getTheme().applyTheme(AITheme.JMETRO_DARK_THEME, root);
+        
         primaryStage.show();
     }
 

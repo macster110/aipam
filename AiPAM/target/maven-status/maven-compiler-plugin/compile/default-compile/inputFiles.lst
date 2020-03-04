@@ -7,6 +7,7 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\ArrayS
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\ClusterParams.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\tsne\TSNEStandardExample.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\AudioImportPane.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\JavaSoundAPITest.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\clips\PamClipPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\GeneralSettingsPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\WavFile.java
@@ -42,6 +43,7 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\Contr
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\utilsFX\FluentMenuPane.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\Spectrogram.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\DownSampleImpl.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\MediaPlayApplicationStarter.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\FingerPrintManager.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\LAPJV1\LAPJV.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\layout\clips\SelectionMenu.java
@@ -63,6 +65,7 @@ C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\PAMCli
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\AudioPlay.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\snapToGrid\SnapToGridListener.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\ClipExporter.java
+C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clips\MediaPlayApplicationTest.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\utils\WindowFunction.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\clustering\ClusterListener.java
 C:\Users\macst\git\aipam\AiPAM\src\main\java\com\jamdev\maven\aipam\annotation\AnnotationManager.java

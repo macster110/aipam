@@ -245,9 +245,6 @@ public class HidingPane extends StackPane {
 			//button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Resources/SidePanelUp2.png"))));
 			fontAwesomeIcon = FontAwesomeIcon.CHEVRON_UP;
 
-			
-			
-
 			//button.setPrefWidth(60); //horizontal buttons are slightly wider
 			//button.getStyleClass().add("close-button-top");
 			break;
@@ -300,7 +297,7 @@ public class HidingPane extends StackPane {
 	@Override	
 	public void setPrefSize(double prefWidth, double prefHeight){
 		super.setPrefSize(prefWidth, prefHeight);
-
+		
 		if (!isHorizontal()){
 			expandedSize=prefWidth; 
 			hidePane.setPrefWidth(expandedSize);

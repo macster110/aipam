@@ -50,11 +50,11 @@
 			<url>https://dl.bintray.com/algs4/maven</url>
 		</repository>
 	</repositories>
-	
-	 <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-	
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 
 	<!-- <properties> -->
 	<!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
@@ -71,7 +71,7 @@
 			<version>4.13</version>
 			<scope>test</scope>
 		</dependency>
-				<!-- JavaFX 13 -->
+		<!-- JavaFX 13 -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -166,10 +166,10 @@
 					<groupId>xml-apis</groupId>
 					<artifactId>xml-apis</artifactId>
 				</exclusion>
-<!-- 				<exclusion> -->
-<!-- 					<groupId>xml-apis</groupId> -->
-<!-- 					<artifactId>xml-apis-ext</artifactId> -->
-<!-- 				</exclusion> -->
+				<!-- <exclusion> -->
+				<!-- <groupId>xml-apis</groupId> -->
+				<!-- <artifactId>xml-apis-ext</artifactId> -->
+				<!-- </exclusion> -->
 			</exclusions>
 		</dependency>
 		<!-- library for spectrograms -->
@@ -191,7 +191,6 @@
 			<artifactId>algs4</artifactId>
 			<version>1.0.3</version>
 		</dependency>
-
 	</dependencies>
 
 
@@ -209,9 +208,9 @@
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.4</version>
-<!-- 				<configuration> -->
-<!-- 					<mainClass>AIPamApp</mainClass> -->
-<!-- 				</configuration> -->
+				<!-- <configuration> -->
+				<!-- <mainClass>AIPamApp</mainClass> -->
+				<!-- </configuration> -->
 			</plugin>
 		</plugins>
 		<!-- <finalName>dl4j-quickstart</finalName> -->

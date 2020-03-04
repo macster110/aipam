@@ -5,8 +5,6 @@ import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.clips.AudioInfo;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
-import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
-
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
@@ -19,7 +17,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
@@ -36,7 +33,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 	/**
 	 * Text field for the file. 
 	 */
-	private TextField textField;
+	private Label textField;
 
 	/**
 	 * The import button 
@@ -96,6 +93,10 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 	private Pane createPane() {
 
+		VBox holder = new VBox();
+		holder.setSpacing(5); 
+		holder.setMaxWidth(300);
+		
 		//create
 		HBox fileImportHolder = new HBox();
 		fileImportHolder.setSpacing(5);
@@ -117,13 +118,22 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 		audioInfoLabel = new Label("AudioInfo: "); 
 
 
-		textField = new TextField(); 
-		textField.setEditable(false);
+		/**
+		 * FIXME. There seems to be a bug in JavaFX 13 which causesa textfield to constantly expand slowly.
+		 * Really really weird
+		 */
+		//textField = new TextField(); 
+		textField = new Label(); 
+		//textField.setEditable(true);
+		textField.setStyle("-fx-border-color:gray; -fx-background-color: gray;");
 		textField.prefHeightProperty().bind(importButton.heightProperty());
 		textField.setText("Open an audio folder");
-		HBox.setHgrow(textField, Priority.ALWAYS);
+		textField.prefWidthProperty().bind(holder.widthProperty().subtract(10));
+		
+		//below worked with Java 8 but causes the pane to resize slwly to infinity in JavaFX 13 
+//		HBox.setHgrow(textField, Priority.ALWAYS);
 
-		fileImportHolder.getChildren().addAll(textField);
+		//fileImportHolder.getChildren().addAll(textField);
 
 
 		//clip length 
@@ -176,9 +186,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 			notifySettingsListeners(); 
 		});
 
-		VBox holder = new VBox();
-		holder.setSpacing(5); 
-		holder.getChildren().addAll(label,fileImportHolder, importButton, audioInfoLabel, clipLength, clipLengthBox, 
+		holder.getChildren().addAll(label,textField, importButton, audioInfoLabel, clipLength, clipLengthBox, 
 				decimatorLabel, decimatorBox, channelLabel, channelBox); 
 
 		return holder; 
@@ -190,6 +198,8 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 	 * @param audioInfo - audio info describing the audio files. 
 	 */
 	private void setAudioInfo(AudioInfo audioInfo, AIPamParams aiParams) {
+		
+		//System.out.println("TextField text: setAudioInfo"); 
 
 		audioInfoLabel.setTextFill(Color.WHITE);
 		if (audioInfo==null) {
@@ -337,12 +347,11 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 	@Override
 	public void setParams(AIPamParams params) {
 
-		//		System.out.println("SEPARAMS:  decimator value is: " + params.decimatorSR);
+		//System.out.println("SEPARAMS:  decimator value is: " + params.decimatorSR);
 		//		System.out.println("SEPARAMS:  channel value is: " + params.channel);
 
 		this.setAllowNotify(false);
 
-		// TODO Auto-generated method stub
 		textField.setText(params.audioFolder); 
 		clipLengthBox.getSelectionModel().select(params.maximumClipLength);
 
