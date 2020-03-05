@@ -182,7 +182,6 @@ public class ClipSelectionManager {
 			playPanes= playPanes.subList(playPanes.indexOf(pamClip), playPanes.size()-1); 
 		}
 
-		
 		Thread th = new Thread(audioTask= new AutoPlayBackTask(
 				playPanes, aiPamView.getAIParams()));
 		
@@ -235,16 +234,17 @@ public class ClipSelectionManager {
 						clearClips();
 						highlightSelectClip(pamClips.get(ii)); 
 					}); 
-					Thread.sleep(500);
 //					System.out.println("Auto play clip: " + pamClips.get(i));
 					pamClips.get(i).getAudioPlay().playClipAudio();
+					Thread.sleep(250); //give the clip a little time to get going
 					while (pamClips.get(i).getAudioPlay().isPlaying()) {
+						//do nothing until clip play back has finished
+						Thread.sleep(500); 
 						if (this.isCancelled()) {
 							pamClips.get(i).getAudioPlay().stopClipAudio();
 							return -1; 
 						}
-						//do nothing until clip play back has finished
-						Thread.sleep(500); 
+
 					}
 				}
 				//System.out.println("Hello: Finished!!!!");

@@ -8,6 +8,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -42,6 +43,11 @@ public class SoundPlay {
 	 * The current audio line
 	 */
 	private SourceDataLine audioLine;
+
+	/**
+	 * True if currently playiung. 
+	 */
+	private volatile boolean isPlaying = false; 
 
 	/**
 	 * Play a given audio file.
@@ -91,7 +97,14 @@ public class SoundPlay {
 
 			//			//now we have to be careful and play only the first two channels. 
 			//			int count=0; 
-
+			
+			audioLine.addLineListener(( event)->{
+				if (event.getType().equals(LineEvent.Type.STOP)) {
+					isPlaying=false; 
+				}
+			});
+			
+			isPlaying = true; 
 			/** 
 			 * If the file has one or two channels then keep it simple and play back all bytes 
 			 */
@@ -131,7 +144,8 @@ public class SoundPlay {
 			audioLine.drain();
 			audioLine.close();
 			audioStream.close();
-
+			
+			isPlaying = false; 
 			System.out.println("Playback completed.");
 
 		} catch (UnsupportedAudioFileException ex) {
@@ -152,7 +166,7 @@ public class SoundPlay {
 	 */
 	public boolean isPlaying() {
 		if (audioLine!=null) {
-			return audioLine.isRunning(); 
+			return isPlaying; 
 		}
 		else return false; 
 	}
@@ -180,11 +194,12 @@ public class SoundPlay {
 	 * Update the volume if audioLine is available. 
 	 */
 	private void updateVolume() {
-		if (audioLine!=null) {
+		if (audioLine!=null && audioLine.isControlSupported( FloatControl.Type.MASTER_GAIN)) {
 		FloatControl gainControl = 
 			    (FloatControl) audioLine.getControl(FloatControl.Type.MASTER_GAIN);
 			gainControl.setValue(volumedB); //reduce or increase by volume dB 
 		}
+
 	}
 
 }
