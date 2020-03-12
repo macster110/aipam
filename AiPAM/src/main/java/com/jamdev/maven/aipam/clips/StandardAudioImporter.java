@@ -48,7 +48,7 @@ public class StandardAudioImporter implements AudioImporter {
 			waves.add(wave); 
 			return waves; 
 
-		} catch (IOException | UnsupportedAudioFileException e) {
+		} catch (IOException | UnsupportedAudioFileException| NullPointerException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -191,6 +191,7 @@ public class StandardAudioImporter implements AudioImporter {
 				if (audioImporterListener.isCancelled()) {
 					return null; 
 				}
+				System.out.println(files.get(j)); 
 				WavFile wavFile = new  WavFile(files.get(j));
 				AudioFileFormat format = wavFile.getAudioFileFormat(); 
 				//				inputStream = new FileInputStream(files.get(j));
@@ -201,14 +202,15 @@ public class StandardAudioImporter implements AudioImporter {
 							
 				audioImporterListener.updateProgress((j/(double) files.size()), j, files.size()); 
 
-			} catch (IOException  | UnsupportedAudioFileException e) {
+			} 
+			catch (IOException  | UnsupportedAudioFileException | NullPointerException e) {
 				unopenablefiles++;; 
 				channels[j] = -1; 
 				sampleRate[j] = (float) -1.0; 
 				e.printStackTrace();
 			}
 		}
-
+		
 		//convert to list
 		Collection<Integer> chnnlList = Arrays.asList(channels); 
 		Collection<Float> srList = Arrays.asList(sampleRate); 
@@ -223,8 +225,8 @@ public class StandardAudioImporter implements AudioImporter {
 
 		AudioInfo audioInfo = new AudioInfo();
 
-//		System.out.println(chnnlListElements);
-//		System.out.println(srListElements);
+		System.out.println(" chnnlListElements: " + chnnlListElements);
+		System.out.println(" srListElements: " + srListElements);
 
 		if (chnnlListElements.size()==1) audioInfo.isSameChannels=true;
 		if (srListElements.size()==1) audioInfo.isSameSampleRate=true;

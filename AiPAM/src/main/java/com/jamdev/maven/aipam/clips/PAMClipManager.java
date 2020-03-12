@@ -92,6 +92,7 @@ public class PAMClipManager {
 		
 					if (!checkAudio(currentAudioInfo)) {
 						//Send error to error reporter. 
+						System.out.println("Error in files - check did not work");
 						return -1; 
 					} 
 					

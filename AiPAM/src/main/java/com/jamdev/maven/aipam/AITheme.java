@@ -42,16 +42,16 @@ public class AITheme extends AIPamApp {
 		//apply JMetro theme
 		new JMetro(Style.DARK).setScene(root.getScene());
 		//add extra style sheet for fluent design menu buttons and tab pane.
-		root.getStylesheets().add(getClass().getResource("/fluentdesignextra.css").toExternalForm());
+		root.getStylesheets().add(getClass().getResource("fluentdesignextra.css").toExternalForm());
 		root.setStyle("-fx-background: BACKGROUND;");
 		break;
 	case JMETRO_LIGHT_THEME:
 		//apply JMetro theme
 		new JMetro(Style.LIGHT).setScene(root.getScene());
 		//add extra style sheet for fluent design menu buttons and tab pane.
-		root.getStylesheets().add(getClass().getResource("/fluentdesignextra.css").toExternalForm());
+		root.getStylesheets().add(getClass().getResource("fluentdesignextra.css").toExternalForm());
 		//just add extra background for dark. 
-		root.getStylesheets().add(getClass().getResource("/fluentdesignextra_light.css").toExternalForm());
+		root.getStylesheets().add(getClass().getResource("fluentdesignextra_light.css").toExternalForm());
 		root.setStyle("-fx-background: BACKGROUND;");
 		break;
 	}

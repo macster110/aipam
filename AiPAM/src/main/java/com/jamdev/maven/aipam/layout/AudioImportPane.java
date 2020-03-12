@@ -220,9 +220,11 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 		}
 
 		else {
-			audioInfoLabel.setText(String.format("No. Files: % d \nChannels: %d \nSample Rate: %.0f \n"
+			audioInfoLabel.setText(String.format("No. Files: % d \nNo.Corrupt Files: %d \nChannels: %d \nSample Rate: %.0f \n"
 					+ "Press 'Generate Clips to import", 
-					audioInfo.nFiles, audioInfo.channels, audioInfo.sampleRate));
+					audioInfo.nFiles, audioInfo.nFilesCorrupt, audioInfo.channels, audioInfo.sampleRate));
+		
+		
 			textField.setText(audioInfo.file); 
 
 			//set up the channel and audio info boxes
