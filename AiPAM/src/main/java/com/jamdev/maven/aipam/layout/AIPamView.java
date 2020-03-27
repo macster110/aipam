@@ -275,6 +275,13 @@ public class AIPamView extends BorderPane {
 			//do nothing
 			return;
 		}
+//		
+//		try {
+//			Thread.sleep(200);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 		aiPamContol.loadAudioData(selectedDirectory, false);
 	}

@@ -72,16 +72,16 @@ public class PAMClipManager {
 					this.updateTitle("Importing Audio Data");
 					
 					//first run checks. 
-					System.out.println("Starting the audio import: Listing files");
+//					System.out.println("Starting the audio import: Listing files");
 
 					this.updateProgress(-1, 0);
 					List<File> files = audioImporter.listAudioFiles(selectedDirectory); 
 					
 					//print the files to the console
 					int n=0; 
-					for (File file:files) {
-						System.out.println(n + ": " +file.getAbsolutePath());
-					}
+//					for (File file:files) {
+//						System.out.println(n + ": " +file.getAbsolutePath());
+//					}
 					
 					this.updateProgress(-1, 0);
 					standAudiListener.setDescription("Running checks on " );

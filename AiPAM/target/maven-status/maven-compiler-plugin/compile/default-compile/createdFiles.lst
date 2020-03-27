@@ -13,6 +13,7 @@ com\jamdev\maven\aipam\layout\AnnotationPane$1.class
 com\jamdev\maven\aipam\layout\utilsFX\SettingsPane.class
 com\jamdev\maven\aipam\layout\GeneralSettingsPane.class
 com\jamdev\maven\aipam\layout\clips\ClipGridPane.class
+com\jamdev\maven\aipam\clips\StandardAudioPlayFX.class
 com\jamdev\maven\aipam\layout\utilsFX\HidingPane$6.class
 com\jamdev\maven\aipam\clips\ClipExporter.class
 com\jamdev\maven\aipam\clips\PAMClipError.class
@@ -21,13 +22,13 @@ com\jamdev\maven\aipam\clustering\snapToGrid\shortestPath\AssignmentProblemDense
 com\jamdev\maven\aipam\layout\utilsFX\HidingPane$3.class
 com\jamdev\maven\aipam\clips\WavClipWave.class
 com\jamdev\maven\aipam\clustering\ClipClusterManager$ClusterTask.class
+com\jamdev\maven\aipam\clips\StandardAudioPlayJ.class
 com\jamdev\maven\aipam\clustering\tsne\TSNEClipClustererYK.class
 com\jamdev\maven\aipam\layout\ColourArray$ColourArrayType.class
 com\jamdev\maven\aipam\layout\utilsFX\HidingPane.class
 com\jamdev\maven\aipam\layout\utilsFX\ColourRangeSlider.class
 com\jamdev\maven\aipam\layout\utilsFX\AcceptOnExitTableCell.class
 com\jamdev\maven\aipam\layout\utilsFX\HidingPane$4.class
-com\jamdev\maven\aipam\clips\StandardAudioPlay.class
 com\jamdev\maven\aipam\AIPamApp.class
 com\jamdev\maven\aipam\layout\AudioImportPane.class
 com\jamdev\maven\aipam\clips\ClipWave.class
@@ -66,10 +67,12 @@ com\jamdev\maven\aipam\clustering\snapToGrid\shortestPath\AssignmentProblem.clas
 com\jamdev\maven\aipam\layout\utilsFX\HidingPane$HideButtonPressed.class
 com\jamdev\maven\aipam\layout\UserPrompts.class
 com\jamdev\maven\aipam\utils\ArrayScaler.class
+com\jamdev\maven\aipam\utils\SoundPlay.class
 com\jamdev\maven\aipam\layout\MasterControlPane.class
 com\jamdev\maven\aipam\utils\WindowFunction.class
 com\jamdev\maven\aipam\layout\clustering\ClusterGraphPane.class
 com\jamdev\maven\aipam\clips\PAMClipManager.class
+com\jamdev\maven\aipam\clips\StandardAudioPlayJ$AudioPlayTask.class
 com\jamdev\maven\aipam\layout\PLayBackParams.class
 com\jamdev\maven\aipam\utils\Spectrogram.class
 com\jamdev\maven\aipam\layout\utilsFX\SettingsListener.class

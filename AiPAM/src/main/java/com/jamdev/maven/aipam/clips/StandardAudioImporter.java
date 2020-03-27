@@ -191,7 +191,7 @@ public class StandardAudioImporter implements AudioImporter {
 				if (audioImporterListener.isCancelled()) {
 					return null; 
 				}
-				System.out.println(files.get(j)); 
+//				System.out.println(files.get(j)); 
 				WavFile wavFile = new  WavFile(files.get(j));
 				AudioFileFormat format = wavFile.getAudioFileFormat(); 
 				//				inputStream = new FileInputStream(files.get(j));
@@ -225,8 +225,8 @@ public class StandardAudioImporter implements AudioImporter {
 
 		AudioInfo audioInfo = new AudioInfo();
 
-		System.out.println(" chnnlListElements: " + chnnlListElements);
-		System.out.println(" srListElements: " + srListElements);
+//		System.out.println(" chnnlListElements: " + chnnlListElements);
+//		System.out.println(" srListElements: " + srListElements);
 
 		if (chnnlListElements.size()==1) audioInfo.isSameChannels=true;
 		if (srListElements.size()==1) audioInfo.isSameSampleRate=true;

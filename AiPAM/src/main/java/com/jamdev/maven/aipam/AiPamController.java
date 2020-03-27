@@ -199,11 +199,10 @@ public class AiPamController {
 	 * @param loadClips - true to load the clips. False checks the files. 
 	 */
 	public void loadAudioData(File selectedDirectory, boolean loadClips) {
-
+		
 		this.lastAiParams = aiPamParams.clone(); 
 		this.lastAiParams.clusterParams = null; //indicates no clustering has taken place since last audio import. 
 		if (!loadClips) lastAiParams.decimatorSR=null; //so that the algorithm know stuff has not been loaded yet. 
-				
 				
 		Task<Integer> task = pamClipManager.importClipsTask(selectedDirectory, this.aiPamParams, loadClips);
 		
