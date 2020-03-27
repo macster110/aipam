@@ -33,8 +33,6 @@ Additional plugins to measure clip metrics on export e.g. power spectrum, peak f
 
 The assignment problem is solved using a shortest path algorithm for which the processing time scales with N^3logN. A [Jonker Volgenant algorithm](https://blog.sourced.tech/post/lapjv/) has the potential to be much faster but none of the Java implementations appear to as fast as would be expect (10 hours for 3000 clips) and much slower than shortest path. 
 
-It would be great to get this all working with Java and [JavaFX 11](https://openjfx.io/) but there are multiple issues moving from Java 8 including invlaid module names for t-SNE library, controlsFX version exception and issues with JMetro (I think). All solvable but for now it might be a case of waiting for other folks ot catch up with JavaFX 11. An attempt at JavaFX 11 POM file is in resources/java11.
-
 # Installation #
 
 SoundSort is based on JavaFX and requires the Java vitual machine to run.
