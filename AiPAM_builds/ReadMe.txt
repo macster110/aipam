@@ -1,14 +1,16 @@
 #Running the aipam.jar file
 
-If using Windows simply download the .exe file and double click to open. 
+If using Windows simply download the .exe file and double click to open. For version > 0920 Java 13 is required. This can be downloaded as a JDK from oracle.
 
 Alternatively
 
 runAiPam.bat is a bat file that will run the jar file with the correct vm argumnets
 
-You must have java 8 installed for this to work, ideally version 131. You may need to change "set path"
-in the .bar file to your java 8 jre or jdk folder. To do this open the file in notepad, change the path, 
-save and then double click the file again 
+For versions < 0920 you must have java 8 installed for this to work, ideally version 131. You may need to change "set path"
+in the .bat file to your java 8 jre or jdk folder. To do this open the file in notepad, change the path, 
+save and then double click the file again. Java 131 is the last release before a bug is introduced which prevents SOundSort from playing audi clips. 
+
+Change log
 
 SoundSort_0921b.exe - windows executable. May require Java 13 download.Based on JavaFX 14 and major revision to sound playback to make more reliable. 
 
