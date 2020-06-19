@@ -223,7 +223,6 @@ public class AIPamView extends BorderPane {
 			}
 		});
 
-
 		centerStackPane.getChildren().add(tabPane);
 		centerStackPane.getChildren().add(userPromptPane); 
 		StackPane.setAlignment(userPromptPane, Pos.TOP_RIGHT);

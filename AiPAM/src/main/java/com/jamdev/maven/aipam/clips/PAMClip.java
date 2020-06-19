@@ -3,6 +3,7 @@ package com.jamdev.maven.aipam.clips;
 import java.io.File;
 
 import com.jamdev.maven.aipam.annotation.Annotation;
+import com.jamdev.maven.aipam.utils.Spectrogram;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -16,7 +17,7 @@ import javafx.beans.property.StringProperty;
  * A single clip for display on the clip pane. 
  * <p>
  * The clip stores a spectrogram image but no raw .wav data. 
- * Can be dealing with Gigabytes of clips so cannot store these in memory
+ * Can be dealing with Gigabytes of clips so cannot store raw wav data in memory
  * 
  * @author Jamie Macaulay 
  *
@@ -30,7 +31,7 @@ public class PAMClip {
 	/**
 	 * Data for colours for spectrogram is stored as a short.
 	 */
-	private double[][] spectrogramClip; 
+	private Spectrogram spectrogramClip; 
 
 	/**
 	 * The filename of the clip
@@ -91,7 +92,7 @@ public class PAMClip {
 		
 		lengthClip = wave.getLengthInSeconds(); 
 
-		this.spectrogramClip=wave.getSpectrogram(fftLength, fftLength/fftHop).getAbsoluteSpectrogram();
+		this.spectrogramClip=wave.getSpectrogram(fftLength, fftLength/fftHop); 
 
 		//spectrogramClip =  DownSampleImpl.largestTriangleThreeBuckets(spectrogramClip, 50);
 		//		System.out.println("The spectrogram clip is: " +  spectrogramClip.length + " x " +  spectrogramClip[0].length);
@@ -111,7 +112,6 @@ public class PAMClip {
 		this.annotation= new SimpleObjectProperty<Annotation>(); 
 
 		//do not want the raw wave data in memory so wave is not saved
-
 		wave = null; //garbage collector probably gets rid of this anyway but makes me feel better. 
 	} 
 
@@ -132,11 +132,12 @@ public class PAMClip {
 
 	/**
 	 * Get the spectrogram data for the clip. 
-	 * @return
+	 * @return the spectrogram object
 	 */
-	public double[][] getSpectrogram() {
+	public Spectrogram getSpectrogram() {
 		return spectrogramClip;
 	}
+	
 
 	/**
 	 * Get the audio play. This plays the audio files.

@@ -239,6 +239,25 @@ public class AiPamUtils {
 		}
 		return maxValue;
 	}
+	
+	
+
+	/**
+	 * Finds the minimum value of a matrix
+	 * @param numbers - the array to find the minimum in
+	 * @return the minimu  number in the array.
+	 */
+	public static double min(double[][] numbers) {
+		double minValue  = numbers[0][0];
+		for(int i=0;i<numbers.length;i++){
+			for(int j=1;j<numbers[i].length;j++){
+				if(numbers[i][j] < minValue){
+					minValue = numbers[i][j];
+				}
+			}
+		}
+		return minValue;
+	}
 
 	/**
 	 * Finds the maximum value of a matrix
@@ -283,6 +302,7 @@ public class AiPamUtils {
 			}
 		}
 	}
+
 
 
 }

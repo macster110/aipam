@@ -1,6 +1,5 @@
 package com.jamdev.maven.aipam.clustering;
 
-import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 import com.jmatio.types.MLStructure;
 
 /**
@@ -10,7 +9,7 @@ import com.jmatio.types.MLStructure;
  * @author Jamie Macaulay
  *
  */
-public interface ClusterParams extends Cloneable {
+public interface Params extends Cloneable {
 
 	/**
 	 * The clustering algorithm the params are associated with. 
@@ -21,7 +20,7 @@ public interface ClusterParams extends Cloneable {
 	 * Clone these parameters.
 	 * @return the cloned cluster parameters. 
 	 */
-	public ClusterParams clone();
+	public Params clone();
 	
 //	/**
 //	 * Get the settings pane for the clustering algorithm 
@@ -33,20 +32,20 @@ public interface ClusterParams extends Cloneable {
 	 * Set the parameters of the cluster algorithm using a MATLAB structure
 	 * @param mlStruct - the strucutre containing the new params. 
 	 */
-	public void struct2ClusterParams(MLStructure mlStruct); 
+	public void struct2Params(MLStructure mlStruct); 
 	
 	/**
-	 * Create a MATLAB strucutre containing the cluster parameters.
-	 * @return a strucutre containing relevent parameters for the structure. 
+	 * Create a MATLAB structure containing the cluster parameters.
+	 * @return a structure containing relevant parameters for the structure. 
 	 */
-	public MLStructure clusterParams2Struct(); 
+	public MLStructure params2Struct(); 
 
 	/**
 	 * Compare this cluster to another cluster parameters. 
 	 * @param clusterParams - the cluster parameters to compare.
 	 * @return true of the parameters in clusterParams is exactly the same as these parameters.
 	 */
-	public boolean compare(ClusterParams clusterParams);
+	public boolean compare(Params clusterParams);
 	
 }
 

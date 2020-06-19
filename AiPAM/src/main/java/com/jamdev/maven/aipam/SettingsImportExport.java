@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jamdev.maven.aipam.annotation.Annotation;
-import com.jamdev.maven.aipam.clustering.ClusterParams;
+import com.jamdev.maven.aipam.clustering.Params;
 import com.jamdev.maven.aipam.layout.ColourArray;
 import com.jmatio.io.MatFileReader;
 import com.jmatio.io.MatFileWriter;
@@ -95,7 +95,7 @@ public class SettingsImportExport {
 		MLStructure annotationStruct = aiPamControl.getAnnotationManager().annotation2Struct(); 
 		
 		// the cluster params
-		MLStructure clusterParams = aiPamParam.clusterParams.clusterParams2Struct();
+		MLStructure clusterParams = aiPamParam.clusterParams.params2Struct();
 
 		mlStruct.setField("maxcliplength", maxClipLength,0);
 		mlStruct.setField("channel", channel,0);
@@ -251,7 +251,7 @@ public class SettingsImportExport {
 
 
 
-	private void printClusterParams(ClusterParams clusterParams) {
+	private void printClusterParams(Params clusterParams) {
 		// TODO Auto-generated method stub
 		
 	}

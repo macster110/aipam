@@ -1,7 +1,7 @@
 package com.jamdev.maven.aipam.clustering.tsne;
 
 import com.jamdev.maven.aipam.SettingsImportExport;
-import com.jamdev.maven.aipam.clustering.ClusterParams;
+import com.jamdev.maven.aipam.clustering.Params;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 import com.jmatio.types.MLDouble;
 import com.jmatio.types.MLInt32;
@@ -13,7 +13,7 @@ import com.jmatio.types.MLStructure;
  * 
  * @author Jamie Macaulay. 
  */
-public class TSNEParams implements ClusterParams {
+public class TSNEParams implements Params {
 
 	/**
 	 * The learning rate. 
@@ -56,9 +56,9 @@ public class TSNEParams implements ClusterParams {
 	public boolean usePCA = false;
 
 	@Override
-	public ClusterParams clone() {
+	public Params clone() {
 		try {
-			return (ClusterParams) super.clone();
+			return (Params) super.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 			return null; 
@@ -66,7 +66,7 @@ public class TSNEParams implements ClusterParams {
 	}
 
 	@Override
-	public boolean compare(ClusterParams clusterParams) {
+	public boolean compare(Params clusterParams) {
 
 		TSNEParams tsneParams = (TSNEParams) clusterParams;
 
@@ -83,7 +83,7 @@ public class TSNEParams implements ClusterParams {
 
 
 	@Override
-	public void struct2ClusterParams(MLStructure mlStruct) {
+	public void struct2Params(MLStructure mlStruct) {
 		
 		MLInt32 initialDim=(MLInt32) mlStruct.getField("initialdim", 0);
 		MLInt32 perplexity=(MLInt32) mlStruct.getField("perplexity", 0);
@@ -100,7 +100,7 @@ public class TSNEParams implements ClusterParams {
 	}
 
 	@Override
-	public MLStructure clusterParams2Struct() {
+	public MLStructure params2Struct() {
 		
 		MLInt32 initialDim= SettingsImportExport.mlInt(this.initialDim);
 		MLInt32 perplexity=SettingsImportExport.mlInt(this.perplexity); 

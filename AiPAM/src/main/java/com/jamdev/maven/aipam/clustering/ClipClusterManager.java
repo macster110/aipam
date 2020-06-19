@@ -122,12 +122,10 @@ public class ClipClusterManager {
 			}
             updateMessage("Cancelled!");
         }
-
-
 	}
 
 
-	public ClusterParams struct2ClusterParams(MLStructure clusterParams) {
+	public Params struct2ClusterParams(MLStructure clusterParams) {
 		clusterParams.getField("type"); 
 		
 		// TODO Auto-generated method stub -switch statement here

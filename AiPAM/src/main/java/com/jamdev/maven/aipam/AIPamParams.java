@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jamdev.maven.aipam.annotation.Annotation;
-import com.jamdev.maven.aipam.clustering.ClusterParams;
+import com.jamdev.maven.aipam.clustering.Params;
 import com.jamdev.maven.aipam.clustering.tsne.TSNEParams;
+import com.jamdev.maven.aipam.featureExtraction.FeatureExtraction;
+import com.jamdev.maven.aipam.featureExtraction.FeatureParams;
 import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
 
 /**
@@ -80,14 +82,20 @@ public class AIPamParams implements Cloneable  {
 	 * List of current annotations. These can be loaded 
 	 */
 	public List<Annotation> annotations = new ArrayList<Annotation>();
-
+	
 
 	//Clustering algorithm 
 
 	/**
 	 * The parameters of the clustering algorithm used
 	 */
-	public ClusterParams clusterParams = new TSNEParams();
+	public Params clusterParams = new TSNEParams();
+	
+	
+	/**
+	 * Params for feature extraction
+	 */
+	public FeatureParams featureParams = new FeatureParams(); 
 
 
 	@Override

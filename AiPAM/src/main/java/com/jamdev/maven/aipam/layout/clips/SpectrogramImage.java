@@ -33,7 +33,7 @@ public class SpectrogramImage {
 	private double[] clims;
 	
 	/**
-	 * Constructor for a spectogram image. 
+	 * Constructor for a spectrogram image. 
 	 * @param spectrogram - the spectrogram to make an image of 
 	 * @param colourArrayType - the colour map to use for the spectrogram 
 	 * @param clims - the colour limits for the spectrogram.

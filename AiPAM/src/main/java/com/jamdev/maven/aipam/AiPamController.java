@@ -9,6 +9,7 @@ import com.jamdev.maven.aipam.clips.ClipExporter;
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.clips.PAMClipManager;
 import com.jamdev.maven.aipam.clustering.ClipClusterManager;
+import com.jamdev.maven.aipam.featureExtraction.FeatureExtractionManager;
 import com.jmatio.types.MLArray;
 import com.jmatio.types.MLStructure;
 
@@ -107,6 +108,11 @@ public class AiPamController {
 	 * The cluster manager
 	 */
 	private ClipClusterManager pamClusterManager; 
+	
+	/**
+	 * The feature extraction manager
+	 */
+	private FeatureExtractionManager featureExtractionManager; 
 
 	/**
 	 * Manages importing audio clips. 
@@ -124,7 +130,7 @@ public class AiPamController {
 	private AIPamParams aiPamParams;
 
 	/**
-	 * Listeners for messages form the controller. 
+	 * Listeners for messages from the controller. 
 	 */
 	ArrayList<AIMessageListener> aiMessageListeners = new ArrayList<AIMessageListener>();
 
@@ -139,6 +145,9 @@ public class AiPamController {
 	 */
 	private SettingsImportExport settingsImportExport;
 
+	/**
+	 * Cluster the clips. 
+	 */
 	private Task<Integer> clusterTask;
 
 	/**
@@ -158,6 +167,7 @@ public class AiPamController {
 		this.aiPamParams = new AIPamParams();
 		this.pamClipManager = new PAMClipManager(); 
 		this.pamClusterManager= new ClipClusterManager(); 
+		this.featureExtractionManager = new FeatureExtractionManager(this); 
 		this.annotationManager= new AnnotationManager(this); 
 		this.settingsImportExport = new SettingsImportExport(this);
 		this.clipExporter = new ClipExporter(); 
@@ -383,6 +393,15 @@ public class AiPamController {
 		th.setDaemon(true);
 		th.start(); 
 		
+	}
+
+
+	/**
+	 * Get the feature extraction manager. 
+	 * @return the feature extraction manager. 
+	 */
+	public FeatureExtractionManager getFeatureExtractionManager() {
+		return this.featureExtractionManager; 
 	}
 
 

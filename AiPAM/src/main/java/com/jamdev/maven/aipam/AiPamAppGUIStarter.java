@@ -2,7 +2,7 @@ package com.jamdev.maven.aipam;
 
 /**
  * Trick to start the JavaFX application - seems to be an 
- * @author macst
+ * @author Jamie Macaulay
  *
  */
 public class AiPamAppGUIStarter {

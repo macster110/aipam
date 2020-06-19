@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
-import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
+import com.jamdev.maven.aipam.layout.featureExtraction.FeaturePane;
 import com.jamdev.maven.aipam.layout.utilsFX.FluentMenuPane;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 
@@ -95,8 +95,12 @@ public class ControlPane extends BorderPane {
 	 */
 	private Button saveSettings;
 
+	/**
+	 * Pane for feature extraction
+	 */
+	private FeaturePane featurePane;
 
-
+	
 	public ControlPane (AIPamView aiPamView) {
 		this.aiPamView=aiPamView; 
 		this.setCenter(createControPane());
@@ -133,6 +137,14 @@ public class ControlPane extends BorderPane {
 		fftPane.setParams(aiPamView.getAIParams());
 		fftPane.addSettingsListener(()->{
 			fftPane.getParams(aiPamView.getAIParams());
+			aiPamView.checkSettings(); 
+		});
+		
+		//pane for feature extraction
+		featurePane = new FeaturePane(aiPamView); 
+		featurePane.setParams(aiPamView.getAIParams());
+		featurePane.addSettingsListener(()->{
+			featurePane.getParams(aiPamView.getAIParams()); 
 			aiPamView.checkSettings(); 
 		});
 
@@ -206,6 +218,8 @@ public class ControlPane extends BorderPane {
 		controlPanes.add(audioImportPane);
 
 		controlPanes.add(fftPane);
+		controlPanes.add(featurePane);
+
 		controlPanes.add(playBackPane);
 		controlPanes.add(clusterPane);
 		controlPanes.add(annotationPane);
@@ -332,6 +346,7 @@ public class ControlPane extends BorderPane {
 		switch (flag) {
 		case AiPamController.NEW_CLIP_SELECTED:
 			fftPane.notifyUpdate(flag, stuff);
+			featurePane.notifyUpdate(flag, stuff);
 			break;
 		}
 	}

@@ -38,7 +38,7 @@ public class FullClipPane extends BorderPane {
 	 * @param pamClip
 	 */
 	public void setPamClip(PAMClip pamClip) {
-		SpectrogramImage image = new SpectrogramImage(pamClip.getSpectrogram(), 
+		SpectrogramImage image = new SpectrogramImage(pamClip.getSpectrogram().getAbsoluteSpectrogram(), 
 				colourArray, colourLims); 
 		
 		ImageView imageView = new ImageView(image.getSpecImage(300, 300));

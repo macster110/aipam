@@ -69,6 +69,8 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 		this.clip=clip; 
 		//create the pane 
 		this.getChildren().add(imageCanvas = new Canvas(width, height)); 
+		
+		//clip features
 		generateSpecImage(colourArray, clims); 
 
 		//add an overlay pane so that the clip can be coloured.
@@ -125,7 +127,7 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 	 * Generate the spectrogram image. 
 	 */
 	public void generateSpecImage(ColourArray colourArray, double[] clims) {
-		this.spectrogramImage = new SpectrogramImage(clip.getSpectrogram(), colourArray, clims); 
+		this.spectrogramImage = new SpectrogramImage(clip.getSpectrogram().getAbsoluteSpectrogram(), colourArray, clims); 
 		//draw the image onto the canvas. 
 		//		imageCanvas.getGraphicsContext2D().drawImage(spectrogramImage.getWritableImage(), 0, 0);
 		Image specImage = spectrogramImage.getSpecImage((int) imageCanvas.getWidth(), (int) imageCanvas.getWidth()); 

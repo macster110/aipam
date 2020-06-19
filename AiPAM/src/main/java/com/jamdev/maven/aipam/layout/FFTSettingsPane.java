@@ -199,7 +199,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 	 */
 	private void updateSpecImage(PAMClip pamClip) {
 		if (pamClip==null) return; 
-		SpectrogramImage image = new SpectrogramImage(pamClip.getSpectrogram(), 
+		SpectrogramImage image = new SpectrogramImage(pamClip.getSpectrogram().getAbsoluteSpectrogram(), 
 				this.aiPamView.getCurrentColourArray(), new double[] {colourRangleSlider.getLowValue(), 
 						colourRangleSlider.getHighValue()}); 
 		

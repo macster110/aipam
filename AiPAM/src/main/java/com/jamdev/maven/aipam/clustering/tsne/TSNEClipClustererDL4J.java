@@ -7,7 +7,7 @@ import java.util.ArrayList;
 //import org.nd4j.linalg.api.ndarray.INDArray;
 
 import com.jamdev.maven.aipam.clips.PAMClip;
-import com.jamdev.maven.aipam.clustering.ClusterParams;
+import com.jamdev.maven.aipam.clustering.Params;
 import com.jamdev.maven.aipam.clustering.ClusteringAlgorithm;
 import com.jamdev.maven.aipam.clustering.StandardTrainingListener;
 
@@ -23,7 +23,7 @@ import com.jamdev.maven.aipam.clustering.StandardTrainingListener;
 public class TSNEClipClustererDL4J implements ClusteringAlgorithm{
 
 	@Override
-	public void cluster(ArrayList<PAMClip> pamClips, ClusterParams clusterParams) {
+	public void cluster(ArrayList<PAMClip> pamClips, Params clusterParams) {
 		// TODO Auto-generated method stub
 		
 	}
