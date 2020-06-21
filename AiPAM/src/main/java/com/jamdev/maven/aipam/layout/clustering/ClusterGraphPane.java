@@ -93,6 +93,10 @@ public class ClusterGraphPane extends BorderPane {
 		
         XYChart.Series series = new XYChart.Series();
         PamClipPane image;
+        
+        //might try to cluster without any clips
+        if (pamClips==null) return; 
+        
 		for (int i=0; i<pamClips.size(); i++) {
 			
 			if (pamClips.get(i).getClusterPoint()==null) {

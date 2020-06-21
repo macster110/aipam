@@ -24,14 +24,14 @@ public class AITheme extends AIPamApp {
 
 	/**
 	 * Get the current theme. 
-	 * @return
+	 * @return the current theme
 	 */
 	public int getCurrentTheme() {
 		return currentTheme;
 	}
 
 	public AITheme() {
-
+		//constructor for the AI theme
 	}
 
 	public void applyTheme(int type, Pane root) {

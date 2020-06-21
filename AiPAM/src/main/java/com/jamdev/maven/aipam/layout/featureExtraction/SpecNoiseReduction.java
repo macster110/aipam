@@ -1,4 +1,4 @@
-package com.jamdev.maven.aipam.utils.noisereduction;
+package com.jamdev.maven.aipam.layout.featureExtraction;
 
 import org.apache.commons.math3.complex.Complex;
 

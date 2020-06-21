@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 /**
  * General progress bar pane. Shows a progress bar during threaded tasks. Also 
  * contains a cancel button to cancel tasks.  
+ * 
  * @author Jamie Macaulay 
  *
  */

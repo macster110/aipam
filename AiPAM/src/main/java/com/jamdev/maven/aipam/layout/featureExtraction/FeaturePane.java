@@ -73,7 +73,7 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 
 
 		mainPane = new VBox(); 
-		mainPane.setSpacing(5);
+		mainPane.setSpacing(10);
 		
 		Label titleLabel = new Label("Feature Extraction");
 		titleLabel.getStyleClass().add("label-title1");

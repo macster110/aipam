@@ -37,7 +37,7 @@ public class FeatureExtractionManager {
 		this.aiPamControl=aiPamControl; 
 		featureExtractor.add(new NoFeatureExtraction()); 
 		featureExtractor.add(new SpectrogramNormalisation()); 
-		featureExtractor.add(new NoiseReductionFeature()); 
+		featureExtractor.add(new SpecNoiseReduction()); 
 	}
 
 	public void loadSettings() {

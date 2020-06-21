@@ -17,6 +17,7 @@ import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
  */
 public class AIPamParams implements Cloneable  {
 
+	public static int MAX_CHANNELS = 32; 
 	//Audio import settings
 	
 	/**

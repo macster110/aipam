@@ -26,23 +26,26 @@ public class Spectrogram {
 
 	private int numFrames;
 
-	private int framesPerSecond;
-
-	private double[][] absoluteSpectrogram;
-
-	private double[][] normSpectrogram;
 
 	private int numFrequencyUnit;
 
-	private double frequencyBinSize;
-
-	private double frequencyRange;
 
 	/**
 	 * Holds the complex data of the spectrogram for further analysis. 
 	 */
-	private ComplexArray[] complexSpectrogram; 
+	private ComplexArray[] complexSpectrogram;
 
+
+	private int framesPerSecond;
+
+	private double frequencyBinSize; 
+
+	/**
+	 * Create the spectrogram from a clip of sound data 
+	 * @param wave - the clip of sound data
+	 * @param fftLength - the FFT length in samples
+	 * @param fftHop - the spectrogram hop size to use in samples. 
+	 */
 	public Spectrogram(ClipWave wave, int fftLength, int fftHop) {
 		this.wave=wave; 
 		this.fftSampleSize=fftLength;
@@ -51,24 +54,27 @@ public class Spectrogram {
 	}
 
 	/**
-	 * Get the absolute spectrogram. 
+	 * Calculates the absolute spectrogram. Note this is not saved within the Spectrogram 
+	 * object and so is recalculated every time this function is called. 
 	 * @return the absolute spectrogram
 	 */
 	public double[][] getAbsoluteSpectrogram() {
-		return absoluteSpectrogram;
+		return buildAbsoluteSpectram(); 
 	}
 
 	/**
-	 * Get the normalized spectrogram. 
+	 * Calculates the normalized spectrogram. Note this is not saved within the Spectrogram 
+	 * object and so is recalculated every time this function is called. 
 	 * @return the normalized spectrogram. 
 	 */
 	public double[][] getNormalisedSpectrogram() {
-		if (absoluteSpectrogram == null)  buildSpectrogram(); 
-		if  (normSpectrogram==null) buildNormalizedSpectram();
-		return normSpectrogram; 
+		return buildNormalizedSpectram();
 	}
 
 
+	/**
+	 * Construct the spectrogram form the raw wave data. 
+	 */
 	private void buildSpectrogram() {
 
 		int[] amplitudes = wave.getSampleAmplitudes();
@@ -112,40 +118,55 @@ public class Spectrogram {
 			}
 		}
 		
-		absoluteSpectrogram = new double[numFrames][];
 	    // for each frame in signals, do fft on it
 	    FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
 	    
 	   complexSpectrogram = new ComplexArray[numFrames]; 
-	    
+	   
+	   
 	    
 	    Complex[] specData; 
 	    for (int i = 0; i < numFrames; i++) {
 	    	specData = fft.transform(signals[i], TransformType.FORWARD); 
-	    	
 	    	complexSpectrogram[i] = new ComplexArray(specData); 
-	    	
-	    	absoluteSpectrogram[i] = new double[specData.length/2];
-	        for (int j = 0; j < absoluteSpectrogram[i].length; j++) {
-	        	absoluteSpectrogram[i][j] = Math.sqrt(specData[j].getReal() * specData[j].getReal() + specData[j].getImaginary() * specData[j].getImaginary());
-	        }
 	    }
+	    
+	    /**
+	     * Set some extra parameters
+	     */
+		numFrequencyUnit = complexSpectrogram[0].length()/2; 
+		frequencyBinSize = (double) wave.getSampleRate() / 2 / numFrequencyUnit; // frequency is half of
 	}
 
-	
+	/**
+	 * Builds the absolute spectrogram from the complex array
+	 * @return the absolute spectrogram. 
+	 */
+	private double[][] buildAbsoluteSpectram() {
+		double[][] absoluteSpectrogram = new double[numFrames][];
+
+	    for (int i = 0; i < complexSpectrogram.length; i++) {
+	    	absoluteSpectrogram[i] = new double[complexSpectrogram[i].length()/2];
+	        for (int j = 0; j < absoluteSpectrogram[i].length; j++) {
+	        	absoluteSpectrogram[i][j] = Math.sqrt(complexSpectrogram[i].getReal(j) * complexSpectrogram[i].getReal(j) 
+	        			+ complexSpectrogram[i].getImag(j) * complexSpectrogram[i].getImag(j));
+	        }
+	    }
+	    return absoluteSpectrogram; 
+	}
+
 	
 	/**
 	 * Build the normalised spectrogram. 
 	 * @return the normalised spectrogram. 
 	 */
 	private double[][] buildNormalizedSpectram() {
+		double[][] absoluteSpectrogram = buildAbsoluteSpectram();
 		
-		if (absoluteSpectrogram.length > 0) {
+		if (absoluteSpectrogram!=null && absoluteSpectrogram.length > 0) {
 
 			numFrequencyUnit = absoluteSpectrogram[0].length;
 			frequencyBinSize = (double) wave.getSampleRate() / 2 / numFrequencyUnit; // frequency is half of
-			// nSamples according to Nyquist theory
-			frequencyRange = wave.getSampleRate() / 2;
 
 			// normalization of absoultSpectrogram
 			double[][]  spectrogram = new double[numFrames][numFrequencyUnit];
@@ -186,6 +207,31 @@ public class Spectrogram {
 			return spectrogram;  
 		}
 		else return null; 	
+	}
+	
+	
+	/**
+	 * Get the total number of FFT bins
+	 * @return the number of FFT bins
+	 */
+	public int getNumFrames() {
+		return numFrames;
+	}
+
+	/**
+	 * Get the number of FFT units per second
+	 * @return the number of FFT units per second
+	 */
+	public int getFramesPerSecond() {
+		return framesPerSecond;
+	}
+
+	/**
+	 * Get the frequency width of frequency bins
+	 * @return the bin size in Hz
+	 */
+	public double getFrequencyBinSize() {
+		return frequencyBinSize;
 	}
 
 
