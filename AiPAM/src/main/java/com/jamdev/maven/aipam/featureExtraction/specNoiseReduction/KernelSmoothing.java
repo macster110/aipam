@@ -177,5 +177,12 @@ public class KernelSmoothing extends SpecNoiseMethod {
 	public SpecNoiseNodeFX getSettingsPane() {
 		return null;
 	}
+	
+
+	@Override
+	public Object getParams(boolean dflt) {
+		return null; 
+	}
+
 
 }

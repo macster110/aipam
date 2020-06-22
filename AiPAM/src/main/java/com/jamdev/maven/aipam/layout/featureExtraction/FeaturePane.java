@@ -74,11 +74,11 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 
 		mainPane = new VBox(); 
 		mainPane.setSpacing(10);
-		
+
 		Label titleLabel = new Label("Feature Extraction");
 		titleLabel.getStyleClass().add("label-title1");
 
-		
+
 		Label selectFeatures = new Label("Method");
 		selectFeatures.getStyleClass().add("label-title2");
 
@@ -96,7 +96,7 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 			setFeatureExtractorPane(); 
 			updateSpecImage(currentPreviewClip);
 		});
-		
+
 		featureSelectionBox.getSelectionModel().select(featureExtractionManager.getFeatureParams().currentFeatureIndex);
 
 
@@ -158,18 +158,47 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 
 
 	/**
-	 * Update the image in the spectrogram display
+	 * Update the image in the spectrogram display. This decides whether to plot as log and autimatically assigns colour limits. 
+	 * 
 	 * @param pamClip - the clips. 
 	 */
 	private void updateSpecImage(PAMClip pamClip) {
 		if (pamClip==null) return; 
 		double[][] featureData = featureExtractionManager.getCurrentFeatureExtractor().getFeatures(pamClip.getSpectrogram()); 
 
-		System.out.println("Feature Extraction ColourLims: " + featureExtractionManager.getCurrentFeatureExtractor().getName() + "  " + featureData.length); 
+		//		System.out.println("Feature Extraction ColourLims: " + featureExtractionManager.getCurrentFeatureExtractor().getName() + "  " + featureData.length); 
+		//		System.out.println("Min max " + " min: " + AiPamUtils.min(featureData) + " max: " + AiPamUtils.max(featureData)); 
+
+		double[] colourlims = new double[2];
+		colourlims[0] = this.aiPamView.getAIControl().getParams().colourLims[0];
+		colourlims[1] = this.aiPamView.getAIControl().getParams().colourLims[1];
+
+		//		System.out.println("Old colour lims: " + " min: " + colourlims[0] + " max: " + colourlims[1]); 
+		//AiPamUtils.printArray(featureData);
+
+		double minFeatureData = AiPamUtils.min(featureData); 
+		double maxFeatureData = AiPamUtils.max(featureData); 
+
+		if (this.featureExtractionManager.getCurrentFeatureExtractor().logPlot()) {
+			minFeatureData = 20*Math.log10(minFeatureData); 
+			maxFeatureData = 20*Math.log10(maxFeatureData); 
+		}
+
+		//check whether the colour lims are maybe sensible bounds. If not use the min and max of the spectrum
+		if (1.3*minFeatureData<colourlims[0] || 0.7*maxFeatureData>colourlims[1]) {
+			//use different colour lims
+			colourlims[0] = minFeatureData;
+			colourlims[1] = maxFeatureData;
+		}
+	
+
+		if (colourlims[0] < 0.000001) colourlims[0] = 0.000001; 
 		
+//		System.out.println("New colour lims" + " min: " + colourlims[0] + " max: " + colourlims[1]); 
+
 		SpectrogramImage image = new SpectrogramImage(featureData, 
-				this.aiPamView.getCurrentColourArray(), new double[] {this.aiPamView.getAIControl().getParams().colourLims[0]
-						, this.aiPamView.getAIControl().getParams().colourLims[1]}); 
+				this.aiPamView.getCurrentColourArray(), colourlims, 
+				this.featureExtractionManager.getCurrentFeatureExtractor().logPlot()); 
 
 		specImage.setImage(image.getSpecImage(200, 200));	
 

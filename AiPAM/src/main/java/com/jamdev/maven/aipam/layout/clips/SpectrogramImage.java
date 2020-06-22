@@ -16,22 +16,27 @@ import javafx.scene.paint.Color;
  *
  */
 public class SpectrogramImage {
-	
+
 	/**
 	 * The spectrogram. 
 	 */
 	private double[][] spectrogram;
-	
+
 	/**
 	 * The colour array type
 	 */
 	private ColourArray colourArray;
-	
+
 	/**
 	 * The colour limits 
 	 */
 	private double[] clims;
-	
+
+	/**
+	 * True to use a log plot
+	 */
+	private boolean log;
+
 	/**
 	 * Constructor for a spectrogram image. 
 	 * @param spectrogram - the spectrogram to make an image of 
@@ -42,8 +47,24 @@ public class SpectrogramImage {
 		this.spectrogram = spectrogram;
 		this.colourArray=colourArray;
 		this.clims=clims; 
+		this.log = true; //use a log plot
 	}
-	
+
+	/**
+	 * Constructor for a spectrogram image. 
+	 * @param spectrogram - the spectrogram to make an image of 
+	 * @param colourArrayType - the colour map to use for the spectrogram 
+	 * @param clims - the colour limits for the spectrogram.
+	 * @parma log - true to plot as a log. 
+	 */
+	public SpectrogramImage(double[][] spectrogram, ColourArray colourArray, double[] clims, boolean log) {
+		this.spectrogram = spectrogram;
+		this.colourArray=colourArray;
+		this.clims=clims; 
+		this.log = log; //use a log plot
+	}
+
+
 	/**
 	 * Create a an image of the spectrogram by applying a colour gradient to the surface data.
 	 * @param spectrogram - the spectrogram to draw
@@ -51,22 +72,26 @@ public class SpectrogramImage {
 	 * @param clims - the colour limits to apply. 
 	 */
 	public WritableImage writeImageData(double[][] data, ColourArray colourArray, double[] clims) {
-		
-//		double[][] data = spectrogram.getAbsoluteSpectrogramData(); 
+
+		//		double[][] data = spectrogram.getAbsoluteSpectrogramData(); 
 		WritableImage specImage = new WritableImage(data.length, data[0].length); 
-		
+
 		PixelWriter writer = specImage.getPixelWriter(); 
 
 		for (int i=0; i<data.length; i++) {
 			for (int j=0; j<data[0].length; j++) {
-				writer.setColor(i, data[0].length-1-j, calcColour(20*Math.log10(data[i][j])));
+				if (log)
+					writer.setColor(i, data[0].length-1-j, calcColour(20*Math.log10(data[i][j])));
+				else 
+					writer.setColor(i, data[0].length-1-j, calcColour(data[i][j])); 
+
 			}
 		}
-		
+
 		return specImage; 
 	}
-	
-	
+
+
 	/**
 	 * Create a an image of the spectrogram by applying a colour gradient to the surface data.
 	 * @return spectrogram image which is the same size in pixels as it is in data length
@@ -74,9 +99,9 @@ public class SpectrogramImage {
 	public WritableImage getRawSpecImage() {
 		return writeImageData(spectrogram,  colourArray,  clims);
 	}
-	
 
-	
+
+
 	/**
 	 * Calculate the colour which corresponds to a point on the spectrogram. 
 	 * @param d - the spectrogram surface point to calculate the colour for. 

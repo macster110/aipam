@@ -38,6 +38,12 @@ public class FeatureExtractionManager {
 		featureExtractor.add(new NoFeatureExtraction()); 
 		featureExtractor.add(new SpectrogramNormalisation()); 
 		featureExtractor.add(new SpecNoiseReduction()); 
+		
+		aiPamControl.getParams().featureParams = new FeatureParams(); 
+		aiPamControl.getParams().featureParams .featureParams = new Object[featureExtractor.size()]; 
+		for (int i=0; i<featureExtractor.size(); i++) {
+			aiPamControl.getParams().featureParams .featureParams[i] = featureExtractor.get(i).getDefaultParams(); 
+		}
 	}
 
 	public void loadSettings() {

@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -47,9 +48,11 @@ public class SpectNoisePane extends DynamicSettingsPane {
 						
 			
 			Label titleLabel = new Label(specNoiseMethod.getName()); 
+			titleLabel.setTooltip(new Tooltip(specNoiseMethod.getDescription()));
 			titleLabel.getStyleClass().add("label-title2");
 			
 			ToggleSwitch toggleButton = new ToggleSwitch(); 
+			toggleButton.setTooltip(new Tooltip(specNoiseMethod.getDescription()));
 			enabledButtons[n] = toggleButton;
 			
 			toggleButton.selectedProperty().addListener((obs, oldVal, newVal)->{

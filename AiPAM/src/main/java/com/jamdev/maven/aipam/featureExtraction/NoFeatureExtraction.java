@@ -29,5 +29,16 @@ public class NoFeatureExtraction implements FeatureExtraction {
 		return null;
 	}
 
+	@Override
+	public Object getDefaultParams() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean logPlot() {
+		return true;
+	}
+
 
 }

@@ -38,7 +38,7 @@ public class ThresholdPane implements SpecNoiseNodeFX {
 		
 		thresholdPane.getChildren().add(thresholdDB = new Slider(1, 30, 8));
 
-		thresholdPane.getChildren().add(new Label("Below threshold -> 0. Set above threshold data to ..."));
+//		thresholdPane.getChildren().add(new Label("Below threshold -> 0. Set above threshold data to ..."));
 
 		thresholdPane.getChildren().add(outputType = new ComboBox<String>());
 		outputType.getItems().add("Binary output (0's and 1's)");

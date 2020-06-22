@@ -1,5 +1,6 @@
 package com.jamdev.maven.aipam.featureExtraction;
 
+
 import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.featureExtraction.specNoiseReduction.AverageSubtraction;
@@ -66,6 +67,22 @@ public class SpecNoiseReduction implements FeatureExtraction {
 	 */
 	public ArrayList<SpecNoiseMethod>  getSpecNoiseMethods() {
 		return this.specNoiseMethods;
+	}
+
+	@Override
+	public Object getDefaultParams() {
+		SpecNoiseReductionParams specNoiseReductionParams = new SpecNoiseReductionParams(); 
+		specNoiseReductionParams.specNoiseParams = new Object[specNoiseMethods.size()]; 
+		for (int i=0; i<specNoiseMethods.size(); i++) {
+			specNoiseReductionParams.specNoiseParams[i] = specNoiseMethods.get(i).getParams(true); 
+		}
+		return null;
+	}
+
+	@Override
+	public boolean logPlot() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 	

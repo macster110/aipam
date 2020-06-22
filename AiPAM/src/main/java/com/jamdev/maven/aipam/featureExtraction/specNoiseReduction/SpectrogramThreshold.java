@@ -98,4 +98,10 @@ public class SpectrogramThreshold extends SpecNoiseMethod{
 		}
 		return thresholdNodeFX;
 	}
+	
+	@Override
+	public Object getParams(boolean dflt) {
+		if (dflt) return new ThresholdParams();
+		return thresholdParams; 
+	}
 }

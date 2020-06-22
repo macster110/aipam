@@ -104,4 +104,11 @@ public class SpectorgramMedianFilter extends SpecNoiseMethod {
 		}
 		return medianFilterNodeFX;
 	}
+	
+
+	@Override
+	public Object getParams(boolean dflt) {
+		if (dflt) return  new MedianFilterParams();
+		return medianFilterParams; 
+	}
 }

@@ -6,6 +6,8 @@ import com.jamdev.maven.aipam.utils.ComplexArray;
 /**
  * Interface for multiple plugins to the spectrogram noise
  * reduction system. 
+ * 
+ * @author Jamie Macaulay
  * @author Doug Gillespie
  *
  */
@@ -48,5 +50,13 @@ public abstract class SpecNoiseMethod {
 	 * @return the FX node for the spectrogram method. 
 	 */
 	public abstract SpecNoiseNodeFX getSettingsPane();
+
+	
+	/**
+	 * Get the parameters object for the method
+	 * @param defualt - true to get the default parameters.
+	 * @return the parameters object. Can be null if no parameters are present. 
+	 */
+	public abstract Object getParams(boolean b); 
 	
 }

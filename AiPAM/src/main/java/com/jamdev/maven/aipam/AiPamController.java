@@ -171,6 +171,8 @@ public class AiPamController {
 		this.annotationManager= new AnnotationManager(this); 
 		this.settingsImportExport = new SettingsImportExport(this);
 		this.clipExporter = new ClipExporter(); 
+		
+		//note that these will all either use or make default parameters. Paramter loading must be after this point. 
 	}
 
 

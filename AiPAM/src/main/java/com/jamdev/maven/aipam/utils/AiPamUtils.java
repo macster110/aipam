@@ -302,6 +302,35 @@ public class AiPamUtils {
 			}
 		}
 	}
+	
+	/**
+	 * Print a 2D double array
+	 * @param array - the array 
+	 */
+	public static void printArray(double[][] array) {
+		for (int j=0; j<array.length; j++) {
+			System.out.println("");
+			for (int i=0; i<array[j].length; i++) {
+				System.out.print(array[j][i] + " : ");
+			}
+		}
+		System.out.println("");
+	}
+	
+	/**
+	 * Print a 2D int array
+	 * @param array - the array 
+	 */
+	public static void printArray(int[][] array) {
+		for (int j=0; j<array.length; j++) {
+			System.out.println("");
+			for (int i=0; i<array[j].length; i++) {
+				System.out.print(array[j][i] + " : ");
+			}
+		}
+		System.out.println("");
+	}
+
 
 
 

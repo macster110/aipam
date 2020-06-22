@@ -5,17 +5,20 @@ import com.jmatio.types.MLStructure;
 
 public class FeatureParams implements Params {
 	
-		
-	/**
-	 * The currently selected index of the eature extractor. 
+		/**
+	 * The currently selected index of the feature extractor. 
 	 */
 	public int currentFeatureIndex = 0 ; 
+	
+	/**
+	 * Holds the parameter objects for each feature extraction method. 
+	 */
+	public Object[] featureParams; 
 
 
 	@Override
 	public void struct2Params(MLStructure mlStruct) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -25,7 +28,7 @@ public class FeatureParams implements Params {
 	}
 
 	@Override
-	public boolean compare(Params clusterParams) {
+	public boolean compare(Params featureParams) {
 		// TODO Auto-generated method stub
 		return false;
 	}

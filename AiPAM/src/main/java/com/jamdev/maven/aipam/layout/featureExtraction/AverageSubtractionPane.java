@@ -3,9 +3,10 @@ package com.jamdev.maven.aipam.layout.featureExtraction;
 
 import com.jamdev.maven.aipam.featureExtraction.specNoiseReduction.AverageSubtraction;
 
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 
 /**
@@ -13,7 +14,7 @@ import javafx.scene.layout.HBox;
  * @author Jamie Macaulay
  *
  */
-public class AverageSubtractionNodeFX implements SpecNoiseNodeFX {
+public class AverageSubtractionPane implements SpecNoiseNodeFX {
 
 	/**
 	 * Reference to average subtraction method. 
@@ -25,19 +26,20 @@ public class AverageSubtractionNodeFX implements SpecNoiseNodeFX {
 	 */
 	private HBox dialogPanel;
 
-	private TextField updateConstant;
+	private Spinner<Double> updateConstant;
 
-	public AverageSubtractionNodeFX(
+	public AverageSubtractionPane(
 			AverageSubtraction averageSubtraction) {
 		super();
 		this.averageSubtraction = averageSubtraction;
 
 		dialogPanel = new HBox();
+		dialogPanel.setAlignment(Pos.CENTER_LEFT);
 		dialogPanel.setSpacing(5); 
 
-		dialogPanel.getChildren().add(new Label("Update constant (e.g. .02) "));
-		dialogPanel.getChildren().add(updateConstant = new TextField());
-		updateConstant.setPrefColumnCount(6);
+		dialogPanel.getChildren().add(new Label("Update constant"));
+		dialogPanel.getChildren().add(updateConstant = new Spinner<Double>(0.00, 0.5, 0.02, 0.01));
+		
 	}
 
 	@Override
@@ -45,14 +47,13 @@ public class AverageSubtractionNodeFX implements SpecNoiseNodeFX {
 		updateConstant.setDisable(!selected);
 
 	}
-
-
-
+	
+	
 	@Override
 	public boolean getParams() {
 		try {
 			double newVal = 
-					Double.valueOf(updateConstant.getText());
+					Double.valueOf(updateConstant.getValue());
 //			if (newVal <= 0 || newVal > 0.5) {
 //				
 //				PamDialogFX.showMessageDialog("Average Subtraction Error",
@@ -70,9 +71,7 @@ public class AverageSubtractionNodeFX implements SpecNoiseNodeFX {
 
 	@Override
 	public void setParams() {
-		updateConstant.setText(String.format("%.3f", 
-				averageSubtraction.averageSubtractionParameters.updateConstant));
-
+		updateConstant.getValueFactory().setValue(averageSubtraction.averageSubtractionParameters.updateConstant);
 	}
 
 

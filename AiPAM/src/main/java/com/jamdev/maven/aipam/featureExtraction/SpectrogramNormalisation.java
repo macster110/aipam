@@ -25,4 +25,14 @@ public class SpectrogramNormalisation implements FeatureExtraction {
 		return null;
 	}
 
+	@Override
+	public Object getDefaultParams() {
+		return null;
+	}
+
+	@Override
+	public boolean logPlot() {
+		return false;
+	}
+
 }
