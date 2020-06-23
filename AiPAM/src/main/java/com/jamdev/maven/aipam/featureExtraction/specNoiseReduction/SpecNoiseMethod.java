@@ -1,6 +1,6 @@
 package com.jamdev.maven.aipam.featureExtraction.specNoiseReduction;
 
-import com.jamdev.maven.aipam.layout.featureExtraction.SpecNoiseNodeFX;
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.utils.ComplexArray;
 
 /**
@@ -49,7 +49,7 @@ public abstract class SpecNoiseMethod {
 	 * Get the FX node for the spectrogram method. 
 	 * @return the FX node for the spectrogram method. 
 	 */
-	public abstract SpecNoiseNodeFX getSettingsPane();
+	public abstract DynamicSettingsPane getSettingsPane();
 
 	
 	/**
@@ -57,6 +57,12 @@ public abstract class SpecNoiseMethod {
 	 * @param defualt - true to get the default parameters.
 	 * @return the parameters object. Can be null if no parameters are present. 
 	 */
-	public abstract Object getParams(boolean b); 
+	public abstract Object getParams(boolean b);
+
+	/**
+	 * Set the parameter object. 
+	 * @param newParams - the new params to set. 
+	 */
+	public abstract void setParams(Object newParams); 
 	
 }

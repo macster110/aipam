@@ -2,7 +2,7 @@ package com.jamdev.maven.aipam.featureExtraction.specNoiseReduction;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.layout.featureExtraction.AverageSubtractionPane;
-import com.jamdev.maven.aipam.layout.featureExtraction.SpecNoiseNodeFX;
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.utils.ComplexArray;
 
 /**
@@ -142,7 +142,7 @@ public class AverageSubtraction extends SpecNoiseMethod {
 
 
 	@Override
-	public SpecNoiseNodeFX getSettingsPane() {
+	public DynamicSettingsPane getSettingsPane() {
 		if (averageSubtractionNode==null) {
 			averageSubtractionNode = new AverageSubtractionPane(this); 
 		}
@@ -154,6 +154,13 @@ public class AverageSubtraction extends SpecNoiseMethod {
 	public Object getParams(boolean dflt) {
 		if (dflt) return new AverageSubtractionParameters();
 		return averageSubtractionParameters;
+	}
+
+
+	@Override
+	public void setParams(Object newParams) {
+		this.averageSubtractionParameters=(AverageSubtractionParameters) newParams; 
+		
 	}
 
 

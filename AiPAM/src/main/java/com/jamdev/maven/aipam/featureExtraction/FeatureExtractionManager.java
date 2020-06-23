@@ -3,6 +3,7 @@ package com.jamdev.maven.aipam.featureExtraction;
 import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.AiPamController;
+import com.jamdev.maven.aipam.featureExtraction.specNoiseReduction.SpecNoiseReduction;
 
 /**
  * 	Manages the extraction of feature from clips. 
@@ -37,7 +38,7 @@ public class FeatureExtractionManager {
 		this.aiPamControl=aiPamControl; 
 		featureExtractor.add(new NoFeatureExtraction()); 
 		featureExtractor.add(new SpectrogramNormalisation()); 
-		featureExtractor.add(new SpecNoiseReduction()); 
+		featureExtractor.add(new SpecNoiseReduction(this)); 
 		
 		aiPamControl.getParams().featureParams = new FeatureParams(); 
 		aiPamControl.getParams().featureParams .featureParams = new Object[featureExtractor.size()]; 
@@ -48,6 +49,13 @@ public class FeatureExtractionManager {
 
 	public void loadSettings() {
 		//TODO - when loading settings i permitted then each of the feature extractors should have it's setting supdated. 
+	}
+	
+	/**
+	 * Notify that a settings has changed and the preview clip may need updated. 
+	 */
+	public void notifySelectedClipChange() {
+		this.aiPamControl.updateMessageListeners(AiPamController.FEATURES_CHANGED, null);
 	}
 
 	/**

@@ -1,6 +1,8 @@
 package com.jamdev.maven.aipam.layout.featureExtraction;
 
+import com.jamdev.maven.aipam.featureExtraction.specNoiseReduction.MedianFilterParams;
 import com.jamdev.maven.aipam.featureExtraction.specNoiseReduction.SpectorgramMedianFilter;
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,13 +11,14 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 
 /**
  * Settings pane with controls to change parameters for the median filter/ 
  * @author Jamie Macaulay 
  *
  */
-public class MedianFilterPane implements SpecNoiseNodeFX {
+public class MedianFilterPane extends DynamicSettingsPane<MedianFilterParams> {
 
 	private SpectorgramMedianFilter spectrogramMedianFilter;
 
@@ -43,7 +46,12 @@ public class MedianFilterPane implements SpecNoiseNodeFX {
 		}
 
 		filterLength = new Spinner<Integer>(oddNumbers);
+		
 		filterLength.setEditable(false);
+		
+		filterLength.valueProperty().addListener((obsVal, oldVal, newVal)->{
+			notifySettingsListeners(); 
+		});
 
 
 		medianFilterPane.getChildren().add(filterLength);
@@ -51,12 +59,14 @@ public class MedianFilterPane implements SpecNoiseNodeFX {
 
 
 	@Override
-	public void setSelected(boolean selected) {
-		filterLength.setDisable(!selected);
-
+	public Pane getPane() {
+		return medianFilterPane;
 	}
+
+
 	@Override
-	public boolean getParams() {
+	public MedianFilterParams getParams(MedianFilterParams paramsIn) {
+		MedianFilterParams paramsIN =  paramsIn.clone(); 
 		try {
 			int newVal = filterLength.getValue(); 
 //			if (newVal < 3 || newVal%2 == 0) {
@@ -65,22 +75,39 @@ public class MedianFilterPane implements SpecNoiseNodeFX {
 //				alert.showAndWait(); 
 //				return false;
 //			}
-			spectrogramMedianFilter.medianFilterParams.filterLength = newVal;
+			paramsIN.filterLength = newVal;
 		}
 		catch (NumberFormatException e) {
-			return false;
+			return null;
 		}
-		return true;
+		return paramsIN;
 	}
 
-	@Override
-	public void setParams() {
-		filterLength.getValueFactory().setValue(spectrogramMedianFilter.medianFilterParams.filterLength);
-	}
 
 	@Override
-	public Node getPane() {
-		return medianFilterPane;
+	public void setParams(MedianFilterParams params) {
+		filterLength.getValueFactory().setValue(params.filterLength);		
+	}
+
+
+	@Override
+	public Node getIcon() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public String getTitle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void notifyUpdate(int flag, Object stuff) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 

@@ -1,14 +1,17 @@
 package com.jamdev.maven.aipam.layout.featureExtraction;
 
 import com.jamdev.maven.aipam.featureExtraction.specNoiseReduction.SpectrogramThreshold;
+import com.jamdev.maven.aipam.featureExtraction.specNoiseReduction.ThresholdParams;
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-public class ThresholdPane implements SpecNoiseNodeFX {
+public class ThresholdPane extends DynamicSettingsPane<ThresholdParams> {
 
 	private SpectrogramThreshold spectrogramThreshold;
 	
@@ -37,6 +40,9 @@ public class ThresholdPane implements SpecNoiseNodeFX {
 		thresholdPane.getChildren().add(new Label("Threshold (dB) "));
 		
 		thresholdPane.getChildren().add(thresholdDB = new Slider(1, 30, 8));
+		thresholdDB.valueProperty().addListener((obsVal, oldVal, newVal)->{
+			notifySettingsListeners(); 
+		});
 
 //		thresholdPane.getChildren().add(new Label("Below threshold -> 0. Set above threshold data to ..."));
 
@@ -44,43 +50,58 @@ public class ThresholdPane implements SpecNoiseNodeFX {
 		outputType.getItems().add("Binary output (0's and 1's)");
 		outputType.getItems().add("Use the output of the preceeding step");
 		outputType.getItems().add("Use the input from the raw FFT data");
+		outputType.valueProperty().addListener((obsVal, oldVal, newVal)->{
+			notifySettingsListeners(); 
+		});
 
 		//thresholdPane.getChildren().add(new Label("(Some downstream processes may want phase information)"));
 	}
 
 	@Override
-	public boolean getParams() {
+	public Pane getPane() {
+		// TODO Auto-generated method stub
+		return thresholdPane;
+	}
+
+	@Override
+	public ThresholdParams getParams(ThresholdParams paramsIn) {
+		ThresholdParams paramsIN = paramsIn.clone(); 
 		try {
 			double newVal = 
 				Double.valueOf(thresholdDB.getValue());
-			spectrogramThreshold.thresholdParams.thresholdDB = newVal;
+			paramsIN.thresholdDB = newVal;
 		}
 		catch (Exception e) {
-			return false;
+			return null;
 		}
-		spectrogramThreshold.thresholdParams.finalOutput = outputType.getSelectionModel().getSelectedIndex();
-		return true;
+		paramsIN.finalOutput = outputType.getSelectionModel().getSelectedIndex();
+		return paramsIN;
 	}
 
-
 	@Override
-	public void setParams() {
-
+	public void setParams(ThresholdParams params) {
 		thresholdDB.setValue(
-				spectrogramThreshold.thresholdParams.thresholdDB);
+				params.thresholdDB);
 		
-		outputType.getSelectionModel().select(spectrogramThreshold.thresholdParams.finalOutput);
-
+		outputType.getSelectionModel().select(params.finalOutput);
 	}
 
 	@Override
-	public void setSelected(boolean selected) {
-		thresholdDB.setDisable(!selected);
+	public Node getIcon() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public Node getPane() {
-		return thresholdPane;
+	public String getTitle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void notifyUpdate(int flag, Object stuff) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

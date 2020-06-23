@@ -2,7 +2,7 @@ package com.jamdev.maven.aipam.featureExtraction.specNoiseReduction;
 
 
 import com.jamdev.maven.aipam.AIPamParams;
-import com.jamdev.maven.aipam.layout.featureExtraction.SpecNoiseNodeFX;
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.utils.ComplexArray;
 
 /**
@@ -174,7 +174,7 @@ public class KernelSmoothing extends SpecNoiseMethod {
 
 
 	@Override
-	public SpecNoiseNodeFX getSettingsPane() {
+	public DynamicSettingsPane getSettingsPane() {
 		return null;
 	}
 	
@@ -182,6 +182,12 @@ public class KernelSmoothing extends SpecNoiseMethod {
 	@Override
 	public Object getParams(boolean dflt) {
 		return null; 
+	}
+
+	@Override
+	public void setParams(Object newParams) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

@@ -143,17 +143,32 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 	}
 
 	@Override
-	public AIPamParams getParams(AIPamParams paramsIn) {
-		System.out.println("Notify settings listeners: " ); 
+	public AIPamParams getParams(AIPamParams params) {
+		//		System.out.println("Notify settings listeners: " ); 
 
-		paramsIn.featureParams.currentFeatureIndex=this.featureSelectionBox.getSelectionModel().getSelectedIndex();
-		return paramsIn;
+		params.featureParams.currentFeatureIndex=this.featureSelectionBox.getSelectionModel().getSelectedIndex();
+		
+		for (int i=0; i<params.featureParams.featureParams.length; i++) {
+			if (featureExtractionManager.getCurrentFeatureExtractor().getSettingsPane()!=null) {
+				params.featureParams.featureParams[i] = featureExtractionManager.getCurrentFeatureExtractor().getSettingsPane().getParams(params.featureParams.featureParams[i] );  
+			}
+		}
+
+		return params;
 	}
 
 	@Override
 	public void setParams(AIPamParams params) {
 		//TODO
 		//params.featureParams.currentFeatureIndex=this.featureSelectionBox.getSelectionModel().getSelectedIndex();
+		this.featureSelectionBox.getSelectionModel().select(params.featureParams.currentFeatureIndex);
+		
+		for (int i=0; i<params.featureParams.featureParams.length; i++) {
+			if (featureExtractionManager.getCurrentFeatureExtractor().getSettingsPane()!=null) {
+				featureExtractionManager.getCurrentFeatureExtractor().getSettingsPane().setParams(params.featureParams.featureParams[i]);
+			}
+		}
+
 	}
 
 
@@ -163,7 +178,9 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 	 * @param pamClip - the clips. 
 	 */
 	private void updateSpecImage(PAMClip pamClip) {
+		
 		if (pamClip==null) return; 
+		
 		double[][] featureData = featureExtractionManager.getCurrentFeatureExtractor().getFeatures(pamClip.getSpectrogram()); 
 
 		//		System.out.println("Feature Extraction ColourLims: " + featureExtractionManager.getCurrentFeatureExtractor().getName() + "  " + featureData.length); 
@@ -190,11 +207,11 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 			colourlims[0] = minFeatureData;
 			colourlims[1] = maxFeatureData;
 		}
-	
+
 
 		if (colourlims[0] < 0.000001) colourlims[0] = 0.000001; 
-		
-//		System.out.println("New colour lims" + " min: " + colourlims[0] + " max: " + colourlims[1]); 
+
+		//		System.out.println("New colour lims" + " min: " + colourlims[0] + " max: " + colourlims[1]); 
 
 		SpectrogramImage image = new SpectrogramImage(featureData, 
 				this.aiPamView.getCurrentColourArray(), colourlims, 
@@ -226,6 +243,11 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 			this.currentPreviewClip = (PAMClip) stuff; 
 			updateSpecImage(currentPreviewClip);
 			break;
+		case AiPamController.FEATURES_CHANGED:
+			if (currentPreviewClip!=null) 
+				updateSpecImage(currentPreviewClip);
+			break;
+
 		}
 	}
 

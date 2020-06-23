@@ -2,6 +2,8 @@ package com.jamdev.maven.aipam.layout.featureExtraction;
 
 import org.apache.commons.math3.complex.Complex;
 
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
+
 /**
  * Interface for multiple plugins to the spectrogram noise
  * reduction system. This is inspired from PAMGuard. www.pamguard.org
@@ -48,6 +50,6 @@ public abstract class SpecNoiseReduction {
 	 * Get the FX node for the spectrogram method. 
 	 * @return the FX node for the spectrogram method. 
 	 */
-	public abstract SpecNoiseNodeFX getNode();
+	public abstract DynamicSettingsPane getNode();
 	
 }

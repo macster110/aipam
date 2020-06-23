@@ -103,6 +103,12 @@ public class AiPamController {
 	 * A clip has been selected by the user. 
 	 */
 	public static final int NEW_CLIP_SELECTED = 15; 
+	
+	
+	/**
+	 * Feature extraction settings have changed. 
+	 */
+	public static final int FEATURES_CHANGED = 16; 
 
 	/**
 	 * The cluster manager

@@ -1,7 +1,7 @@
 package com.jamdev.maven.aipam.featureExtraction.specNoiseReduction;
 
 import com.jamdev.maven.aipam.layout.featureExtraction.MedianFilterPane;
-import com.jamdev.maven.aipam.layout.featureExtraction.SpecNoiseNodeFX;
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.utils.ComplexArray;
 import com.jamdev.maven.aipam.utils.MedianFilter;
 
@@ -98,7 +98,7 @@ public class SpectorgramMedianFilter extends SpecNoiseMethod {
 	}
 
 	@Override
-	public SpecNoiseNodeFX getSettingsPane() {
+	public DynamicSettingsPane getSettingsPane() {
 		if (medianFilterNodeFX==null) {
 			medianFilterNodeFX= new MedianFilterPane(this); 
 		}
@@ -111,4 +111,11 @@ public class SpectorgramMedianFilter extends SpecNoiseMethod {
 		if (dflt) return  new MedianFilterParams();
 		return medianFilterParams; 
 	}
+
+
+	@Override
+	public void setParams(Object newParams) {
+		this.medianFilterParams=(MedianFilterParams) newParams; 
+	}
+
 }

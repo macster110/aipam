@@ -20,13 +20,24 @@ public class Spectrogram {
 	 */
 	private ClipWave wave;
 
+	/**
+	 * The FFT length in samples. 
+	 */
 	private int fftSampleSize =1024; 
 
+	/**
+	 * The hop size in samples. 
+	 */
 	private int overlapFactor = 512;
 
+	/**
+	 * The total number of fft windows. 
+	 */
 	private int numFrames;
 
-
+	/**
+	 * The total number of frequency bins 
+	 */
 	private int numFrequencyUnit;
 
 
@@ -35,10 +46,20 @@ public class Spectrogram {
 	 */
 	private ComplexArray[] complexSpectrogram;
 
-
+	/**
+	 * The number of fft bins per second
+	 */
 	private int framesPerSecond;
 
-	private double frequencyBinSize; 
+	/**
+	 * The size of each FFT bin in Hz. 
+	 */
+	private double frequencyBinSize;
+
+	/**
+	 * The sample rate in samples per second.
+	 */
+	private int sR; 
 
 	/**
 	 * Create the spectrogram from a clip of sound data 
@@ -47,10 +68,10 @@ public class Spectrogram {
 	 * @param fftHop - the spectrogram hop size to use in samples. 
 	 */
 	public Spectrogram(ClipWave wave, int fftLength, int fftHop) {
-		this.wave=wave; 
+		this.sR=wave.getSampleRate(); 
 		this.fftSampleSize=fftLength;
 		this.overlapFactor=fftHop; 
-		this.buildSpectrogram();
+		this.buildSpectrogram(wave);
 	}
 
 	/**
@@ -59,7 +80,7 @@ public class Spectrogram {
 	 * @return the absolute spectrogram
 	 */
 	public double[][] getAbsoluteSpectrogram() {
-		return buildAbsoluteSpectram(); 
+		return buildAbsoluteSpectram(complexSpectrogram); 
 	}
 
 	/**
@@ -68,14 +89,14 @@ public class Spectrogram {
 	 * @return the normalized spectrogram. 
 	 */
 	public double[][] getNormalisedSpectrogram() {
-		return buildNormalizedSpectram();
+		return buildNormalizedSpectram(complexSpectrogram);
 	}
 
 
 	/**
 	 * Construct the spectrogram form the raw wave data. 
 	 */
-	private void buildSpectrogram() {
+	private void buildSpectrogram(ClipWave wave) {
 
 		int[] amplitudes = wave.getSampleAmplitudes();
 		int numSamples = amplitudes.length;
@@ -117,23 +138,23 @@ public class Spectrogram {
 				signals[f][n] = amplitudes[startSample + n] * win[n];
 			}
 		}
-		
-	    // for each frame in signals, do fft on it
-	    FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
-	    
-	   complexSpectrogram = new ComplexArray[numFrames]; 
-	   
-	   
-	    
-	    Complex[] specData; 
-	    for (int i = 0; i < numFrames; i++) {
-	    	specData = fft.transform(signals[i], TransformType.FORWARD); 
-	    	complexSpectrogram[i] = new ComplexArray(specData); 
-	    }
-	    
-	    /**
-	     * Set some extra parameters
-	     */
+
+		// for each frame in signals, do fft on it
+		FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
+
+		complexSpectrogram = new ComplexArray[numFrames]; 
+
+
+
+		Complex[] specData; 
+		for (int i = 0; i < numFrames; i++) {
+			specData = fft.transform(signals[i], TransformType.FORWARD); 
+			complexSpectrogram[i] = new ComplexArray(specData); 
+		}
+
+		/**
+		 * Set some extra parameters
+		 */
 		numFrequencyUnit = complexSpectrogram[0].length()/2; 
 		frequencyBinSize = (double) wave.getSampleRate() / 2 / numFrequencyUnit; // frequency is half of
 	}
@@ -142,39 +163,39 @@ public class Spectrogram {
 	 * Builds the absolute spectrogram from the complex array
 	 * @return the absolute spectrogram. 
 	 */
-	private double[][] buildAbsoluteSpectram() {
-		double[][] absoluteSpectrogram = new double[numFrames][];
+	public static double[][] buildAbsoluteSpectram(ComplexArray[] complexSpectrogram) {
+		double[][] absoluteSpectrogram = new double[complexSpectrogram.length][];
 
-	    for (int i = 0; i < complexSpectrogram.length; i++) {
-	    	absoluteSpectrogram[i] = new double[complexSpectrogram[i].length()/2];
-	        for (int j = 0; j < absoluteSpectrogram[i].length; j++) {
-	        	absoluteSpectrogram[i][j] = Math.sqrt(complexSpectrogram[i].getReal(j) * complexSpectrogram[i].getReal(j) 
-	        			+ complexSpectrogram[i].getImag(j) * complexSpectrogram[i].getImag(j));
-	        }
-	    }
-	    return absoluteSpectrogram; 
+		for (int i = 0; i < complexSpectrogram.length; i++) {
+			absoluteSpectrogram[i] = new double[complexSpectrogram[i].length()/2];
+			for (int j = 0; j < absoluteSpectrogram[i].length; j++) {
+				absoluteSpectrogram[i][j] = Math.sqrt(complexSpectrogram[i].getReal(j) * complexSpectrogram[i].getReal(j) 
+						+ complexSpectrogram[i].getImag(j) * complexSpectrogram[i].getImag(j));
+			}
+		}
+		return absoluteSpectrogram; 
 	}
 
-	
+
 	/**
 	 * Build the normalised spectrogram. 
 	 * @return the normalised spectrogram. 
 	 */
-	private double[][] buildNormalizedSpectram() {
-		double[][] absoluteSpectrogram = buildAbsoluteSpectram();
-		
+	public static double[][] buildNormalizedSpectram(ComplexArray[] complexSpectrogram) {
+		double[][] absoluteSpectrogram = buildAbsoluteSpectram(complexSpectrogram);
+
 		if (absoluteSpectrogram!=null && absoluteSpectrogram.length > 0) {
 
-			numFrequencyUnit = absoluteSpectrogram[0].length;
-			frequencyBinSize = (double) wave.getSampleRate() / 2 / numFrequencyUnit; // frequency is half of
+			int numFrequencyUnit = absoluteSpectrogram[0].length;
+//			double frequencyBinSize = (double) sR / 2.0 / numFrequencyUnit; // frequency is half of
 
 			// normalization of absoultSpectrogram
-			double[][]  spectrogram = new double[numFrames][numFrequencyUnit];
+			double[][]  spectrogram = new double[complexSpectrogram.length][numFrequencyUnit];
 
 			// set max and min amplitudes
 			double maxAmp = Double.MIN_VALUE;
 			double minAmp = Double.MAX_VALUE;
-			for (int i = 0; i < numFrames; i++) {
+			for (int i = 0; i < complexSpectrogram.length; i++) {
 				for (int j = 0; j < numFrequencyUnit; j++) {
 					if (absoluteSpectrogram[i][j] > maxAmp) {
 						maxAmp = absoluteSpectrogram[i][j];
@@ -193,7 +214,7 @@ public class Spectrogram {
 			}
 
 			double diff = Math.log10(maxAmp / minAmp); // perceptual difference
-			for (int i = 0; i < numFrames; i++) {
+			for (int i = 0; i < complexSpectrogram.length; i++) {
 				for (int j = 0; j < numFrequencyUnit; j++) {
 					if (absoluteSpectrogram[i][j] < minValidAmp) {
 						spectrogram[i][j] = 0;
@@ -208,8 +229,8 @@ public class Spectrogram {
 		}
 		else return null; 	
 	}
-	
-	
+
+
 	/**
 	 * Get the total number of FFT bins
 	 * @return the number of FFT bins
@@ -233,6 +254,23 @@ public class Spectrogram {
 	public double getFrequencyBinSize() {
 		return frequencyBinSize;
 	}
+
+	/**
+	 * Get the raw spectrogram data. This is a complex array containing both the phase and amplitude information 
+	 * @return complex array with each array one FFT slice of the spectrogram. 
+	 */
+	public ComplexArray[] getFFTData() {
+		return this.complexSpectrogram;
+	}
+
+	/**
+	 * Get the sample rate in samples per second. 
+	 * @return the sample rate. 
+	 */
+	public int getSampleRate() {
+		return this.sR;
+	}
+
 
 
 }

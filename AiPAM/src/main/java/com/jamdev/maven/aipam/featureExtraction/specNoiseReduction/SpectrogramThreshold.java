@@ -1,7 +1,7 @@
 package com.jamdev.maven.aipam.featureExtraction.specNoiseReduction;
 
-import com.jamdev.maven.aipam.layout.featureExtraction.SpecNoiseNodeFX;
 import com.jamdev.maven.aipam.layout.featureExtraction.ThresholdPane;
+import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.utils.ComplexArray;
 
 /**
@@ -92,7 +92,7 @@ public class SpectrogramThreshold extends SpecNoiseMethod{
 	}
 
 	@Override
-	public SpecNoiseNodeFX getSettingsPane() {
+	public DynamicSettingsPane getSettingsPane() {
 		if (thresholdNodeFX==null) {
 			thresholdNodeFX= new ThresholdPane(this);
 		}
@@ -103,5 +103,11 @@ public class SpectrogramThreshold extends SpecNoiseMethod{
 	public Object getParams(boolean dflt) {
 		if (dflt) return new ThresholdParams();
 		return thresholdParams; 
+	}
+
+	@Override
+	public void setParams(Object newParams) {
+		this.thresholdParams= (ThresholdParams) newParams; 
+		
 	}
 }
