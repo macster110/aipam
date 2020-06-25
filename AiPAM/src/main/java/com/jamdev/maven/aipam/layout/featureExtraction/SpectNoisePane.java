@@ -55,12 +55,15 @@ public class SpectNoisePane extends DynamicSettingsPane<SpecNoiseReductionParams
 			titleLabel.getStyleClass().add("label-title2");
 
 			ToggleSwitch toggleButton = new ToggleSwitch(); 
+			toggleButton.setPrefWidth(80);
 			toggleButton.setTooltip(new Tooltip(specNoiseMethod.getDescription()));
 			enabledButtons[n] = toggleButton;
 
 			toggleButton.selectedProperty().addListener((obs, oldVal, newVal)->{
 				titleLabel.setDisable(!toggleButton.isSelected());
 				if (specNoisePane!=null) specNoisePane.getPane().setDisable(!toggleButton.isSelected());
+				//there are new settings so may need to update the pane. 
+				newSettings();
 
 			});
 			//			toggleButton.setMinWidth(100);
@@ -74,25 +77,14 @@ public class SpectNoisePane extends DynamicSettingsPane<SpecNoiseReductionParams
 			VBox methodPane = new VBox(); 
 			methodPane.setSpacing(5);
 			methodPane.getChildren().add(headerPane);
+			
+			//add a listener to check for any changes to settings in the method pane. 
 			if (specNoisePane!=null) {
 				methodPane.getChildren().add(specNoisePane.getPane());
 				specNoisePane.addSettingsListener(()->{
 					//new settings have occurred in one of noise reduction the method settings pane
-					System.out.println("Hello new features: "); 
-
-					//update the parameters
-					SpecNoiseReductionParams newParams = getParams(specNoiseReduction.getParams()); 
+					newSettings(); 
 					
-					if (newParams==null) {
-						System.err.println("SpecNoiseReductionParams  are null"); 
-					}
-					else {
-						//set the new params. 
-						specNoiseReduction.setParams(newParams);
-					}
-
-					//update the preview clip
-					specNoiseReduction.getFeatureExtractionManager().notifySelectedClipChange();
 				});
 			}
 
@@ -100,6 +92,45 @@ public class SpectNoisePane extends DynamicSettingsPane<SpecNoiseReductionParams
 			n++;
 		}
 
+	}
+	
+	
+	/**
+	 * Called whenever a control is changes to update all settings fields 
+	 */
+	private void newSettings() {
+		//new settings have occurred in one of noise reduction the method settings pane
+
+		//update the parameters
+		SpecNoiseReductionParams newParams = getParams(specNoiseReduction.getParams()); 
+		
+		if (newParams==null) {
+			System.err.println("SpecNoiseReductionParams  are null"); 
+		}
+		else {
+			//set the new params. 
+			specNoiseReduction.setParams(newParams);
+		}
+		
+		//update the fields in the noise methods. Each noise method has it's own settings pane but this is the only listener 
+		//that is trigered if a setting changes. Thus the settings for each method are handled centrally here. Might not be the neatest 
+		//way to do it but easiest if adding new methods. 
+		updateMethodParams(newParams); 
+		
+		//update the preview clip
+		specNoiseReduction.getFeatureExtractionManager().notifySelectedClipChange();
+		
+		
+	}
+	
+	/**
+	 * Update the current method params fields with those stored in SpecNoiseReductionParams 
+	 * @param newParams
+	 */
+	private void updateMethodParams(SpecNoiseReductionParams newParams) {
+		for (int i=0; i<specNoiseReduction.getSpecNoiseMethods().size(); i++) {
+			specNoiseReduction.getSpecNoiseMethods().get(i).setParams(newParams.specNoiseParams[i]);
+		}
 	}
 
 	@Override
@@ -118,7 +149,7 @@ public class SpectNoisePane extends DynamicSettingsPane<SpecNoiseReductionParams
 			if (specNoiseReduction.getSpecNoiseMethods().get(i).getSettingsPane()!=null) {
 
 				Object newParams= specNoiseReduction.getSpecNoiseMethods().get(i).getSettingsPane().getParams(paramsIn.specNoiseParams[i]); 
-				
+								
 				if (newParams==null) {
 					System.err.println("Parameters for: " + i + " are null"); 
 					return null; 

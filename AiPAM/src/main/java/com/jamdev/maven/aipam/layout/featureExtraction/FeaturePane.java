@@ -181,6 +181,8 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 		
 		if (pamClip==null) return; 
 		
+		
+		
 		double[][] featureData = featureExtractionManager.getCurrentFeatureExtractor().getFeatures(pamClip.getSpectrogram()); 
 
 		//		System.out.println("Feature Extraction ColourLims: " + featureExtractionManager.getCurrentFeatureExtractor().getName() + "  " + featureData.length); 

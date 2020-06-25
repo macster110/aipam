@@ -299,7 +299,7 @@ public class AIPamView extends BorderPane {
 	 * @param updateType - the update type. 
 	 */
 	public void notifyUpdate(int updateType, Object data) {
-		System.out.println("AIPamView: notifyUpdate: " +updateType + " " + data);
+//		System.out.println("AIPamView: notifyUpdate: " +updateType + " " + data);
 		switch (updateType) {
 		case AiPamController.START_FILE_LOAD:
 			this.clipPane.clearSpecImages();

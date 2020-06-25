@@ -75,6 +75,7 @@ public class ThresholdPane extends DynamicSettingsPane<ThresholdParams> {
 			return null;
 		}
 		paramsIN.finalOutput = outputType.getSelectionModel().getSelectedIndex();
+		
 		return paramsIN;
 	}
 

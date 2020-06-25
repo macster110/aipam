@@ -150,7 +150,7 @@
 		<dependency>
 			<groupId>org.jfxtras</groupId>
 			<artifactId>jmetro</artifactId>
-			<version>11.6.9</version>
+			<version>11.6.12</version>
 		</dependency>
 		<!-- Allows the importing of SVG files for icons. -->
 		<dependency>

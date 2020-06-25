@@ -348,6 +348,9 @@ public class ControlPane extends BorderPane {
 			fftPane.notifyUpdate(flag, stuff);
 			featurePane.notifyUpdate(flag, stuff);
 			break;
+		case AiPamController.FEATURES_CHANGED:
+			featurePane.notifyUpdate(flag, stuff);
+			break;
 		}
 	}
 

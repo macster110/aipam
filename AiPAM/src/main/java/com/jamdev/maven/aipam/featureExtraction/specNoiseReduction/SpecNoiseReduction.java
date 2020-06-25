@@ -69,7 +69,7 @@ public class SpecNoiseReduction implements FeatureExtraction {
 	@Override
 	public double[][] getFeatures(Spectrogram spectrogram) {
 
-		System.out.println("Calc new features: " + thresholdMethod.thresholdParams.thresholdDB); 
+//		System.out.println("Calc new features: " + thresholdMethod.thresholdParams.thresholdDB); 
 		
 		for (int i = 0; i < specNoiseMethods.size(); i++) {
 			specNoiseMethods.get(i).initialise(1); 
