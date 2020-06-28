@@ -11,7 +11,7 @@ public interface AIMessageListener {
 	 * Called whenever there is a new update from the controller.
 	 * 
 	 * @param messageFlag - the message flag.
-	 * @param messageObject - the message obeject.
+	 * @param messageObject - the message object.
 	 */
 	public void newMessage(int messageFlag, Object messageObject); 
 

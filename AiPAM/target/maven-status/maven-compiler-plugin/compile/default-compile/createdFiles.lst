@@ -83,7 +83,6 @@ com\jamdev\maven\aipam\utils\DownSampleImpl.class
 com\jamdev\maven\aipam\layout\utilsFX\FluentMenuPane.class
 com\jamdev\maven\aipam\clips\MediaPlayApplicationTest.class
 com\jamdev\maven\aipam\layout\ColourArray$1.class
-com\jamdev\maven\aipam\clustering\ClusterParams.class
 com\jamdev\maven\aipam\layout\clips\PamClipPane.class
 com\jamdev\maven\aipam\clips\PAMClip.class
 com\jamdev\maven\aipam\clustering\tsne\TSNEParams.class

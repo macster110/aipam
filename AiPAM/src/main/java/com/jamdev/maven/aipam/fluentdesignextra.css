@@ -1,0 +1,264 @@
+/* 
+    Document   : controlStyle1
+*/
+
+{
+    BACKGROUND_MENU: rgb(68,68,68);
+    BACKGROUND_PRESSED_MENU: rgba(100,100,100,0.5);
+    BACKGROUND: #1d1d1d; /*dark background*/
+    BACKGROUND_TRANS: rgb(29, 29, 29, 0.96);
+    TEXT_FILL: white;
+
+    /*Override JMetro*/
+    ACCENT_COLOR: #26C223; /*For high lights, toggle buttons etc.**/
+        TEXT_USER_PROMPT: ACCENT_COLOR;
+
+}
+
+
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Tab pane                              *
+ *                                                                             *
+ ******************************************************************************/
+
+ .label-title1 {
+    -fx-font: 20px "Segoe UI Semibold";
+    -fx-text-fill: TEXT_FILL;
+    -fx-font-weight: bold
+}
+
+.label-title2 {
+    -fx-font: 16px "Segoe UI Semibold";
+    -fx-text-fill: TEXT_FILL;
+    /*-fx-font-weight: bold;*/
+}
+
+
+
+.chart-symbol {
+    -fx-background-radius: 0;
+    -fx-padding: 1px ;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Fluent design menu button for side pane                                  *
+ *                                                                             *
+ ******************************************************************************/
+
+.fluent-menu-button {
+    -fx-skin: "com.jamdev.maven.aipam.layout.utilsFX.FluentButtonSkin";
+    
+    -fx-padding: 0.4em 0.4em 0.4em 0.4em; /*3 20 3 20*/
+
+    -fx-font: 16px "Segoe UI";
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-background: BACKGROUND_MENU;
+    -fx-background-color: BACKGROUND_MENU;
+}
+
+.fluent-menu-button:hover{
+    -fx-border-color: transparent;
+    -fx-background-color: BACKGROUND_PRESSED_MENU;
+}
+
+.fluent-menu-button:pressed
+{
+    -fx-border-color: BACKGROUND_PRESSED_MENU;
+    -fx-background-color: BACKGROUND_PRESSED_MENU;
+}
+
+.fluent-menu-button:focused
+{
+    -fx-border-color: transparent;
+    -fx-background: BACKGROUND_MENU;
+    -fx-background-color: BACKGROUND_MENU;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Pane for holding menu side pane buttons in.                                       *
+ *                                                                             *
+ ******************************************************************************/
+
+.menu-button {
+    -fx-padding: 5 22 5 22;   
+    -fx-border-color: #e2e2e2;
+    -fx-border-width: 2;
+
+    -fx-background-radius: 0;
+
+    -fx-background-color: BACKGROUND;
+  
+     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 11pt;
+    -fx-text-fill: #d8d8d8;
+}
+
+.menu-button .label {
+       -fx-text-fill: #d8d8d8;
+}
+
+ .menu-button:hover{
+    -fx-background-color: #3a3a3a;
+}
+
+.menu-button:pressed, .menu-button:default:hover:pressed
+{
+  -fx-background-color: white;
+  -fx-text-fill: BACKGROUND;
+}
+
+.menu-button:focused
+{
+    -fx-border-color: white, white;
+    -fx-border-width: 1, 1;
+    -fx-border-style: solid, segments(1, 1);
+    -fx-border-radius: 0, 0;
+    -fx-border-insets: 1 1 1 1, 0;
+}
+
+.menu-button:disabled, .menu-button:default:disabled
+{
+    -fx-opacity: 0.4;
+    -fx-background-color: BACKGROUND;
+    -fx-text-fill: TEXT_FILL;
+}
+
+.menu-button:default
+{
+    -fx-background-color: #008287;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-button:default:hover{
+    -fx-background-color: #219297;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Tab pane                              *
+ *                                                                             *
+ ******************************************************************************/
+
+ .tab-pane > .tab-header-area {
+    -fx-padding: 0em 0em 0em 0em; /* 1 18 0.99 18 */
+    -fx-background-color: BACKGROUND_MENU;
+    -fx-border-color: transparent, transparent;
+    -fx-border-width: 0;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-padding: 0em 0em 0em 0em; /* 1 18 0.99 18 */
+    -fx-background-color: BACKGROUND_MENU;
+    -fx-border-color: transparent, transparent;
+    -fx-border-width: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region {
+    -fx-padding: 0em 0em 0em 0em; /* 1 18 0.99 18 */
+    -fx-background-color: BACKGROUND_MENU;
+    -fx-border-color: transparent, transparent;
+    -fx-border-width: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: BACKGROUND_MENU;
+    -fx-background-radius: 0 0 0 0, 0 0 0 0, 0 0 0 0;
+    -fx-padding: 0em 1.5em 0em 1.5em; /* 1 18 0.99 18 */
+    -fx-border-color: BACKGROUND_MENU, BACKGROUND_MENU;
+    -fx-border-width: 2;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container {
+    -fx-padding: 0em 0em 0em 0em; /* 1 18 0.99 18 */
+    -fx-border-color: BACKGROUND_MENU, BACKGROUND_MENU;
+    -fx-border-width: 2;
+}
+
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background: BACKGROUND;
+    -fx-background-color: BACKGROUND;
+    -fx-background-radius: 0 0 0 0, 0 0 0 0, 0 0 0 0;
+    -fx-padding: 0em 1.5em 0em 1.5em; /* 1 18 0.99 18 */
+    /*It is important to have border here to fill in a bottom gap*/
+    -fx-border-color: BACKGROUND;
+    -fx-border-width: 2;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container {
+    -fx-padding: 0em 0em 0em 0em; /* 1 18 0.99 18 */
+    -fx-background-color: BACKGROUND;
+    -fx-background: BACKGROUND;
+    /*It is important to have border here to fill in a bottom gap*/
+    -fx-border-color: BACKGROUND;
+    -fx-border-width: 2;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:hover {
+    -fx-background: derive(BACKGROUND_MENU, 50%);
+    -fx-background-color: derive(BACKGROUND_MENU, 50%);;
+    -fx-padding: 0em 1.5em 0em 1.5em; /* 1 18 0.99 18 */
+    /*It is important to have border here to fill in a bottom gap*/
+    -fx-border-color: derive(BACKGROUND_MENU, 50%);;
+    -fx-border-width: 2;
+}
+
+
+.tab-pane > .tab-header-area > .headers-region > .tab:hover > .tab-container {
+    -fx-background: derive(BACKGROUND_MENU, 50%);;
+    -fx-background-color: derive(BACKGROUND_MENU, 50%);;
+    -fx-padding: 0em 0em 0em 0em; /* 1 18 0.99 18 */
+
+    /*It is important to have border here to fill in a bottom gap*/
+    -fx-border-color: derive(BACKGROUND_MENU, 50%);;
+    -fx-border-width: 2;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {
+    -fx-text-fill: TEXT_FILL;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:hover > .tab-container > .tab-label {
+    -fx-text-fill: TEXT_FILL;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected:hover > .tab-container > .tab-label {
+    -fx-text-fill: TEXT_FILL;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Tab pane                              *
+ *                                                                             *
+ ******************************************************************************/
+
+
+.axis {
+     -fx-stroke: TEXT_FILL;
+}
+ 
+.axis-label {
+    -fx-stroke: TEXT_FILL;
+}
+ 
+.axis-tick-mark {
+    -fx-stroke: TEXT_FILL;
+}
+.axis-minor-tick-mark {
+    -fx-stroke: TEXT_FILL;
+}
+
+
+
+

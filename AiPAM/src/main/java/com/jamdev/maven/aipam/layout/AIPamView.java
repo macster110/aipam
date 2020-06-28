@@ -27,6 +27,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -39,6 +40,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import jfxtras.styles.jmetro.MDL2IconFont;
 
 /**
  * The main view for AIPam. This controls the GUI components and receivers messages from the 
@@ -154,7 +156,9 @@ public class AIPamView extends BorderPane {
 	/**
 	 * Pane which shows the full spectrogram of the clip and a few other controls. 
 	 */
-	private FullClipPane fullClipPane; 
+	private FullClipPane fullClipPane;
+
+	private Button displayOptionsButton; 
 
 	public AIPamView(AiPamController aiPamControl, Stage primaryStage, Pane root) {
 
@@ -187,7 +191,7 @@ public class AIPamView extends BorderPane {
 		controlPaneHolder.setStyle("-fx-background-color: BACKGROUND_MENU");
 
 		clipPane= new ClipGridPane(this); 
-		fullClipPane = new FullClipPane(); //for viewing clips in seperate dialog
+		fullClipPane = new FullClipPane(); //for viewing clips in separate dialog
 
 		clusterGraphPane = new ClusterGraphPane(this); 
 
@@ -230,6 +234,12 @@ public class AIPamView extends BorderPane {
 		centerStackPane.getChildren().add(hidingPane); 
 		StackPane.setAlignment(hidingPane, Pos.TOP_LEFT);
 
+		
+		//too maessy having a button 
+//		centerStackPane.getChildren().add(displayOptionsButton = createViewSettingsButton()); 
+//		StackPane.setAlignment(displayOptionsButton, Pos.BOTTOM_RIGHT);
+//		StackPane.setMargin(displayOptionsButton, new Insets(20,20,20,20));
+
 		centerPane.setCenter(centerStackPane);
 
 		setCenter(centerPane);
@@ -238,10 +248,25 @@ public class AIPamView extends BorderPane {
 		//apply the theme
 		theme = new AITheme();
 		theme.applyTheme(AITheme.JMETRO_DARK_THEME, root);
-
 	}
 
 
+//	/**
+//	 * Create the settings button for changing some basic click settings.  
+//	 */
+//	private Button createViewSettingsButton() {
+//		MDL2IconFont iconFont1 = new MDL2IconFont("\uE700");
+//		iconFont1.setSize(30);
+//		
+//		Button displayOptionsButton = new Button();
+//		displayOptionsButton.setGraphic(iconFont1);
+//		displayOptionsButton.setOnAction((action)->{
+//			PopMenu popMenu = new PopMenu(); 
+//		});
+//		
+//		return displayOptionsButton;
+//	}
+	
 	/**
 	 * Show the progress pane. 
 	 * @param show - true to show the pane. 
