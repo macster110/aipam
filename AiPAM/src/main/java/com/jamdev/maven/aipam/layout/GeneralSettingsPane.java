@@ -1,5 +1,7 @@
 package com.jamdev.maven.aipam.layout;
 
+import org.controlsfx.control.ToggleSwitch;
+
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AITheme;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
@@ -7,10 +9,12 @@ import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -25,7 +29,9 @@ public class GeneralSettingsPane extends DynamicSettingsPane<AIPamParams> {
 
 	private AIPamView aiPamView;
 	
-	private VBox mainPane; 
+	private VBox mainPane;
+
+	private ToggleSwitch showPromptsSwitch; 
 
 	public GeneralSettingsPane(AIPamView aiPamView) {
 		this.aiPamView=aiPamView; 
@@ -50,10 +56,26 @@ public class GeneralSettingsPane extends DynamicSettingsPane<AIPamParams> {
 			aiPamView.setTheme(AITheme.JMETRO_DARK_THEME); 
 		});
 		radioButtonDark.setSelected(true);
+		
+		//user options ot display all clips as features. 
+		showPromptsSwitch = new ToggleSwitch(); 
+		showPromptsSwitch.selectedProperty().addListener((obs, oldVal, newVal)->{
+			notifySettingsListeners();
+		});
+//		showPromptsSwitch.setMaxWidth(100);
+
+		Label label = new Label("Show user prompts");
+		//label.getStyleClass().add("label-title2");
+		HBox hBox = new HBox(); 
+		hBox.setAlignment(Pos.CENTER_LEFT);
+		hBox.setSpacing(5);
+		hBox .getChildren().addAll(showPromptsSwitch, label); 
 
 		mainPane = new VBox(); 
 		mainPane.setSpacing(15);
-		mainPane.getChildren().addAll(title, theme, radioButtonLight, radioButtonDark ); 
+		mainPane.getChildren().addAll(title, theme, radioButtonLight, radioButtonDark, hBox); 
+		
+		
 		
 	}
 	
@@ -64,13 +86,13 @@ public class GeneralSettingsPane extends DynamicSettingsPane<AIPamParams> {
 
 	@Override
 	public AIPamParams getParams(AIPamParams paramsIn) {
+		paramsIn.showUserPrompts = showPromptsSwitch.isSelected(); 
 		return paramsIn;
 	}
 
 	@Override
 	public void setParams(AIPamParams params) {
-		// TODO Auto-generated method stub
-		
+		showPromptsSwitch.setSelected(params.showUserPrompts);
 	}
 
 	@Override

@@ -178,7 +178,7 @@ public class AiPamController {
 		this.settingsImportExport = new SettingsImportExport(this);
 		this.clipExporter = new ClipExporter(); 
 		
-		//note that these will all either use or make default parameters. Paramter loading must be after this point. 
+		//note that these will all either use or make default parameters. Parameter loading, when implemented, must be after this point. 
 	}
 
 

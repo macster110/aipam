@@ -2,6 +2,8 @@ package com.jamdev.maven.aipam.layout.featureExtraction;
 
 import java.util.ArrayList;
 
+import org.controlsfx.control.ToggleSwitch;
+
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.clips.PAMClip;
@@ -15,12 +17,14 @@ import com.jamdev.maven.aipam.utils.AiPamUtils;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -99,8 +103,21 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 
 		featureSelectionBox.getSelectionModel().select(featureExtractionManager.getFeatureParams().currentFeatureIndex);
 
+		//user options ot display all clips as features. 
+		ToggleSwitch showFeaturesSwitch = new ToggleSwitch(); 
+		showFeaturesSwitch.selectedProperty().addListener((obs, oldVal, newVal)->{
+			notifySettingsListeners();
+		});
 
-		mainPane.getChildren().addAll(titleLabel, selectFeatures, featureSelectionBox, settingsPane = new BorderPane(), createClipPane());
+		Label label = new Label("Display features in all clips");
+		label.getStyleClass().add("label-title2");
+		HBox hBox = new HBox(); 
+		hBox.setAlignment(Pos.CENTER_LEFT);
+		hBox.setSpacing(5);
+		hBox .getChildren().addAll(showFeaturesSwitch, label); 
+
+		mainPane.getChildren().addAll(titleLabel, selectFeatures, featureSelectionBox, 
+				settingsPane = new BorderPane(), createClipPane(), hBox);
 
 	}
 
@@ -121,7 +138,8 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 		colourScale.getStyleClass().add("label-title2");
 
 		clipPreviewHolder.setTop(colourScale);
-		clipPreviewHolder.setCenter(new Label("Select an imported clip to see a preview\nThis can be used to test feature extraction parameters"));
+		clipPreviewHolder.setCenter(new Label("Select an imported clip to see a preview. \n"
+				+ "Use this to test feature extraction parameters."));
 
 		return clipPreviewHolder; 
 	}
@@ -147,7 +165,7 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 		//		System.out.println("Notify settings listeners: " ); 
 
 		params.featureParams.currentFeatureIndex=this.featureSelectionBox.getSelectionModel().getSelectedIndex();
-		
+
 		for (int i=0; i<params.featureParams.featureParams.length; i++) {
 			if (featureExtractionManager.getCurrentFeatureExtractor().getSettingsPane()!=null) {
 				params.featureParams.featureParams[i] = featureExtractionManager.getCurrentFeatureExtractor().getSettingsPane().getParams(params.featureParams.featureParams[i] );  
@@ -162,7 +180,7 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 		//TODO
 		//params.featureParams.currentFeatureIndex=this.featureSelectionBox.getSelectionModel().getSelectedIndex();
 		this.featureSelectionBox.getSelectionModel().select(params.featureParams.currentFeatureIndex);
-		
+
 		for (int i=0; i<params.featureParams.featureParams.length; i++) {
 			if (featureExtractionManager.getCurrentFeatureExtractor().getSettingsPane()!=null) {
 				featureExtractionManager.getCurrentFeatureExtractor().getSettingsPane().setParams(params.featureParams.featureParams[i]);
@@ -178,11 +196,11 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 	 * @param pamClip - the clips. 
 	 */
 	private void updateSpecImage(PAMClip pamClip) {
-		
+
 		if (pamClip==null) return; 
-		
-		
-		
+
+
+
 		double[][] featureData = featureExtractionManager.getCurrentFeatureExtractor().getFeatures(pamClip.getSpectrogram()); 
 
 		//		System.out.println("Feature Extraction ColourLims: " + featureExtractionManager.getCurrentFeatureExtractor().getName() + "  " + featureData.length); 

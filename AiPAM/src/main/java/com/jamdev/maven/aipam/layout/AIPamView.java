@@ -5,6 +5,8 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import org.controlsfx.control.NotificationPane;
+
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AITheme;
 import com.jamdev.maven.aipam.AiPamController;
@@ -27,6 +29,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -39,6 +42,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import jfxtras.styles.jmetro.MDL2IconFont;
 
 /**
  * The main view for AIPam. This controls the GUI components and receivers messages from the 
@@ -150,17 +154,21 @@ public class AIPamView extends BorderPane {
 	 * The theme for the UI. 
 	 */
 	private AITheme theme; 
-	
+
 	/**
 	 * Pane which shows the full spectrogram of the clip and a few other controls. 
 	 */
-	private FullClipPane fullClipPane; 
+	private FullClipPane fullClipPane;
+
+	private Button displayOptionsButton;
+
+	private NotificationPane notificationPane; 
 
 	public AIPamView(AiPamController aiPamControl, Stage primaryStage, Pane root) {
 
 		this.primaryStage = primaryStage; 
 		this.root=root; 
-	
+
 		//ai pam control. 
 		this.aiPamContol = aiPamControl; 
 		this.aiPamContol.addSensorMessageListener((flag, dataObject)->{
@@ -172,9 +180,11 @@ public class AIPamView extends BorderPane {
 		userPromptPane = new BorderPane(); 
 		userPromptPane.setMaxHeight(20);
 		userPromptPane.setPadding(new Insets(5,50,5,5));
+		notificationPane = new NotificationPane();
+
 		//userPromptPane.setStyle("-fx-background-color: BACKGROUND_TRANS;"); 
 		//labelSettings.prefWidthProperty().bind(holder.widthProperty());
-		
+
 		clipSelectionManager = new ClipSelectionManager(this); 
 
 
@@ -187,7 +197,7 @@ public class AIPamView extends BorderPane {
 		controlPaneHolder.setStyle("-fx-background-color: BACKGROUND_MENU");
 
 		clipPane= new ClipGridPane(this); 
-		fullClipPane = new FullClipPane(); //for viewing clips in seperate dialog
+		fullClipPane = new FullClipPane(); //for viewing clips in separate dialog
 
 		clusterGraphPane = new ClusterGraphPane(this); 
 
@@ -224,23 +234,46 @@ public class AIPamView extends BorderPane {
 		});
 
 		centerStackPane.getChildren().add(tabPane);
-		centerStackPane.getChildren().add(userPromptPane); 
-		StackPane.setAlignment(userPromptPane, Pos.TOP_RIGHT);
+		
+	
+//		StackPane.setAlignment(notificationPane, Pos.TOP_CENTER);
 		//hiding pane must be above the prompt pane or we can;t close it!
 		centerStackPane.getChildren().add(hidingPane); 
 		StackPane.setAlignment(hidingPane, Pos.TOP_LEFT);
 
-		centerPane.setCenter(centerStackPane);
+
+		//too maessy having a button 
+		//		centerStackPane.getChildren().add(displayOptionsButton = createViewSettingsButton()); 
+		//		StackPane.setAlignment(displayOptionsButton, Pos.BOTTOM_RIGHT);
+		//		StackPane.setMargin(displayOptionsButton, new Insets(20,20,20,20));
+
+		notificationPane.setContent(centerStackPane);
+		centerPane.setCenter(notificationPane);
 
 		setCenter(centerPane);
 		setLeft(controlPaneHolder);
-		
+
 		//apply the theme
 		theme = new AITheme();
 		theme.applyTheme(AITheme.JMETRO_DARK_THEME, root);
-
 	}
 
+
+	//	/**
+	//	 * Create the settings button for changing some basic click settings.  
+	//	 */
+	//	private Button createViewSettingsButton() {
+	//		MDL2IconFont iconFont1 = new MDL2IconFont("\uE700");
+	//		iconFont1.setSize(30);
+	//		
+	//		Button displayOptionsButton = new Button();
+	//		displayOptionsButton.setGraphic(iconFont1);
+	//		displayOptionsButton.setOnAction((action)->{
+	//			PopMenu popMenu = new PopMenu(); 
+	//		});
+	//		
+	//		return displayOptionsButton;
+	//	}
 
 	/**
 	 * Show the progress pane. 
@@ -248,12 +281,12 @@ public class AIPamView extends BorderPane {
 	 */
 	private void showProgressPane(boolean show) {
 		if (show) {
-			centerStackPane.getChildren().remove(userPromptPane);
+			//centerStackPane.getChildren().remove(userPromptPane);
 			centerPane.setTop(progressPane= new ProgressBarPane(this));
 		}
 		else {
-			centerStackPane.getChildren().remove(userPromptPane);
-			centerStackPane.getChildren().add(userPromptPane);
+			//centerStackPane.getChildren().remove(userPromptPane);
+			//centerStackPane.getChildren().add(userPromptPane);
 			hidingPane.toFront(); //myust be above everything. 
 			centerPane.setTop(null); //replace with user promtp pane. 
 		}
@@ -274,13 +307,13 @@ public class AIPamView extends BorderPane {
 			//do nothing
 			return;
 		}
-//		
-//		try {
-//			Thread.sleep(200);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		//		
+		//		try {
+		//			Thread.sleep(200);
+		//		} catch (InterruptedException e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
 
 		aiPamContol.loadAudioData(selectedDirectory, false);
 	}
@@ -299,7 +332,7 @@ public class AIPamView extends BorderPane {
 	 * @param updateType - the update type. 
 	 */
 	public void notifyUpdate(int updateType, Object data) {
-//		System.out.println("AIPamView: notifyUpdate: " +updateType + " " + data);
+		//		System.out.println("AIPamView: notifyUpdate: " +updateType + " " + data);
 		switch (updateType) {
 		case AiPamController.START_FILE_LOAD:
 			this.clipPane.clearSpecImages();
@@ -389,7 +422,7 @@ public class AIPamView extends BorderPane {
 			System.out.println("There is no spectrogram clip task. The importer may have returned an error or was cancelled"); 
 			return; 
 		}
-		
+
 		task.setOnCancelled((value)->{
 			//send notification when 
 			notifyUpdate(AiPamController.CANCELLED_IMAGE_LOAD, null); 
@@ -548,8 +581,6 @@ public class AIPamView extends BorderPane {
 	}
 
 
-
-
 	/**
 	 * Check that the last settings used to import clips and/or cluster are the same
 	 * If not then presents a message to the user indicating that files need re imported etc. 
@@ -558,7 +589,18 @@ public class AIPamView extends BorderPane {
 		//ArrayList<Integer> toDoFlags = checkLastSettings(); 
 		ArrayList<UserPrompt> userPromptsA = userPrompts.checkLastSettings();		
 		//set the message in the user prompt pane. 
-		this.userPromptPane.setRight(userPrompts.getUserPromptPane(userPromptsA)); 
+		if (userPrompts.getUserPromptPane(userPromptsA)!=null) {
+			this.userPromptPane.setRight(userPrompts.getUserPromptPane(userPromptsA)); 
+			
+			notificationPane.setGraphic(userPromptPane);
+			System.out.println("Show notification: " + notificationPane.isShowing());
+//			if (!this.notificationPane.isShowing())
+			 this.notificationPane.show("");		
+			}
+		else {
+			System.out.println("Hide notification: ");
+			this.notificationPane.hide();
+		}
 
 		//now lets try an highlight some control buttons
 		this.controlPane.setUserPrompt(userPromptsA);
@@ -656,7 +698,7 @@ public class AIPamView extends BorderPane {
 	public void setTheme(int thetype) {
 		this.theme.applyTheme(thetype, root); 
 	}
-	
+
 	/**
 	 * The full clip pane. Pane which shows the full spectrogram of the clip and a few other controls. 
 	 * @return the full clip pane
@@ -664,7 +706,7 @@ public class AIPamView extends BorderPane {
 	public FullClipPane getFullClipPane() {
 		return fullClipPane;
 	}
-	
+
 	/**
 	 * Get the theme
 	 * @return the theme to get. 
@@ -672,7 +714,7 @@ public class AIPamView extends BorderPane {
 	public AITheme getTheme() {
 		return theme;
 	}
-	
+
 	/**
 	 * Get the clip pane. 
 	 * @return the clip pane. 

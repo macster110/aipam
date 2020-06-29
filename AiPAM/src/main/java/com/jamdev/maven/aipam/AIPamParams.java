@@ -92,11 +92,20 @@ public class AIPamParams implements Cloneable  {
 	 */
 	public Params clusterParams = new TSNEParams();
 	
+	//Feature extraction parameters. 
 	
 	/**
 	 * Params for feature extraction
 	 */
 	public FeatureParams featureParams = new FeatureParams(); 
+	
+	
+	//General parameters
+	
+	/**
+	 * True to show user prompts. Can get annoying if you know how to use SOudnSort so can be disabled. 
+	 */
+	public boolean showUserPrompts = true; 
 
 
 	@Override

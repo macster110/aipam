@@ -55,6 +55,8 @@ public class MedianFilterPane extends DynamicSettingsPane<MedianFilterParams> {
 
 
 		medianFilterPane.getChildren().add(filterLength);
+		
+		setParams(spectrogramMedianFilter.medianFilterParams); 
 	}
 
 

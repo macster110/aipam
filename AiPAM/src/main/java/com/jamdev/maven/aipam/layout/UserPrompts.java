@@ -72,7 +72,7 @@ public class UserPrompts {
 	
 
 	/**
-	 * Figure what has changed since lad audio load. 
+	 * Figure what has changed since last audio load. 
 	 * @return a list of flags indicating what needs re run. 
 	 */
 	public ArrayList<UserPrompt> checkLastSettings() {
