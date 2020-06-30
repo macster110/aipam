@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.clustering.snapToGrid.ClusterSnapGrid;
+import com.jamdev.maven.aipam.featureExtraction.FeatureExtraction;
 import com.jamdev.maven.aipam.layout.AIPamView;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 import com.jamdev.maven.aipam.layout.utilsFX.ZoomableScrollPane;
@@ -136,7 +137,12 @@ public class ClipGridPane extends BorderPane {
 						
 						UtilsFX.runAndWait(() -> {
 							//must run on FX thread as generates an image. 
-							final PamClipPane pamClipPane= new PamClipPane(pamClips.get(ii), clipSize[0], clipSize[1], aiPamView.getCurrentColourArray(), aiPamView.getClims());
+							FeatureExtraction featureExtraction=null; 
+							if (aiPamView.getAIParams().showFeatures) {
+								featureExtraction=aiPamView.getAIControl().getFeatureExtractionManager().getCurrentFeatureExtractor(); 
+							}
+
+							final PamClipPane pamClipPane = new PamClipPane(pamClips.get(ii), clipSize[0], clipSize[1], aiPamView.getCurrentColourArray(), aiPamView.getClims(), featureExtraction);
 							pamClipPane.setSelectionManager(aiPamView.getClipSelectionManager()); 
 							//add child on the fx pane
 							//tilePane.getChildren().add(pamClipPane); 

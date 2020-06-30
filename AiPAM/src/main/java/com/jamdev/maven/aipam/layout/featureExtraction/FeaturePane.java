@@ -10,16 +10,21 @@ import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.featureExtraction.FeatureExtraction;
 import com.jamdev.maven.aipam.featureExtraction.FeatureExtractionManager;
 import com.jamdev.maven.aipam.layout.AIPamView;
+import com.jamdev.maven.aipam.layout.ColourArray;
+import com.jamdev.maven.aipam.layout.MasterControlPane;
+import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
 import com.jamdev.maven.aipam.layout.clips.FullClipPane;
 import com.jamdev.maven.aipam.layout.clips.SpectrogramImage;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.utils.AiPamUtils;
+import com.jamdev.maven.aipam.utils.Spectrogram;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -68,6 +73,10 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 	 */
 	private BorderPane settingsPane;
 
+	private ToggleSwitch showFeaturesSwitch;
+
+	private BorderPane userPromptPane;
+
 	/**
 	 * Create the feature pane
 	 */
@@ -104,7 +113,7 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 		featureSelectionBox.getSelectionModel().select(featureExtractionManager.getFeatureParams().currentFeatureIndex);
 
 		//user options ot display all clips as features. 
-		ToggleSwitch showFeaturesSwitch = new ToggleSwitch(); 
+		showFeaturesSwitch = new ToggleSwitch(); 
 		showFeaturesSwitch.selectedProperty().addListener((obs, oldVal, newVal)->{
 			notifySettingsListeners();
 		});
@@ -117,8 +126,42 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 		hBox .getChildren().addAll(showFeaturesSwitch, label); 
 
 		mainPane.getChildren().addAll(titleLabel, selectFeatures, featureSelectionBox, 
-				settingsPane = new BorderPane(), createClipPane(), hBox);
+				settingsPane = new BorderPane(), createClipPane(), hBox, userPromptPane= new BorderPane());
 
+	}
+	
+	/**
+	 * Create pane to allow user to recalculate 
+	 * @return
+	 */
+	private Pane createRecalcPane() {
+		HBox recalcPane = new HBox(); 
+		recalcPane.setAlignment(Pos.CENTER_LEFT);
+		recalcPane.setSpacing(5); 
+
+		Button recalc = new Button("Recalculate"); 
+		recalc.setOnAction((action)->{
+			aiPamView.reCalcImages();
+		}); 
+		
+		recalcPane.getChildren().addAll(new Label("Features need recalculated"), recalc); 
+		
+		MasterControlPane.highLightButton(recalc); 
+
+		return recalcPane; 
+	}
+	
+	/**
+	 * Called whenever there is a new user prompt. Convenience for the user to recalc spectrograms. 
+	 * @param list - the userprompt list.  
+	 */
+	private void newUserPrompt(ArrayList<UserPrompt> list) {
+		this.userPromptPane.setCenter(null); 
+		for (UserPrompt prompt : list) {
+			if (prompt == UserPrompt.RECREATE_FEATURES) {
+				this.userPromptPane.setCenter(createRecalcPane() );
+			}
+		}
 	}
 
 
@@ -172,6 +215,8 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 			}
 		}
 
+		params.showFeatures = showFeaturesSwitch.isSelected(); 
+
 		return params;
 	}
 
@@ -186,29 +231,23 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 				featureExtractionManager.getCurrentFeatureExtractor().getSettingsPane().setParams(params.featureParams.featureParams[i]);
 			}
 		}
+		
+		showFeaturesSwitch.setSelected(params.showFeatures);
 
 	}
-
-
+	
+	
 	/**
-	 * Update the image in the spectrogram display. This decides whether to plot as log and autimatically assigns colour limits. 
-	 * 
-	 * @param pamClip - the clips. 
+	 * Get the image for feature extractions. 
+	 * @param spectrogram - the spectrogram. 
+	 * @param featureExtractor - the feature extractor
+	 * @param colourlims - the default colour limits. These can be overiden by the feature extraction method.  
+	 * @param colourArray - the default colour array. 
+	 * @return the feature image. 
 	 */
-	private void updateSpecImage(PAMClip pamClip) {
+	public static SpectrogramImage getFeatureImage(Spectrogram spectrogram, FeatureExtraction featureExtractor, double[] colourlims, ColourArray colourArray) {
+		double[][] featureData = featureExtractor.getFeatures(spectrogram); 
 
-		if (pamClip==null) return; 
-
-
-
-		double[][] featureData = featureExtractionManager.getCurrentFeatureExtractor().getFeatures(pamClip.getSpectrogram()); 
-
-		//		System.out.println("Feature Extraction ColourLims: " + featureExtractionManager.getCurrentFeatureExtractor().getName() + "  " + featureData.length); 
-		//		System.out.println("Min max " + " min: " + AiPamUtils.min(featureData) + " max: " + AiPamUtils.max(featureData)); 
-
-		double[] colourlims = new double[2];
-		colourlims[0] = this.aiPamView.getAIControl().getParams().colourLims[0];
-		colourlims[1] = this.aiPamView.getAIControl().getParams().colourLims[1];
 
 		//		System.out.println("Old colour lims: " + " min: " + colourlims[0] + " max: " + colourlims[1]); 
 		//AiPamUtils.printArray(featureData);
@@ -216,7 +255,7 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 		double minFeatureData = AiPamUtils.min(featureData); 
 		double maxFeatureData = AiPamUtils.max(featureData); 
 
-		if (this.featureExtractionManager.getCurrentFeatureExtractor().logPlot()) {
+		if (featureExtractor.logPlot()) {
 			minFeatureData = 20*Math.log10(minFeatureData); 
 			maxFeatureData = 20*Math.log10(maxFeatureData); 
 		}
@@ -234,8 +273,44 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 		//		System.out.println("New colour lims" + " min: " + colourlims[0] + " max: " + colourlims[1]); 
 
 		SpectrogramImage image = new SpectrogramImage(featureData, 
-				this.aiPamView.getCurrentColourArray(), colourlims, 
-				this.featureExtractionManager.getCurrentFeatureExtractor().logPlot()); 
+				colourArray, colourlims, 
+				featureExtractor.logPlot()); 
+		
+		return image; 
+	}
+
+	
+	/**
+	 * Get the feature image with correct colours. 
+	 * @param spectrogram - the spectrogram
+	 * @return the image of the features. 
+	 */
+	public 	SpectrogramImage getFeatureImage(Spectrogram spectrogram) {
+		
+		FeatureExtraction featureExtractor = featureExtractionManager.getCurrentFeatureExtractor(); 
+		ColourArray colourArray = this.aiPamView.getCurrentColourArray(); 
+
+		//		System.out.println("Feature Extraction ColourLims: " + featureExtractionManager.getCurrentFeatureExtractor().getName() + "  " + featureData.length); 
+		//		System.out.println("Min max " + " min: " + AiPamUtils.min(featureData) + " max: " + AiPamUtils.max(featureData)); 
+
+		double[] colourlims = new double[2];
+		colourlims[0] = this.aiPamView.getAIControl().getParams().colourLims[0];
+		colourlims[1] = this.aiPamView.getAIControl().getParams().colourLims[1];
+		
+		return  getFeatureImage( spectrogram,  featureExtractor, colourlims,  colourArray); 
+	}
+
+
+	/**
+	 * Update the image in the spectrogram display. This decides whether to plot as log and autimatically assigns colour limits. 
+	 * 
+	 * @param pamClip - the clips. 
+	 */
+	private void updateSpecImage(PAMClip pamClip) {
+
+		if (pamClip==null) return; 
+
+		SpectrogramImage image =  getFeatureImage(pamClip.getSpectrogram()); 
 
 		specImage.setImage(image.getSpecImage(200, 200));	
 
@@ -267,8 +342,11 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 			if (currentPreviewClip!=null) 
 				updateSpecImage(currentPreviewClip);
 			break;
-
-		}
+		case AiPamController.USER_PROMPT:
+			ArrayList<UserPrompt> list = (ArrayList<UserPrompt> ) stuff; 
+			newUserPrompt(list);
+			break; 		
+			}
 	}
 
 

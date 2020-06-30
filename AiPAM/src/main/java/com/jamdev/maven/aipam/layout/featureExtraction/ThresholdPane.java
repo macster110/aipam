@@ -55,6 +55,8 @@ public class ThresholdPane extends DynamicSettingsPane<ThresholdParams> {
 		});
 
 		//thresholdPane.getChildren().add(new Label("(Some downstream processes may want phase information)"));
+		
+		setParams(spectrogramThreshold.thresholdParams); 
 	}
 
 	@Override
@@ -83,8 +85,8 @@ public class ThresholdPane extends DynamicSettingsPane<ThresholdParams> {
 	public void setParams(ThresholdParams params) {
 		thresholdDB.setValue(
 				params.thresholdDB);
-		
-		outputType.getSelectionModel().select(params.finalOutput);
+				
+				outputType.getSelectionModel().select(params.finalOutput);
 	}
 
 	@Override

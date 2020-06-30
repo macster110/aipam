@@ -5,8 +5,11 @@ import java.io.File;
 import com.jamdev.maven.aipam.annotation.SimpleAnnotation;
 import com.jamdev.maven.aipam.clips.AudioPlay;
 import com.jamdev.maven.aipam.clips.PAMClip;
+import com.jamdev.maven.aipam.featureExtraction.FeatureExtraction;
 import com.jamdev.maven.aipam.layout.ColourArray;
+import com.jamdev.maven.aipam.layout.featureExtraction.FeaturePane;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
+import com.jamdev.maven.aipam.utils.Spectrogram;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -55,21 +58,27 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 	 * Pane which overlays the image. This can be sued to add highlights. 
 	 */
 	private Pane overlayPane;
-	
+
 	/**
 	 * The default opacity value to use for overlays 
 	 */
-	private double defaultOpacity = 0.3; 
+	private double defaultOpacity = 0.3;
+
+	/**
+	 * Reference to the feature extraction mmethod
+	 */
+	private FeatureExtraction featureExtraction; 
 
 	/**
 	 * Constructor for the clip pane. 
 	 * @param clip
 	 */
-	public PamClipPane(PAMClip clip, int width, int height, ColourArray colourArray, double clims[]) {
+	public PamClipPane(PAMClip clip, int width, int height, ColourArray colourArray, double clims[], FeatureExtraction featureExtraction) {
 		this.clip=clip; 
+		this.featureExtraction  = featureExtraction; 
 		//create the pane 
 		this.getChildren().add(imageCanvas = new Canvas(width, height)); 
-		
+
 		//clip features
 		generateSpecImage(colourArray, clims); 
 
@@ -95,20 +104,20 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 
 		//when the colour property changes changed the back ground
 		colourProperty.addListener((obsval, oldVal, newVal)->{
-			 setOverlayColour(); 
+			setOverlayColour(); 
 		});
-		
-	
+
+
 		Tooltip tooltip = new Tooltip(
 				new File(clip.getFileName()).getName() +"\n"
 						+ "Cluster ID: " + clip.getGridID() + "\n"
 						+ "Original ID: " +  clip.getGridID());
 		Tooltip.install(this, tooltip);
-		
+
 		setOverlayColour(); 
 
 	}
-	
+
 	private void setOverlayColour() {
 		//bit ugly but meh
 		if (colourProperty.get().equals(UtilsFX.toRGBCode(Color.TRANSPARENT))) {
@@ -127,7 +136,12 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 	 * Generate the spectrogram image. 
 	 */
 	public void generateSpecImage(ColourArray colourArray, double[] clims) {
-		this.spectrogramImage = new SpectrogramImage(clip.getSpectrogram().getAbsoluteSpectrogram(), colourArray, clims); 
+
+		if (featureExtraction==null)
+			this.spectrogramImage = new SpectrogramImage(clip.getSpectrogram().getAbsoluteSpectrogram(), colourArray, clims); 
+		else {
+			this.spectrogramImage = FeaturePane.getFeatureImage(clip.getSpectrogram(), featureExtraction, clims, colourArray); 
+		}
 		//draw the image onto the canvas. 
 		//		imageCanvas.getGraphicsContext2D().drawImage(spectrogramImage.getWritableImage(), 0, 0);
 		Image specImage = spectrogramImage.getSpecImage((int) imageCanvas.getWidth(), (int) imageCanvas.getWidth()); 

@@ -18,6 +18,9 @@ import com.jamdev.maven.aipam.utils.MedianFilter;
  */
 public class SpectorgramMedianFilter extends SpecNoiseMethod {
 
+	/**
+	 * The median filter parameters. 
+	 */
 	public MedianFilterParams medianFilterParams = new MedianFilterParams();
 	
 	/**

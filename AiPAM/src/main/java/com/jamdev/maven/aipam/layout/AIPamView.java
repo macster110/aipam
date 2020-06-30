@@ -181,6 +181,7 @@ public class AIPamView extends BorderPane {
 		userPromptPane.setMaxHeight(20);
 		userPromptPane.setPadding(new Insets(5,50,5,5));
 		notificationPane = new NotificationPane();
+		notificationPane.setStyle("-fx-background-color: BACKGROUND_TRANS;");
 
 		//userPromptPane.setStyle("-fx-background-color: BACKGROUND_TRANS;"); 
 		//labelSettings.prefWidthProperty().bind(holder.widthProperty());
@@ -283,6 +284,7 @@ public class AIPamView extends BorderPane {
 		if (show) {
 			//centerStackPane.getChildren().remove(userPromptPane);
 			centerPane.setTop(progressPane= new ProgressBarPane(this));
+			notificationPane.hide();
 		}
 		else {
 			//centerStackPane.getChildren().remove(userPromptPane);
@@ -589,12 +591,12 @@ public class AIPamView extends BorderPane {
 		//ArrayList<Integer> toDoFlags = checkLastSettings(); 
 		ArrayList<UserPrompt> userPromptsA = userPrompts.checkLastSettings();		
 		//set the message in the user prompt pane. 
-		if (userPrompts.getUserPromptPane(userPromptsA)!=null) {
+		if (userPrompts.getUserPromptPane(userPromptsA)!=null && this.getAIParams().showUserPrompts) {
 			this.userPromptPane.setRight(userPrompts.getUserPromptPane(userPromptsA)); 
 			
 			notificationPane.setGraphic(userPromptPane);
 			System.out.println("Show notification: " + notificationPane.isShowing());
-//			if (!this.notificationPane.isShowing())
+			if (!this.notificationPane.isShowing())
 			 this.notificationPane.show("");		
 			}
 		else {
@@ -721,6 +723,15 @@ public class AIPamView extends BorderPane {
 	 */
 	public ClipGridPane getClipPane() {
 		return clipPane;
+	}
+
+
+	/**
+	 * Get user prompts manager. 
+	 * @return the user prompts. 
+	 */
+	public UserPrompts getUserPrompts() {
+		return userPrompts;
 	}
 
 }

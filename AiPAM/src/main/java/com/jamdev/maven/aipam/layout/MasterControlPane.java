@@ -187,7 +187,7 @@ public class MasterControlPane {
 	 * Highlight a button
 	 * @param button - the button to highlight
 	 */
-	private void highLightButton(Button button) {
+	public static Animation highLightButton(Button button) {
 		
 		final Animation animation = new Transition() {
 
@@ -205,8 +205,9 @@ public class MasterControlPane {
 	        }
 	    };
 	    
-	    this.currentAnimation = animation;
 	    animation.play();
+	    
+	    return animation; 
 		
 	}
 	
@@ -247,18 +248,18 @@ public class MasterControlPane {
 		UserPrompt userPrompt = userPromptsA.get(0); 
 		switch (userPrompt) {
 		case IMPORT_AGAIN:
-			highLightButton(importClipsButton);
+		    this.currentAnimation = highLightButton(importClipsButton);
 			break;
 		case NOTHING_CLUSTERED_YET:
-			highLightButton(clusterButton);
+			this.currentAnimation = highLightButton(clusterButton);
 			break;
 		case NOTHING_IMPORTED_YET:
-			highLightButton(browseButton);
+			this.currentAnimation = highLightButton(browseButton);
 			break;
 		case RECREATE_IMAGES:
 			break;
 		case RE_CLUSTER:
-			highLightButton(clusterButton);
+			this.currentAnimation = highLightButton(clusterButton);
 			break;
 		default:
 			break;

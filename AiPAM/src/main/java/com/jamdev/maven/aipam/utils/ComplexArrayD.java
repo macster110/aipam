@@ -17,7 +17,7 @@ import java.util.Arrays;
  * @author Doug Gillespie 
  *
  */
-public class ComplexArray implements Cloneable, Serializable {
+public class ComplexArrayD implements Cloneable, Serializable {
 
 
 	private static final long serialVersionUID = 1L;
@@ -32,7 +32,7 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * data array will be 2*n
 	 * @param n Number of real / imaginary pairs. 
 	 */
-	public ComplexArray(int n) {
+	public ComplexArrayD(int n) {
 		data = new double[n*2];
 	}
 
@@ -42,7 +42,7 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * so the length of data MUST be even. 
 	 * @param complexData interleaved real and imaginary data. 
 	 */
-	public ComplexArray(double[] complexData) {
+	public ComplexArrayD(double[] complexData) {
 		this.data = complexData;
 	}
 	
@@ -52,7 +52,7 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * parts. Make sure imagData is same length as realData or else... 
 	 * @param complexData interleaved real and imaginary data. 
 	 */
-	public ComplexArray(double[] realData, double[] imagData) {
+	public ComplexArrayD(double[] realData, double[] imagData) {
 		this.data = new double[realData.length*2];
 		for (int i = 0, j = 0; i < realData.length; i++, j+=2) {
 			this.data[j] = realData[i];
@@ -64,7 +64,7 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * Construct a complex array from an array of Apache Complex objects. 
 	 * @param complexArr  an array of Apache Complex objects. 
 	 */
-	public ComplexArray(org.apache.commons.math3.complex.Complex[] complexArr) {
+	public ComplexArrayD(org.apache.commons.math3.complex.Complex[] complexArr) {
 		this.data = new double[complexArr.length*2];
 		for (int i = 0, j = 0; i < complexArr.length; i++, j+=2) {
 			this.data[j] = complexArr[i].getReal();
@@ -78,8 +78,8 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * @param newLength new number of complex objects. 
 	 * @return Complex array with the new length. 
 	 */
-	public ComplexArray copyOf(int newLength) {
-		return new ComplexArray(Arrays.copyOf(data, newLength*2));
+	public ComplexArrayD copyOf(int newLength) {
+		return new ComplexArrayD(Arrays.copyOf(data, newLength*2));
 	}
 
 	/**
@@ -120,10 +120,10 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * @see java.lang.Object#clone()
 	 */
 	@Override
-	public ComplexArray clone() {
-		ComplexArray newOne;
+	public ComplexArrayD clone() {
+		ComplexArrayD newOne;
 		try {
-			newOne = (ComplexArray) super.clone();
+			newOne = (ComplexArrayD) super.clone();
 			newOne.data = data.clone();
 			return newOne;
 		} catch (CloneNotSupportedException e) {
@@ -218,11 +218,11 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * Calculates the square root of all complex numbers in the array
 	 * @return square roots of complex numbers. 
 	 */
-	public ComplexArray sqrt() {
+	public ComplexArrayD sqrt() {
 		if (data == null) {
 			return null;
 		}
-		ComplexArray s = new ComplexArray(length());
+		ComplexArrayD s = new ComplexArrayD(length());
 		for (int o = 0; o < data.length/2; o++) {
 			double newmag = Math.sqrt(mag(o));
 			double newang = ang(o) / 2.0;
@@ -246,11 +246,11 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * @param f power factor
 	 * @return array of complex numbers raised to the power f. 
 	 */
-	public ComplexArray pow(double f) {
+	public ComplexArrayD pow(double f) {
 		if (data == null) {
 			return null;
 		}
-		ComplexArray s = new ComplexArray(length());
+		ComplexArrayD s = new ComplexArrayD(length());
 		for (int o = 0; o < data.length/2; o++) {
 			double newmag = Math.pow(mag(o), f);
 			double newang = ang(o) * f;
@@ -276,11 +276,11 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * @param c complex array to add
 	 * @return sum of this and c.
 	 */
-	public ComplexArray plus(ComplexArray c) {
+	public ComplexArrayD plus(ComplexArrayD c) {
 		if (data == null) {
 			return null;
 		}
-		ComplexArray s = clone();
+		ComplexArrayD s = clone();
 		for (int i = 0; i < c.data.length; i++) {
 			s.data[i] += c.data[i];
 		}
@@ -292,11 +292,11 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * @param c complex array to subtract. 
 	 * @return this minus c.
 	 */
-	public ComplexArray minus(ComplexArray c) {
+	public ComplexArrayD minus(ComplexArrayD c) {
 		if (data == null) {
 			return null;
 		}
-		ComplexArray s = clone();
+		ComplexArrayD s = clone();
 		for (int i = 0; i < c.data.length; i++) {
 			s.data[i] -= c.data[i];
 		}
@@ -308,7 +308,7 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * @param f multiplication factor. 
 	 * @return new complex array
 	 */
-	public ComplexArray times(double f) {
+	public ComplexArrayD times(double f) {
 		if (data == null) {
 			return null;
 		}
@@ -316,7 +316,7 @@ public class ComplexArray implements Cloneable, Serializable {
 		for (int i = 0; i < data.length; i++) {
 			tData[i] = data[i]*f;
 		}
-		return new ComplexArray(tData);
+		return new ComplexArrayD(tData);
 	}
 	
 	public Complex times(int i, double f) {
@@ -327,7 +327,7 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * Calculate the complex conjugate of the complex array
 	 * @return complex conjugate of the complex array. 
 	 */
-	public ComplexArray conj() {
+	public ComplexArrayD conj() {
 		if (data == null) {
 			return null;
 		}
@@ -335,7 +335,7 @@ public class ComplexArray implements Cloneable, Serializable {
 		for (int i = 1; i < tData.length; i+=2) {
 			tData[i] = -tData[i];
 		}
-		return new ComplexArray(tData);
+		return new ComplexArrayD(tData);
 	}
 
 	/**
@@ -343,7 +343,7 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * @param s Array to multiply by
 	 * @return new array = this*conj(other)
 	 */
-	public ComplexArray conjTimes(ComplexArray s) {
+	public ComplexArrayD conjTimes(ComplexArrayD s) {
 		if (data == null) {
 			return null;
 		}
@@ -353,7 +353,7 @@ public class ComplexArray implements Cloneable, Serializable {
 			tData[re] = data[re]*sData[re] + data[im]*sData[im];
 			tData[im] = -data[re]*sData[im] + data[im]*sData[re];
 		}
-		return new ComplexArray(tData);
+		return new ComplexArrayD(tData);
 	}
 	
 	/**
@@ -363,7 +363,7 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * @param binRange range of frequency bins to include. 
 	 * @return new array = this*conj(other)
 	 */
-	public ComplexArray conjTimes(ComplexArray s, int[] binRange) {
+	public ComplexArrayD conjTimes(ComplexArrayD s, int[] binRange) {
 		if (data == null) {
 			return null;
 		}
@@ -373,13 +373,13 @@ public class ComplexArray implements Cloneable, Serializable {
 			tData[re] = data[re]*sData[re] + data[im]*sData[im];
 			tData[im] = -data[re]*sData[im] + data[im]*sData[re];
 		}
-		return new ComplexArray(tData);		
+		return new ComplexArrayD(tData);		
 	}
 	
 	/**
 	 * Dot product (aka Inner Product) of this array and another complex array 's'.
 	 * The order of the equation is this&#8901s.</p>
-	 * <p>For example, if this ComplexArray u = [u0 u1 u2] and the passed array is
+	 * <p>For example, if this ComplexArrayD u = [u0 u1 u2] and the passed array is
 	 * v = [v0 v1 v2], the number returned would be:
 	 * <ul>
 	 * <li>Complex newVal = u0<u>v0</u> + u1<u>v1</u> + u2<u>v2</u></li>
@@ -387,10 +387,10 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * <p>Where the underlined variables indicate the complex conjugate.  This method
 	 * is similar to the conjTimes method, but adds Complex Numbers together
 	 * and returns the resultant Complex number</p>
-	 * @param s the ComplexArray to perform the dot product with
+	 * @param s the ComplexArrayD to perform the dot product with
 	 * @return Complex number = this&#8901s 
 	 */
-	public Complex dotProduct(ComplexArray s) {
+	public Complex dotProduct(ComplexArrayD s) {
 		if (data == null) {
 			return null;
 		}
@@ -407,23 +407,23 @@ public class ComplexArray implements Cloneable, Serializable {
 	/**
 	 * <p>Calculate the Cross-Spectral Density Matrix (CSDM) from this complex array.
 	 * This array is assumed to be a column vector with number of rows = length().
-	 * The returned object will be a ComplexArray column vector with length() number
-	 * of rows, and each row will be a ComplexArray object containing a row
+	 * The returned object will be a ComplexArrayD column vector with length() number
+	 * of rows, and each row will be a ComplexArrayD object containing a row
 	 * vector with length() number of columns.</p>
-	 * <p>For example, if this ComplexArray u = [u0 u1 u2], then CSDM(u) = ComplexArray[] of
+	 * <p>For example, if this ComplexArrayD u = [u0 u1 u2], then CSDM(u) = ComplexArrayD[] of
 	 * length 3, where:
 	 * <ul>
-	 * <li>ComplexArray[0] = [u0<u>u0</u> u0<u>u1</u> u0<u>u2</u>]</li>
-	 * <li>ComplexArray[1] = [u1<u>u0</u> u1<u>u1</u> u1<u>u2</u>]</li>
-	 * <li>ComplexArray[2] = [u2<u>u0</u> u2<u>u1</u> u2<u>u2</u>]</li>
+	 * <li>ComplexArrayD[0] = [u0<u>u0</u> u0<u>u1</u> u0<u>u2</u>]</li>
+	 * <li>ComplexArrayD[1] = [u1<u>u0</u> u1<u>u1</u> u1<u>u2</u>]</li>
+	 * <li>ComplexArrayD[2] = [u2<u>u0</u> u2<u>u1</u> u2<u>u2</u>]</li>
 	 * </ul>
 	 * <p>Where the underlined variables indicate the complex conjugate</p>
 	 * @return
 	 */
-	public ComplexArray[] calcCSDM() {
-		ComplexArray[] csdm = new ComplexArray[this.length()];
+	public ComplexArrayD[] calcCSDM() {
+		ComplexArrayD[] csdm = new ComplexArrayD[this.length()];
 		for (int row=0; row<this.length(); row++) {
-			ComplexArray prelim = new ComplexArray(this.length());
+			ComplexArrayD prelim = new ComplexArrayD(this.length());
 			for (int col=0; col<this.length(); col++) {
 //				prelim.set(col, this.get(row).times(this.get(col).conj())); to save time and not continuously create new Complex objects, work on the data vector directly
 				prelim.data[col*2] = data[row*2]*data[col*2] + data[row*2+1]*data[col*2+1];	// real value
@@ -531,11 +531,11 @@ public class ComplexArray implements Cloneable, Serializable {
 	}
 	
     /**
-     *  return a new ComplexArray whose value is (this * b)
+     *  return a new ComplexArrayD whose value is (this * b)
      * @param b
      * @return
      */
-    public ComplexArray times(Complex b) {
+    public ComplexArrayD times(Complex b) {
     	double[] newData = data.clone();
     	for(int i = 0; i<newData.length; i+=2) {
     		Complex a = new Complex(newData[i],newData[i+1]);
@@ -543,7 +543,7 @@ public class ComplexArray implements Cloneable, Serializable {
     		newData[i] = a.real;
     		newData[i+1] = a.imag;
     	}
-    	return new ComplexArray(newData);
+    	return new ComplexArrayD(newData);
     }
 	
 	/**
@@ -572,13 +572,13 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * fill back in the second half of the data.  
 	 * @return double length array with the second half being the complex cunjugate of the first. 
 	 */
-	public ComplexArray fillConjugateHalf() {
+	public ComplexArrayD fillConjugateHalf() {
 		double[] fData = Arrays.copyOf(data, data.length*2);
 		for (int re1 = 0, im1 = 1, re2 = fData.length-2, im2 = fData.length-1; re1 < data.length; re1+=2, im1+=2, re2-=2, im2-=2) {
 			fData[re2] = data[re1];
 			fData[im2] = -data[im1];
 		}
-		return new ComplexArray(fData);
+		return new ComplexArrayD(fData);
 	}
 
 	/**
@@ -586,7 +586,7 @@ public class ComplexArray implements Cloneable, Serializable {
 	 * @param realArray array of real data. 
 	 * @return a complex array - twice the length of realArray with imag parts = 0;
 	 */
-	public static ComplexArray realToComplex(double[] realArray) {
+	public static ComplexArrayD realToComplex(double[] realArray) {
 		if (realArray == null) {
 			return null;
 		}
@@ -595,7 +595,7 @@ public class ComplexArray implements Cloneable, Serializable {
 		for (int i = 0, j = 0; i < n; i++, j+=2) {
 			cData[j] = realArray[i];
 		}
-		return new ComplexArray(cData);
+		return new ComplexArrayD(cData);
 	}
 
 	/**

@@ -12,7 +12,7 @@ import com.jamdev.maven.aipam.utils.DownSampleImpl;
  * <p>
  * Fingerprint are representation of the audio data which can be 
  * used by machine learning algorithms. They could be simple spectrogram flattened
- * to be a 1D array or a more advanced peak finding method, or noise reduced spectrgrams, or
+ * to be a 1D array or a more advanced peak finding method, or noise reduced spectrograms, or
  * wigner plots, or anything really. 
  * 
  * 

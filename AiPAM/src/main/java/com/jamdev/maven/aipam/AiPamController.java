@@ -109,6 +109,11 @@ public class AiPamController {
 	 * Feature extraction settings have changed. 
 	 */
 	public static final int FEATURES_CHANGED = 16; 
+	
+	/**
+	  * There is a new user prompt
+	 */
+	public static final int USER_PROMPT = 17; 
 
 	/**
 	 * The cluster manager
@@ -172,7 +177,7 @@ public class AiPamController {
 	public AiPamController() {
 		this.aiPamParams = new AIPamParams();
 		this.pamClipManager = new PAMClipManager(); 
-		this.pamClusterManager= new ClipClusterManager(); 
+		this.pamClusterManager= new ClipClusterManager(this); 
 		this.featureExtractionManager = new FeatureExtractionManager(this); 
 		this.annotationManager= new AnnotationManager(this); 
 		this.settingsImportExport = new SettingsImportExport(this);

@@ -3,6 +3,7 @@ package com.jamdev.maven.aipam.clustering;
 import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.AIPamParams;
+import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.clustering.snapToGrid.ClusterSnapGrid;
 import com.jamdev.maven.aipam.clustering.snapToGrid.SnapToGridListener;
@@ -24,12 +25,16 @@ public class ClipClusterManager {
 	/**
 	 * The current clustering algorithm
 	 */
-	private ClusteringAlgorithm clusterAlgorithm = new TSNEClipClustererYK(); 
+	private ClusteringAlgorithm clusterAlgorithm; 
 	
 	/**
 	 * The snap to grid algorithm. 
 	 */
 	private ClusterSnapGrid clusterSnapGrid = new ClusterSnapGrid(); 
+	
+	public ClipClusterManager(AiPamController aiPamControl) {
+		 clusterAlgorithm = new TSNEClipClustererYK(aiPamControl); 
+	}
 
 	/**
 	 * Construct the cluster data task. 

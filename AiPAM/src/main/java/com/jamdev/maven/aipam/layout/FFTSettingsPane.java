@@ -1,9 +1,12 @@
 package com.jamdev.maven.aipam.layout;
 
+import java.util.ArrayList;
+
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
+import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
 import com.jamdev.maven.aipam.layout.clips.FullClipPane;
 import com.jamdev.maven.aipam.layout.clips.SpectrogramImage;
 import com.jamdev.maven.aipam.layout.utilsFX.ColourRangeSlider;
@@ -12,6 +15,7 @@ import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -67,7 +71,12 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 	 */
 	private PAMClip currentPreviewClip;
 
-	private BorderPane clipPreviewHolder; 
+	private BorderPane clipPreviewHolder;
+
+	/**
+	 * Pane which shows some user prompts. 
+	 */
+	private BorderPane userPromptPane; 
 
 	/**
 	 * The FFT settings pane. 
@@ -121,6 +130,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		Label colourScale = new Label("Colour Scales");
 		colourScale.getStyleClass().add("label-title2");
 		
+		
 		Button defaultHop = new Button("Default"); 
 		defaultHop.setTooltip(new Tooltip("The default FFT hop is 50% of the the FFT length")); 
 		defaultHop.setOnAction((action)->{
@@ -166,10 +176,49 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		VBox vBox = new VBox(); 
 		vBox.setSpacing(5);
 		vBox.getChildren().addAll(titleLabel, fftLabel, fftComboBox, fftHopLabel,
-				hopBox, colourScale,colorType,  colourRangleSlider, createClipPane()); 
+				hopBox, colourScale,colorType,  colourRangleSlider, createClipPane(),  createUserPromptPane()); 
 		
 		return vBox;
 
+	}
+	
+	private Pane createUserPromptPane() {
+		this.userPromptPane = new BorderPane(); 
+		return userPromptPane; 
+	}
+	
+	/**
+	 * Create pane to allow user to recalculate 
+	 * @return
+	 */
+	private Pane createRecalcPane() {
+		HBox recalcPane = new HBox(); 
+		recalcPane.setAlignment(Pos.CENTER_LEFT);
+		recalcPane.setSpacing(5); 
+
+		Button recalc = new Button("Recalculate"); 
+		recalc.setOnAction((action)->{
+			aiPamView.reCalcImages();
+		}); 
+		
+		recalcPane.getChildren().addAll(new Label("Spectrogram images need recalculated "), recalc); 
+		
+		MasterControlPane.highLightButton(recalc); 
+		
+		return recalcPane; 
+	}
+	
+	/**
+	 * Called whenever there is a new user prompt. Convenience for the user to recalc spectrograms. 
+	 * @param list - the userprompt list.  
+	 */
+	private void newUserPrompt(ArrayList<UserPrompt> list) {
+		this.userPromptPane.setCenter(null); 
+		for (UserPrompt prompt : list) {
+			if (prompt == UserPrompt.RECREATE_IMAGES) {
+				this.userPromptPane.setCenter(createRecalcPane() );
+			}
+		}
 	}
 	
 	/**
@@ -262,7 +311,13 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 			this.currentPreviewClip = (PAMClip) stuff; 
 			updateSpecImage(currentPreviewClip);
 			break;
+		case AiPamController.USER_PROMPT:
+			ArrayList<UserPrompt> list = (ArrayList<UserPrompt> ) stuff; 
+			newUserPrompt(list);
+			break; 
+
 		}
 	}
+
 
 }

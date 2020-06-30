@@ -326,7 +326,9 @@ public class ControlPane extends BorderPane {
 	 */
 	public void setUserPrompt(ArrayList<UserPrompt> userPromptsA) {
 		masterControlPane.setUserPrompts(userPromptsA); 
-		
+		for (int i=0; i<controlPanes.size(); i++) {
+			controlPanes.get(i).notifyUpdate(AiPamController.USER_PROMPT, userPromptsA);
+		}
 	}
 
 	/**

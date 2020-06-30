@@ -34,7 +34,7 @@ public class UserPrompts {
 	 * @author Jamie Macaulay
 	 *
 	 */
-	public enum UserPrompt {NOTHING_IMPORTED_YET, NOTHING_CLUSTERED_YET, IMPORT_AGAIN, RECREATE_IMAGES, RE_CLUSTER}
+	public enum UserPrompt {NOTHING_IMPORTED_YET, NOTHING_CLUSTERED_YET, IMPORT_AGAIN, RECREATE_IMAGES, RE_CLUSTER, RECREATE_FEATURES}
 
 	/**
 	 * Reference to the controller. 
@@ -103,6 +103,12 @@ public class UserPrompts {
 		if (!aiPamContol.getLastAiParams().spectrogramColour.equals(aiPamContol.getParams().spectrogramColour)) reCalcImage=true;
 		if (aiPamContol.getLastAiParams().colourLims[0]!=aiPamContol.getParams().colourLims[0]) reCalcImage=true;
 		if (aiPamContol.getLastAiParams().colourLims[1]!=aiPamContol.getParams().colourLims[1]) reCalcImage=true;
+		 if (aiPamContol.getParams().showFeatures)  reCalcImage = false; //only need this if showing raw spectrograms. 
+		
+		//cluster messages
+		boolean reFeatureImages = false; 
+		 if (!aiPamContol.getLastAiParams().featureParams.compare(aiPamContol.getParams().featureParams)) reFeatureImages=true;
+		 if (!aiPamContol.getParams().showFeatures) reFeatureImages = false; //only need this message if showing features
 
 		
 		//cluster messages
@@ -115,6 +121,7 @@ public class UserPrompts {
 		if (reimport) userPrompts.add(0,UserPrompt.IMPORT_AGAIN); //should always be first. 
 		if (reCalcImage && !reimport) userPrompts.add(UserPrompt.RECREATE_IMAGES); 
 		if (reCluster) userPrompts.add(UserPrompt.RE_CLUSTER); 
+		if (reFeatureImages) userPrompts.add(UserPrompt.RECREATE_FEATURES); 
 
 //		for (int i =0; i<userPrompts.size(); i++) {
 //			System.out.println("UserPrompts: " + userPrompts.get(i));
@@ -137,6 +144,9 @@ public class UserPrompts {
 		case RECREATE_IMAGES:
 			pane = reCalcImageMessage(); 
 			break;
+		case RECREATE_FEATURES:
+			pane = reCalcFeatures(); 
+			break;
 		case RE_CLUSTER:
 			pane = reClusterMessage(); 
 			break;
@@ -145,7 +155,6 @@ public class UserPrompts {
 			break;
 		case NOTHING_CLUSTERED_YET:
 			pane = nothingClusterredYet(); 
-
 			break;
 		default:
 			break;
@@ -221,16 +230,25 @@ public class UserPrompts {
 		Button button = new Button();
 	
 		button.setGraphic(specImage);	
-		
-		Label label = new Label("Need to recalculate spectrogram images: Press");
-		label.setStyle("-fx-text-fill: TEXT_USER_PROMPT"); 
-		
+
 		button.setOnAction((action)->{
 			aiPamView.reCalcImages();
 		});
 
-		return 	iconLabelPane(button, "Need to recalculate spectrogram images: Press", "to recalculate now" )
-;
+		return 	iconLabelPane(button, "Need to recalculate spectrogram images: Press", "to recalculate now" );
+	}
+	
+	
+	private Pane reCalcFeatures() {
+		Button button = new Button();
+	
+		button.setGraphic(specImage);	
+	
+		button.setOnAction((action)->{
+			aiPamView.reCalcImages();
+		});
+
+		return 	iconLabelPane(button, "Need to recalculate feature images: Press", "to recalculate now" );
 	}
 
 	/**

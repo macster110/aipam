@@ -28,7 +28,7 @@ public class ComplexArrayF implements Cloneable, Serializable {
 	/**
 	 * Main data array of interleaved real / complex data. 
 	 */
-	private float[] data;
+	protected float[] data;
 
 	/**
 	 * Construct a complex array. Length of allocated
@@ -95,6 +95,18 @@ public class ComplexArrayF implements Cloneable, Serializable {
 		i<<=1;
 		data[i++] = re;
 		data[i] = im;
+	}
+	
+	/**
+	 * Set a single complex number in the array. Be careful when using doubles
+	 * @param i index of the complex number
+	 * @param re real part
+	 * @param im imaginary part
+	 */
+	public void set(int i, double re, double im) {
+		i<<=1;
+		data[i++] = (float) re;
+		data[i] = (float) im;
 	}
 	
 	public void set(int i, Complex complex) {
@@ -555,6 +567,17 @@ public class ComplexArrayF implements Cloneable, Serializable {
 	 * @param d scalar factor
 	 */
 	public void internalTimes(int i, float d) {
+		i<<=1;
+		data[i++] *= d;
+		data[i] *= d;
+	}
+	
+	/**
+	 * Multiple a single element of the array by a scalar
+	 * @param i index of the complex number
+	 * @param d scalar factor
+	 */
+	public void internalTimes(int i, double d) {
 		i<<=1;
 		data[i++] *= d;
 		data[i] *= d;

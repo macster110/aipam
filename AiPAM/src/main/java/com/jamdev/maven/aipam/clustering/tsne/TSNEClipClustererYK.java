@@ -2,6 +2,7 @@ package com.jamdev.maven.aipam.clustering.tsne;
 
 import java.util.ArrayList;
 
+import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.clustering.Params;
 import com.jamdev.maven.aipam.clustering.ClusteringAlgorithm;
@@ -48,9 +49,11 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 	 */
 	private double theta = 0.5;
 
+	private AiPamController aiPamControl;
 
-	public TSNEClipClustererYK() {
-		
+
+	public TSNEClipClustererYK(AiPamController aiPamControl) {
+		this.aiPamControl=aiPamControl; 
 	}
 
 	@Override
@@ -70,7 +73,10 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 			for (int i=0; i<pamClips.size(); i++) {
 				//fingerprints[i] =ArrayUtil.flatten(pamClips.get(i).getSpectrogram());
 				//TODO - need to get features. 
-				fingerprints[i] = FingerPrintManager.simpleSpectrogramFingerPrint(pamClips.get(i).getSpectrogram().getAbsoluteSpectrogram(), -1); 
+				
+				double[][] data = aiPamControl.getFeatureExtractionManager().getCurrentFeatureExtractor().getFeatures(pamClips.get(i).getSpectrogram());
+				
+				fingerprints[i] = FingerPrintManager.simpleSpectrogramFingerPrint(data, -1); 
 				//System.out.println("The size of fingerprint is: " + fingerprints[i].length);
 			}
 			

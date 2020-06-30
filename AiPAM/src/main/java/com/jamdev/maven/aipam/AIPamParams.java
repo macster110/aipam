@@ -105,7 +105,12 @@ public class AIPamParams implements Cloneable  {
 	/**
 	 * True to show user prompts. Can get annoying if you know how to use SOudnSort so can be disabled. 
 	 */
-	public boolean showUserPrompts = true; 
+	public boolean showUserPrompts = true;
+
+	/**
+	 * Show features on clip pane instead of spectrograms 
+	 */
+	public boolean showFeatures = false; 
 
 
 	@Override

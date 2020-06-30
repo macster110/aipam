@@ -3,6 +3,7 @@ package com.jamdev.maven.aipam.layout.clustering;
 import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.clips.PAMClip;
+import com.jamdev.maven.aipam.featureExtraction.FeatureExtraction;
 import com.jamdev.maven.aipam.layout.AIPamView;
 import com.jamdev.maven.aipam.layout.clips.PamClipPane;
 import com.jamdev.maven.aipam.layout.utilsFX.ZoomableScrollPane;
@@ -108,7 +109,12 @@ public class ClusterGraphPane extends BorderPane {
 			XYChart.Data dataPoint = new XYChart.Data(pamClips.get(i).getClusterPoint()[0],
 					 pamClips.get(i).getClusterPoint()[1]);
 			
-			image = new PamClipPane(pamClips.get(i), 30, 30, aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
+			FeatureExtraction featureExtraction=null; 
+			if (aiPamView.getAIParams().showFeatures) {
+				featureExtraction=aiPamView.getAIControl().getFeatureExtractionManager().getCurrentFeatureExtractor(); 
+			}
+			
+			image = new PamClipPane(pamClips.get(i), 30, 30, aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims, featureExtraction); 
 			image.setSelectionManager(aiPamView.getClipSelectionManager());
 //			image = new SpectrogramImage(pamClips.get(i).getSpectrogram(), 
 //        			aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
