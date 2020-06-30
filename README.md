@@ -4,7 +4,7 @@ A Java and JavaFX based program to visualise and cluster sound clips which can t
 
 SoundSort is still in beta. There may be bugs. Please take the time to report them here!
 
-# Introduction #
+## Introduction ##
 
 In passive acoustic monitoring it is often relatively easy to make a <b>detector</b>, i.e. some algorithm which picks out all or a subset of interesting sounds e.g. all short transient sounds. However making a <b>classifier</b> which accurately picks out a very particular subset of sound types can be difficult, due to variations within species, different noise conditions etc. Machine learning is helping in this area however humans remain the best pattern recognition machines, we have initiative and can deal with unexpected constancies in datasets. 
 
@@ -13,7 +13,7 @@ SoundSort (AIPAM working name) is inpsired from a [google experiment](https://ex
 <center><img src="resources/screenshot1.jpg" width="512"></center>
 An example of the program displaying a few thousand clips. 
 
-# Features #
+## Features ##
 
 Decimator with anti alisaing filter to down sample clips
 
@@ -25,15 +25,19 @@ Simple annotation system for manually identifying clips and exporting.
 
 Settings export and import. 
 
-# Still to do #
+## Still to do ##
 
-Only supports .wav clips. This could be expanded to mp3, aiff etc.
+Only supports .wav clips. This could be expanded to mp3, aiff etc. 
+
+Integration with PAMGuard so that binary file click and clip files can be imported
 
 Additional plugins to measure clip metrics on export e.g. power spectrum, peak frequency etc.
 
 The assignment problem is solved using a shortest path algorithm for which the processing time scales with N^3logN. A [Jonker Volgenant algorithm](https://blog.sourced.tech/post/lapjv/) has the potential to be much faster but none of the Java implementations appear to as fast as would be expect (10 hours for 3000 clips) and much slower than shortest path. 
 
-# Installation #
+Add some deep learning models. 
+
+## Installation ##
 
 SoundSort is based on JavaFX and requires the Java vitual machine to run.
 
@@ -46,11 +50,11 @@ the program Java and JavaFX can be allocated sufficient memory.
   
 ```
 
-A good graphics card is recommended. 
+A good graphics card and at least 16GB of RAM is recommended. 
 
 A windows installer will be available in the installer folder soon...
 
-# Libraries #
+## Libraries ##
 
 There are multiple libraries used in AIPAM without which a program like this would simply not be feasible to build. 
 
