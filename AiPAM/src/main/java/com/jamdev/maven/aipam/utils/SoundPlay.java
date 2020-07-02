@@ -105,6 +105,7 @@ public class SoundPlay {
 			});
 			
 			isPlaying = true; 
+			
 			/** 
 			 * If the file has one or two channels then keep it simple and play back all bytes 
 			 */

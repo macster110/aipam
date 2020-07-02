@@ -69,7 +69,6 @@ public class AIPamView extends BorderPane {
 	 */
 	private ClipGridPane clipPane;
 
-
 	/**
 	 * The primary stage. 
 	 */
