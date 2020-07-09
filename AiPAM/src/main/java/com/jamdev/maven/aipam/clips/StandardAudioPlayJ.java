@@ -50,6 +50,14 @@ public class StandardAudioPlayJ implements AudioPlay {
 		});
 		this.audioFile=file; 
 	}
+	
+	/**
+	 * Get the audio file. 
+	 * @return the audio file. 
+	 */
+	public File getAudioFile() {
+		return audioFile; 
+	}
 
 	@Override
 	public void playClipAudio() {
@@ -57,8 +65,8 @@ public class StandardAudioPlayJ implements AudioPlay {
         th.setDaemon(true);
         th.start();
 	}
-	
 
+	
 	@Override
 	public void stopClipAudio() {
 		if (task!=null) {
@@ -80,6 +88,7 @@ public class StandardAudioPlayJ implements AudioPlay {
 	 * 
 	 * @return the volume property
 	 */
+	@Override
 	public DoubleProperty getVolumePropery() {
 		return volumeProperty; 
 	}
@@ -91,6 +100,8 @@ public class StandardAudioPlayJ implements AudioPlay {
 	}
 
 	class AudioPlayTask extends Task<Integer> {
+		
+		boolean play = true; 
 
 		public AudioPlayTask(File audioFile) {
 			// TODO Auto-generated constructor stub
@@ -104,7 +115,7 @@ public class StandardAudioPlayJ implements AudioPlay {
 			soundPlay.play(audioFile); 
 			return 1;
 		}
-
+		
 	}
 
 

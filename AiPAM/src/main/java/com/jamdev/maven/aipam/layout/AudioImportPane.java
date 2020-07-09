@@ -174,7 +174,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 		decimatorSR = FXCollections.observableArrayList(); 
 		//set some standard decimator values. 
 		decimatorSR.addAll(500, 1000, 2000, 4000, 6000, 10000, 16000, 24000, 32000, 36000, 44100, 48000, 
-				60000, 80000, 96000, 128000, 192000, 256000, 500000);
+				60000, 80000, 96000, 128000, 192000, 256000, 500000, 1000000);
 
 
 		Label channelLabel = new Label("Channel"); 

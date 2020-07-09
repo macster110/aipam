@@ -161,7 +161,12 @@ public class AIPamView extends BorderPane {
 
 	private Button displayOptionsButton;
 
-	private NotificationPane notificationPane; 
+	private NotificationPane notificationPane;
+
+	/**
+	 * True if the progress pane is showing. 
+	 */
+	private boolean progressPaneShowing; 
 
 	public AIPamView(AiPamController aiPamControl, Stage primaryStage, Pane root) {
 
@@ -255,7 +260,8 @@ public class AIPamView extends BorderPane {
 
 		//apply the theme
 		theme = new AITheme();
-		theme.applyTheme(AITheme.JMETRO_DARK_THEME, root);
+		setTheme(AITheme.JMETRO_DARK_THEME); 
+//		theme.applyTheme(AITheme.JMETRO_DARK_THEME, root);
 	}
 
 
@@ -281,11 +287,13 @@ public class AIPamView extends BorderPane {
 	 */
 	private void showProgressPane(boolean show) {
 		if (show) {
+			this.progressPaneShowing = true; 
 			//centerStackPane.getChildren().remove(userPromptPane);
 			centerPane.setTop(progressPane= new ProgressBarPane(this));
 			notificationPane.hide();
 		}
 		else {
+			this.progressPaneShowing = false; 
 			//centerStackPane.getChildren().remove(userPromptPane);
 			//centerStackPane.getChildren().add(userPromptPane);
 			hidingPane.toFront(); //myust be above everything. 
@@ -590,7 +598,7 @@ public class AIPamView extends BorderPane {
 		//ArrayList<Integer> toDoFlags = checkLastSettings(); 
 		ArrayList<UserPrompt> userPromptsA = userPrompts.checkLastSettings();		
 		//set the message in the user prompt pane. 
-		if (userPrompts.getUserPromptPane(userPromptsA)!=null && this.getAIParams().showUserPrompts) {
+		if (userPrompts.getUserPromptPane(userPromptsA)!=null && this.getAIParams().showUserPrompts && !progressPaneShowing) {
 			this.userPromptPane.setRight(userPrompts.getUserPromptPane(userPromptsA)); 
 			
 			notificationPane.setGraphic(userPromptPane);
@@ -697,6 +705,16 @@ public class AIPamView extends BorderPane {
 	 * @param thetype - the theme type. e.g. AiTheme.JMETRO_LIGHT_THEME
 	 */
 	public void setTheme(int thetype) {
+		
+		//TEMP hack needs to go into CSS FILE. 
+		switch (thetype) {
+		case AITheme.JMETRO_DARK_THEME:
+			 notificationPane.getStyleClass().add(NotificationPane.STYLE_CLASS_DARK);
+			break;
+		case AITheme.JMETRO_LIGHT_THEME:
+			//notificationPane.getStyleClass().clear();
+			break;
+		}
 		this.theme.applyTheme(thetype, root); 
 	}
 

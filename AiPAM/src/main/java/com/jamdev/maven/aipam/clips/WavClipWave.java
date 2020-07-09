@@ -41,7 +41,7 @@ public class WavClipWave implements ClipWave {
 		this.wavFile= wavFile;
 		this.data = data; 
 		this.sampleRate = sampleRate;
-		audioPlay = new StandardAudioPlayJ(wavFile.getFile()); 
+		audioPlay = new StandardAudioPlayJFX(wavFile.getFile()); 
 	}
 	
 	/**
