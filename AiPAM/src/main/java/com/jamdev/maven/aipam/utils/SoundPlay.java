@@ -241,6 +241,8 @@ public class SoundPlay {
 			audioLine.write(b, 0, len);
 			return; 
 		}
+		
+		//TODO really need to put in an anti-aliasing filter here...
 
 		//wav files are in order of frame where each frame contains samples form all channels. 
 		//samply need to skip frames. 
@@ -248,7 +250,7 @@ public class SoundPlay {
 		int n=0; 
 		for (int i=0; i<len; i++) {
 			//can we add? 
-			if (i%audioStreamFormat.getFrameRate()==0){
+			if (i%audioStreamFormat.getFrameSize()==0){
 				frameNum++; 
 			} 
 
@@ -258,7 +260,7 @@ public class SoundPlay {
 			}
 		}
 
-		System.out.println("Play audio " + n + "  " + len); 
+		//System.out.println("Play audio " + n + "  " + len + " " + frameNum); 
 		audioLine.write(downsmpleb, 0, n);
 	}
 

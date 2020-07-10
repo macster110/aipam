@@ -30,7 +30,7 @@ public class ColourArray implements Cloneable, Serializable{
 		
 	}
 
-	public static enum ColourArrayType{GREY, REVERSEGREY, BLUE,  GREEN, RED, HOT, FIRE, PARULA, PATRIOTIC, MATLAB,}
+	public static enum ColourArrayType{GREY, REVERSEGREY, BLUE,  GREEN, RED, HOT, FIRE, PARULA, PATRIOTIC, MATLAB,INFERNO}
 	
 	public static String getName(ColourArrayType type) {
 		switch (type){
@@ -46,6 +46,8 @@ public class ColourArray implements Cloneable, Serializable{
 			return "Red";
 		case HOT:
 			return "Hot (multicoloured)";
+		case INFERNO:
+			return "Inferno (multicoloured)";
 		case FIRE:
 			return "Fire (multicoloured)";
 		case PATRIOTIC:
@@ -79,6 +81,8 @@ public class ColourArray implements Cloneable, Serializable{
 			return ColourArrayType.RED;
 		case "Hot (multicoloured)":
 			return ColourArrayType.HOT;
+		case "Inferno (multicoloured)":
+			return  ColourArrayType.INFERNO;
 		case "Fire (multicoloured)":
 			return ColourArrayType.FIRE;
 		case "Red-White-Blue":
@@ -142,6 +146,8 @@ public class ColourArray implements Cloneable, Serializable{
 			break;
 		case MATLAB:
 			array = createMATLABArray(nPoints);
+		case INFERNO:
+			array =createInfronArray(nPoints); 
 			break;
 		default:
 			array = createMergedArray(nPoints, Color.GREEN, Color.RED);
@@ -280,7 +286,8 @@ public class ColourArray implements Cloneable, Serializable{
 			colors[4]= Color.color(  0.918400,  0.73080  , 0.18900);
 			colors[5]= Color.color(  0.9769 , 0.98390   ,0.0805000);
 				return colors; 
-
+		case INFERNO:
+			return InfernoColorMap.getInfernoColourMap();
 		default :
 			colors=new Color[2];
 			colors[0]=Color.WHITE;
@@ -303,6 +310,13 @@ public class ColourArray implements Cloneable, Serializable{
 		// TODO Auto-generated method stub
 		Color[] parula=getColorList(ColourArrayType.PARULA); 
 		return createMultiColouredArray(nPoints, parula[0], parula[1], parula[2], parula[3], parula[4], parula[5]);
+	}
+	
+	private static ColourArray createInfronArray(int nPoints) {
+		Color[] inferno=getColorList(ColourArrayType.INFERNO); 
+		ColourArray ca = new ColourArray();
+		ca.colours = inferno; 
+		return ca; 
 	}
 	
 	public static ColourArray createWhiteToBlackArray(int nPoints) {

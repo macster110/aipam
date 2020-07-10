@@ -42,7 +42,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import jfxtras.styles.jmetro.MDL2IconFont;
 
 /**
  * The main view for AIPam. This controls the GUI components and receivers messages from the 
