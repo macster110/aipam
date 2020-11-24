@@ -62,7 +62,7 @@ import javax.sound.sampled.spi.AudioFileReader;
  * http://www.sonicspot.com/guide/wavefiles.html
  *
  * @author Anthony Green (green@redhat.com)
- * @author macst Jamie Macaulay 
+ * @author Jamie Macaulay 
  *
  */
 public class WavFile extends AudioFileReader

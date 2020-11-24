@@ -10,7 +10,9 @@ import javafx.scene.paint.Color;
 
 
 /**
- * Some basic utility classes. . 
+ * 
+ * Some basic utility classes.
+ * 
  * @author Jamie Macaulay 
  *
  */
@@ -193,7 +195,7 @@ public class AiPamUtils {
         for (int i = 0; i < mult.length; i++)
             ret *= mult[i];
         return ret;
-}
+    }
 
 
 

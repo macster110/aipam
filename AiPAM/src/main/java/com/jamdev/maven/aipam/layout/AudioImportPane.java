@@ -142,7 +142,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 
 		ObservableList<Double> defaultClipTimes = FXCollections.observableArrayList(); 
-		defaultClipTimes.addAll(0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0);
+		defaultClipTimes.addAll(0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 7.5, 10.0, 15.0, 20.0, 30.0, 40.0);
 		clipLengthBox = new ComboBox<Double>(defaultClipTimes); 
 		clipLengthBox.setEditable(false);
 		clipLengthBox.getSelectionModel().select(3.0);
@@ -173,7 +173,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 		decimatorSR = FXCollections.observableArrayList(); 
 		//set some standard decimator values. 
-		decimatorSR.addAll(500, 1000, 2000, 4000, 6000, 10000, 16000, 24000, 32000, 36000, 44100, 48000, 
+		decimatorSR.addAll(50, 100, 200, 400, 500, 1000, 2000, 4000, 6000, 10000, 16000, 24000, 32000, 36000, 44100, 48000, 
 				60000, 80000, 96000, 128000, 192000, 256000, 500000, 1000000);
 
 

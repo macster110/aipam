@@ -98,30 +98,32 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		fftLabel.getStyleClass().add("label-title2");
 
 		ObservableList<Integer> fftLenList  = FXCollections.observableArrayList();
-		int len=32; 
+		int len=4; 
 		for (int i=0; i<10; i++) {
 			fftLenList.add(len);
 			len*=2; 
 		}
 		fftComboBox = new ComboBox<Integer>(fftLenList); 
-		fftComboBox.getSelectionModel().select(4);
+		fftComboBox.getSelectionModel().select(8); // 512 samples default
 		fftComboBox.setOnAction((action)->{
 			notifySettingsListeners();
 		});
 
-		fftComboBox.setTooltip(new Tooltip("The FFT length is the length of each chunk used to calculate a \n"
-				+ " spectrogram. The chunk lengths are in sample bins. The way the FFT calculation works means \n"
-				+ " that larger chunks allow for better frequency resolution, however because they require \n"
-				+ "more samples time resolution is lost. Therefore a balance is required between larger chunks \n"
-				+ "giving better frequency resolution and smaller chunks giving better time resolution. In \n"
-				+ "passive acoustic monitoring chunk sizes are usually 512 ->2048 "));
+		fftComboBox.setTooltip(new Tooltip(
+							"The FFT length is the length of each chunk used to calculate a \n"
+						+ " spectrogram. The chunk lengths are in sample bins. The way the FFT calculation works means \n"
+						+ " that larger chunks allow for better frequency resolution, however because they require \n"
+						+ "more samples time resolution is lost. Therefore a balance is required between larger chunks \n"
+						+ "giving better frequency resolution and smaller chunks giving better time resolution. In \n"
+						+ "passive acoustic monitoring chunk sizes are usually 512 ->2048 "));
 
 		Label fftHopLabel = new Label("FFT Hop");
 		fftHopLabel.getStyleClass().add("label-title2");
 		
 		hopComboBox  = new ComboBox<Integer>(FXCollections.observableArrayList(fftLenList)); 
-		hopComboBox.getSelectionModel().select(3);
-		hopComboBox.setTooltip(new Tooltip("The FFT hop is the amount the FFT Lengbth window slides along \n"
+		hopComboBox.getSelectionModel().select(7); //256 samples hop default
+		hopComboBox.setTooltip(new Tooltip(
+				"The FFT hop is the amount the FFT Lengbth window slides along \n"
 				+ "the samples before a new FFT chunk is calculated. Often the hop is half the FFT length \n"));  
 		hopComboBox.setOnAction((action)->{
 			notifySettingsListeners();

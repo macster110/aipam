@@ -1,6 +1,7 @@
 package com.jamdev.maven.aipam.clips;
 
 import java.io.File;
+
 import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
@@ -10,6 +11,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
 
 /**
  * This is an example program that demonstrates how to play back an audio file
@@ -23,7 +25,7 @@ public class JavaSoundAPITest {
 	private static final int BUFFER_SIZE = 4096;
 
 	private static final int CHAN_PLAY_BACK = 2; //playback two channels. 
-
+	
 	/**
 	 * Play a given audio file.
 	 * @param audioFilePath Path of the audio file.

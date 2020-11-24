@@ -92,7 +92,7 @@ public class PAMClip {
 		
 		lengthClip = wave.getLengthInSeconds(); 
 
-		this.spectrogramClip=wave.getSpectrogram(fftLength, fftLength/fftHop); 
+		this.spectrogramClip=wave.getSpectrogram(fftLength, fftHop); 
 
 		//spectrogramClip =  DownSampleImpl.largestTriangleThreeBuckets(spectrogramClip, 50);
 		//		System.out.println("The spectrogram clip is: " +  spectrogramClip.length + " x " +  spectrogramClip[0].length);

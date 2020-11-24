@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
 
 /**
  * Manages which clips are selected by the user
@@ -124,15 +125,18 @@ public class ClipSelectionManager {
 		pamClipPane.setOnMouseClicked((event)->{
 			//pamClipPane.toFront(); //this creates big bug in the tile pane. moves all the clips to a different location. 
 			
+			//System.out.println("Mouse clicked: !!!: " + event.getButton() + " " + event.isSecondaryButtonDown()); 
+			
 			if (event.isControlDown()) {
 				selectMultiClip(pamClipPane); 
 			}
-			else if (!(event.isSecondaryButtonDown() || event.isPopupTrigger())) {
-				//don't want multi clips to dissappear on right click. 
+			else if (!(event.getButton()==MouseButton.SECONDARY || event.isPopupTrigger())) {
+				//don't want multi-clips to disappear on right click. 
 				selectClip(pamClipPane); 
 			}
 			
-			if (event.isSecondaryButtonDown() || event.isPopupTrigger()) {
+			if (event.getButton()==MouseButton.SECONDARY || event.isPopupTrigger()) {
+				//System.out.println("Show selection menu: "); 
 				showSelectionMenu(selectedClips, event); 
 			}
 			

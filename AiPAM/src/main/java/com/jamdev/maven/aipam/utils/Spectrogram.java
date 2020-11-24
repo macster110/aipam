@@ -28,7 +28,7 @@ public class Spectrogram {
 	/**
 	 * The hop size in samples. 
 	 */
-	private int overlapFactor = 512;
+	private int fftHop = 512;
 
 	/**
 	 * The total number of fft windows. 
@@ -70,7 +70,7 @@ public class Spectrogram {
 	public Spectrogram(ClipWave wave, int fftLength, int fftHop) {
 		this.sR=wave.getSampleRate(); 
 		this.fftSampleSize=fftLength;
-		this.overlapFactor=fftHop; 
+		this.fftHop=fftHop; 
 		this.buildSpectrogram(wave);
 	}
 
@@ -99,28 +99,44 @@ public class Spectrogram {
 	private void buildSpectrogram(ClipWave wave) {
 
 		int[] amplitudes = wave.getSampleAmplitudes();
-		int numSamples = amplitudes.length;
-
 		int pointer = 0;
+		
 
 		// overlapping
-		if (overlapFactor > 1) {
+		
+		/**
+		 * This is a little complicated. The FFT hop is the number of samples the the window moves each iteration in
+		 * the spectrogram. the hop moves as long as the current window position + FFT length is no greater than the total number
+		 * of samples. once that limit is reached then the spectrogram stops calculating samples. Surprisingly complicate to 
+		 * deal all the all the cases where the fft hop and length are not direct divisors of the samples etc. 
+		 */
 
-			int numOverlappedSamples = numSamples * overlapFactor;
-			int backSamples = fftSampleSize * (overlapFactor - 1) / overlapFactor;
-			int fftSampleSize_1 = fftSampleSize - 1;
-			int[] overlapAmp = new int[numOverlappedSamples];
-			pointer = 0;
-			for (int i = 0; i < amplitudes.length; i++) {
-				overlapAmp[pointer++] = amplitudes[i];
-				if (pointer % fftSampleSize == fftSampleSize_1) {
-					// overlap
-					i -= backSamples;
-				}
+		int numHops = (int) Math.ceil((amplitudes.length-fftSampleSize)/fftHop); 
+		int numOverlappedSamples = (int) (fftSampleSize*numHops)+fftSampleSize;
+		int[] overlapAmp = new int[numOverlappedSamples];
+
+		//temp
+		int numSamples = numHops*fftHop+fftSampleSize;
+		
+		//System.out.println("FFT length: " + fftSampleSize + " FFT hop: " + fftHop + " Num hops: " + numHops + " amplitudes: " +amplitudes.length); 
+
+
+		int nn =0; 
+		for (int i = 0; i < numSamples; i++) {
+			overlapAmp[pointer++] = amplitudes[i];
+			if (pointer % fftSampleSize == 0 && nn<numHops) {
+				//					System.out.println("Pointer: " + pointer + " i: " + i); 
+				// overlap
+				i = pointer/fftSampleSize*fftHop-1;
+				nn++;
+
+				//					System.out.println("New i: " + i + " of " +  amplitudes.length); 
 			}
-			numSamples = numOverlappedSamples;
-			amplitudes = overlapAmp;
 		}
+//		System.out.println("Pointer: " + pointer + " Num samples: " + overlapAmp.length); 
+		numSamples = numOverlappedSamples;
+		amplitudes = overlapAmp;
+
 
 		numFrames = numSamples / fftSampleSize;
 		framesPerSecond = (int) (numFrames / wave.getLengthInSeconds());
@@ -134,6 +150,7 @@ public class Spectrogram {
 		for (int f = 0; f < numFrames; f++) {
 			signals[f] = new double[fftSampleSize];
 			int startSample = f * fftSampleSize;
+
 			for (int n = 0; n < fftSampleSize; n++) {
 				signals[f][n] = amplitudes[startSample + n] * win[n];
 			}
@@ -144,11 +161,10 @@ public class Spectrogram {
 
 		complexSpectrogram = new ComplexArray[numFrames]; 
 
-
-
 		Complex[] specData; 
 		for (int i = 0; i < numFrames; i++) {
 			specData = fft.transform(signals[i], TransformType.FORWARD); 
+			//			System.out.println("First signal bin" + signals[i][0]);
 			complexSpectrogram[i] = new ComplexArray(specData); 
 		}
 
@@ -187,7 +203,7 @@ public class Spectrogram {
 		if (absoluteSpectrogram!=null && absoluteSpectrogram.length > 0) {
 
 			int numFrequencyUnit = absoluteSpectrogram[0].length;
-//			double frequencyBinSize = (double) sR / 2.0 / numFrequencyUnit; // frequency is half of
+			//			double frequencyBinSize = (double) sR / 2.0 / numFrequencyUnit; // frequency is half of
 
 			// normalization of absoultSpectrogram
 			double[][]  spectrogram = new double[complexSpectrogram.length][numFrequencyUnit];

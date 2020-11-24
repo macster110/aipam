@@ -117,7 +117,7 @@ public class PAMClipManager {
 									currentClips=pamClips; 
 									return n; //cancel stuff 
 								}
-								pamClip = new PAMClip(wave, params.fftLength, params.fftLength, n); 
+								pamClip = new PAMClip(wave, params.fftLength, params.fftHop, n); 
 								pamClips.add(pamClip); 
 								n++;
 							}

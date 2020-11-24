@@ -133,8 +133,9 @@ public class StandardAudioImporter implements AudioImporter {
 			butterworth.lowPass(4,format.getSampleRate(), decimatorSr/2);
 			
 			double[] wavArray = new double[samples.length]; 
+			double bitSize = Math.pow(2, format.getSampleSizeInBits()); 
 			for (int i=0; i<wavArray.length; i++) {
-				wavArray[i] = butterworth.filter((double) samples[i]/(double) format.getSampleSizeInBits());
+				wavArray[i] = butterworth.filter((double) samples[i]/bitSize);
 			}
 		
 			//now have to down sample. 
@@ -146,7 +147,7 @@ public class StandardAudioImporter implements AudioImporter {
 			
 			int[] samplesDecimated = new int[wavArray.length]; 
 			for (int i=0; i<wavArray.length; i++) {
-				samplesDecimated[i]=(int) (format.getSampleSizeInBits()*wavArray[i]);
+				samplesDecimated[i]=(int) (bitSize*wavArray[i]);
 			}
 
 			samples=samplesDecimated; 

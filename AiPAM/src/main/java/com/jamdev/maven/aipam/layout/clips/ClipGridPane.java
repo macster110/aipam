@@ -104,6 +104,7 @@ public class ClipGridPane extends BorderPane {
 
 
 	public int[] getClipsSize(int nClips) {
+		//TODO- clips can be bigger if there are less of them
 		return new int[] {100,100};
 	}
 

@@ -19,14 +19,14 @@ public interface ClipWave {
 
 	
 	/**
-	 * Get the file the audio was laoded from
+	 * Get the file the audio was loaded from
 	 * @return -the audio the file was loaded from. 
 	 */
 	public String getFileName();
 
 	/**
 	 * Get the spectrogram for the clip. 
-	 * @param fftLength - the fft length
+	 * @param fftLength - the FFT length
 	 * @param ffthop - the hop size
 	 * @return double[][] array of non normalized fft values
 	 */
