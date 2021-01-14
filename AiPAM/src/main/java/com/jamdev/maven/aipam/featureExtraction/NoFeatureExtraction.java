@@ -1,7 +1,7 @@
 package com.jamdev.maven.aipam.featureExtraction;
 
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
-import com.jamdev.maven.aipam.utils.Spectrogram;
+import com.jamdev.maven.aipam.utils.ClipSpectrogram;
 
 
 /**
@@ -15,7 +15,7 @@ public class NoFeatureExtraction implements FeatureExtraction {
 	
 
 	@Override
-	public double[][] getFeatures(Spectrogram spectrogram) {
+	public double[][] getFeatures(ClipSpectrogram spectrogram) {
 		return spectrogram.getAbsoluteSpectrogram();
 	}
 

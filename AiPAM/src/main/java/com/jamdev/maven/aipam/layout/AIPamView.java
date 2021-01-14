@@ -42,6 +42,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import jfxtras.styles.jmetro.MDL2IconFont;
 
 /**
  * The main view for AIPam. This controls the GUI components and receivers messages from the 
@@ -200,7 +201,6 @@ public class AIPamView extends BorderPane {
 		controlPaneHolder.setLeft(controlPane);
 		controlPaneHolder.setStyle("-fx-background-color: BACKGROUND_MENU");
 
-		clipPane= new ClipGridPane(this); 
 		fullClipPane = new FullClipPane(); //for viewing clips in separate dialog
 
 		clusterGraphPane = new ClusterGraphPane(this); 
@@ -212,7 +212,7 @@ public class AIPamView extends BorderPane {
 		//create a cluster pane
 		TabPane tabPane = new TabPane(); 
 		tabPane.setSide(Side.RIGHT);
-		Tab tabClip = new Tab("Clips", clipPane); 
+		Tab tabClip = new Tab("Clips",  createClipPane()); 
 		Tab tabCluster = new Tab("ClusterGraph", clusterGraphPane);
 		tabClip.setClosable(false);
 		tabCluster.setClosable(false);
@@ -222,6 +222,7 @@ public class AIPamView extends BorderPane {
 
 		//GaussianBlur blur = new GaussianBlur(20);       
 		settingsHolder.setPrefWidth(350);
+		
 		settingsHolder.setStyle("-fx-background-color: BACKGROUND_TRANS;"); 
 		//settingsHolder.setEffect(blur);
 		settingsHolder.setPadding(new Insets(5,5,5,10));
@@ -261,6 +262,45 @@ public class AIPamView extends BorderPane {
 		theme = new AITheme();
 		setTheme(AITheme.JMETRO_DARK_THEME); 
 //		theme.applyTheme(AITheme.JMETRO_DARK_THEME, root);
+	}
+	
+	/**
+	 * Create the clip pane with buttons. 
+	 * @return the clip grid pane. 
+	 */
+	private Pane createClipPane() {
+		//create the clip pane
+		clipPane= new ClipGridPane(this); 
+		
+		StackPane stackPane = new StackPane(); 
+		stackPane.getChildren().add(clipPane); 
+		
+		
+		Button nextButton = new Button(); 
+		MDL2IconFont iconFont1 = new MDL2IconFont("\uE893");
+		iconFont1.setSize(30);
+		nextButton.setGraphic(iconFont1);
+		nextButton.setOnAction((action)->{
+			//move to the previous section. 
+			this.aiPamContol.nextPage(true);
+		});
+		
+		
+		Button prevButton = new Button(); 
+		MDL2IconFont iconFont2 = new MDL2IconFont("\uE892"
+				+ "");
+		iconFont2.setSize(30);
+		prevButton.setGraphic(iconFont2);
+		prevButton.setOnAction((action)->{
+			//move to the next section
+			this.aiPamContol.nextPage(false);
+		});
+		StackPane.setAlignment(prevButton, Pos.CENTER_LEFT);
+		StackPane.setAlignment(nextButton, Pos.CENTER_RIGHT);
+
+		stackPane.getChildren().addAll(prevButton, nextButton); 
+		
+		return stackPane; 
 	}
 
 
@@ -342,17 +382,31 @@ public class AIPamView extends BorderPane {
 	public void notifyUpdate(int updateType, Object data) {
 		//		System.out.println("AIPamView: notifyUpdate: " +updateType + " " + data);
 		switch (updateType) {
+		
 		case AiPamController.START_FILE_LOAD:
 			this.clipPane.clearSpecImages();
 			this.clusterGraphPane.clearGraph(); 
 			showProgressPane(true); 
 			this.progressPane.setTask((Task) data);
 			break;
+			
+		case AiPamController.START_PAGE_LOAD:
+			this.clipPane.clearSpecImages();
+			this.clusterGraphPane.clearGraph(); 
+			showProgressPane(true); 
+			this.progressPane.setTask((Task) data);
+			break;
+			
 		case AiPamController.CANCELLED_FILE_LOAD:
 			showProgressPane(false); 
 			this.generateSpectrogramClips(); 
 			break; 
-		case AiPamController.END_FILE_LOAD:
+			
+		case AiPamController.CANCELLED_PAGE_LOAD:
+			showProgressPane(false); 
+			this.generateSpectrogramClips(); 
+			break; 
+		case AiPamController.END_PAGE_LOAD:
 			showProgressPane(false); 
 			this.generateSpectrogramClips(); 
 			checkSettings();

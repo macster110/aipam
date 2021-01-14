@@ -26,9 +26,10 @@ public interface AudioImporter {
 	 * which contain multiple clips could exist. Thus returns an array of audio clips. 
 	 * @param audioFile - the file to import a clip(s) from. 
 	 * @param maxLen - the maximum length of the file allowed. 
+	 * @param loadraw - load the raw audioData into memory. 
 	 * @return a list of clips contained in the file. 
 	 */
-	public ArrayList<ClipWave> importAudio(File audioFile,  AIPamParams aiPamParams, AudioImporterListener audioImporterListener);
+	public ArrayList<ClipWave> importAudio(File audioFile,  AIPamParams aiPamParams, AudioImporterListener audioImporterListener, boolean loadRaw);
 	
 	/**
 	 * Get the audio information on a directory of files. This is a first run which does not import the

@@ -3,12 +3,13 @@ package com.jamdev.maven.aipam.featureExtraction.specNoiseReduction;
 
 import java.util.ArrayList;
 
+import org.jamdev.jpamutils.spectrogram.ComplexArray;
+
 import com.jamdev.maven.aipam.featureExtraction.FeatureExtraction;
 import com.jamdev.maven.aipam.featureExtraction.FeatureExtractionManager;
 import com.jamdev.maven.aipam.layout.featureExtraction.SpectNoisePane;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
-import com.jamdev.maven.aipam.utils.ComplexArray;
-import com.jamdev.maven.aipam.utils.Spectrogram;
+import com.jamdev.maven.aipam.utils.ClipSpectrogram;
 
 /**
  * Feature extraction which implements various noise reduction methods on the spectrogram. 
@@ -67,7 +68,7 @@ public class SpecNoiseReduction implements FeatureExtraction {
 	}
 
 	@Override
-	public double[][] getFeatures(Spectrogram spectrogram) {
+	public double[][] getFeatures(ClipSpectrogram spectrogram) {
 
 //		System.out.println("Calc new features: " + thresholdMethod.thresholdParams.thresholdDB); 
 		
@@ -99,7 +100,7 @@ public class SpecNoiseReduction implements FeatureExtraction {
 
 
 		//get the normalised spectrogram for the feature output. 
-		return Spectrogram.buildNormalizedSpectram(complexArrayOut); 
+		return ClipSpectrogram.buildNormalizedSpectram(complexArrayOut); 
 	}
 
 	@Override

@@ -66,6 +66,7 @@ public class ClipGridPane extends BorderPane {
 	 * @return the clip pane. 
 	 */
 	private Node createPane() {
+		
 		tilePane = new TilePane();
 		tilePane.setPadding(new Insets(5));
 		tilePane.setVgap(2);
@@ -117,7 +118,12 @@ public class ClipGridPane extends BorderPane {
 		
 		if (pamClips==null) return null; 
 
-		int[] gridSize = ClusterSnapGrid.calcGridSize(pamClips.size());
+		//work out the number of clips that have a spectrogram - these are hte only ones that will be displayed in the page. 
+		int nClips =0 ; 
+		for (PAMClip pamClip: pamClips) {
+			if (pamClip.getSpectrogram()!=null) nClips++; 
+		}
+		int[] gridSize = ClusterSnapGrid.calcGridSize(nClips);
 		
 		tilePane.setPrefColumns(gridSize[0]);
 //
@@ -135,6 +141,9 @@ public class ClipGridPane extends BorderPane {
 					double memoryMB ;
 					for (int i=0; i<pamClips.size(); i++) {
 						final int ii=i; 
+						
+						//clips which have no pane are not shown. 
+						if (pamClips.get(i).getSpectrogram()==null) continue;
 						
 						UtilsFX.runAndWait(() -> {
 							//must run on FX thread as generates an image. 

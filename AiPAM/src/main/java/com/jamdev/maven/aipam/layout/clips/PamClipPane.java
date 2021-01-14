@@ -9,7 +9,7 @@ import com.jamdev.maven.aipam.featureExtraction.FeatureExtraction;
 import com.jamdev.maven.aipam.layout.ColourArray;
 import com.jamdev.maven.aipam.layout.featureExtraction.FeaturePane;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
-import com.jamdev.maven.aipam.utils.Spectrogram;
+import com.jamdev.maven.aipam.utils.ClipSpectrogram;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -68,6 +68,7 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 	 * Reference to the feature extraction mmethod
 	 */
 	private FeatureExtraction featureExtraction; 
+	
 
 	/**
 	 * Constructor for the clip pane. 

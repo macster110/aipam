@@ -78,6 +78,7 @@
 /Users/au671271/git/soundsort/AiPAM/src/main/java/com/jamdev/maven/aipam/utils/Complex.java
 /Users/au671271/git/soundsort/AiPAM/src/main/java/com/jamdev/maven/aipam/clips/PAMClipError.java
 /Users/au671271/git/soundsort/AiPAM/src/main/java/com/jamdev/maven/aipam/AIMessageListener.java
+/Users/au671271/git/soundsort/AiPAM/src/main/java/com/jamdev/maven/aipam/layout/detectionDisplay/ClipDetectionDisplay.java
 /Users/au671271/git/soundsort/AiPAM/src/main/java/com/jamdev/maven/aipam/utils/MedianFilter.java
 /Users/au671271/git/soundsort/AiPAM/src/main/java/com/jamdev/maven/aipam/layout/PLayBackParams.java
 /Users/au671271/git/soundsort/AiPAM/src/main/java/com/jamdev/maven/aipam/clustering/snapToGrid/shortestPath/DenseDijkstraSP.java

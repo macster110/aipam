@@ -34,9 +34,19 @@ public class AiPamController {
 	public static final int START_FILE_LOAD = 1;
 
 	/**
+	 * Start of loading a page of clips. 
+	 */
+	public static final int START_PAGE_LOAD =101;
+
+	/**
 	 * End loading audio data from a file. 
 	 */
 	public static final int END_FILE_LOAD =2;
+	
+	/**
+	 * End of loading a page of clips. 
+	 */
+	public static final int END_PAGE_LOAD =102;
 
 	/**
 	 * Start creating spectrogrma images for all the loaded clips. 
@@ -58,6 +68,11 @@ public class AiPamController {
 	 * Message for cancelled data loaded.
 	 */
 	public static final int CANCELLED_FILE_LOAD=6; 
+	
+	/**
+	 * Message for cancelled page loaded.
+	 */
+	public static final int CANCELLED_PAGE_LOAD=106; 
 
 	/**
 	 * Start the clustering algorithm 
@@ -217,7 +232,8 @@ public class AiPamController {
 
 
 	/**
-	 * Load the audio data. 
+	 * Load the audio data. This checks the audio files and creates a list of potential clips but it 
+	 * does not load in the audio data or load the spectrograms. That is handled by the nextPage() function. 
 	 * @param selectedDirectory - the directory for the clips
 	 * @param loadClips - true to load the clips. False checks the files. 
 	 */
@@ -227,7 +243,7 @@ public class AiPamController {
 		this.lastAiParams.clusterParams = null; //indicates no clustering has taken place since last audio import. 
 		if (!loadClips) lastAiParams.decimatorSR=null; //so that the algorithm know stuff has not been loaded yet. 
 				
-		Task<Integer> task = pamClipManager.importClipsTask(selectedDirectory, this.aiPamParams, loadClips);
+		Task<Integer> task = pamClipManager.importClipsTask(selectedDirectory, this.aiPamParams);
 		
 		updateMessageListeners(START_FILE_LOAD, task); 
 
@@ -248,12 +264,34 @@ public class AiPamController {
 		th.setDaemon(true);
 		th.start(); 
 	}
-
+	
+	
 	/**
-	 * Start a thread clustering the data. 
+	 * Load the audio data and calculate the spectrograms for a page of lcisp. 
+	 * @param selectedDirectory - the directory for the clips
+	 * @param loadClips - true to load the clips. False checks the files. 
 	 */
-	public void clusterData() {
+	public void nextPage(boolean forward) {
+		
+		this.lastAiParams = aiPamParams.clone(); 
+		this.lastAiParams.clusterParams = null; //indicates no clustering has taken place since last audio import. 
+				
+		Task<Integer> task = pamClipManager.nextClipPageTask(aiPamParams, forward);
+		
+		updateMessageListeners(START_PAGE_LOAD, task); 
 
+		task.setOnCancelled((value)->{
+			//send notification when 
+			updateMessageListeners(CANCELLED_PAGE_LOAD, task); 
+		});
+		
+		task.setOnSucceeded((value)->{
+				updateMessageListeners(END_PAGE_LOAD, task);  
+		});
+
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start(); 
 	}
 
 	/**

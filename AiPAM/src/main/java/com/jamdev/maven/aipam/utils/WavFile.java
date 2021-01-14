@@ -78,6 +78,8 @@ public class WavFile extends AudioFileReader
 	 */
 	private AudioFileFormat audioFormat;
 
+	public  int byteLength = -1;
+
 	public WavFile(File file) throws UnsupportedAudioFileException, IOException {
 		this.file=file; 
 		this.audioFormat = getAudioFileFormat();
@@ -164,6 +166,7 @@ public class WavFile extends AudioFileReader
 		short compressionCode = 0, numberChannels = 0, blockAlign = 0, bitsPerSample = 0;
 		long sampleRate = 0, bytesPerSecond = 0;
 		long chunkLength = 0;
+		
 
 		while (! foundData)
 		{
@@ -195,6 +198,8 @@ public class WavFile extends AudioFileReader
 				din.skip(chunkLength);
 			}
 		}
+		
+		this.byteLength = din.available(); 
 
 		AudioFormat.Encoding encoding;
 
@@ -211,15 +216,18 @@ public class WavFile extends AudioFileReader
 			throw new UnsupportedAudioFileException("Unrecognized WAV compression code: 0x" 
 					+ Integer.toHexString(compressionCode));
 		}
+				
+		AudioFileFormat format =  new AudioFileFormat (AudioFileFormat.Type.WAVE,
+					new AudioFormat(encoding,
+							(float) sampleRate, 
+							bitsPerSample,
+							numberChannels, 
+							((bitsPerSample + 7) / 8) * numberChannels,
+							(float) bytesPerSecond, false),
+					(int) chunkLength);
+		
 
-		return new AudioFileFormat (AudioFileFormat.Type.WAVE,
-				new AudioFormat(encoding,
-						(float) sampleRate, 
-						bitsPerSample,
-						numberChannels, 
-						((bitsPerSample + 7) / 8) * numberChannels,
-						(float) bytesPerSecond, false),
-				(int) chunkLength);
+		return format;
 	}
 
 	/* Get an AudioFileFormat from the given URL.

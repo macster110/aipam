@@ -3,7 +3,7 @@ package com.jamdev.maven.aipam.clips;
 import java.io.File;
 
 import com.jamdev.maven.aipam.annotation.Annotation;
-import com.jamdev.maven.aipam.utils.Spectrogram;
+import com.jamdev.maven.aipam.utils.ClipSpectrogram;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -17,12 +17,13 @@ import javafx.beans.property.StringProperty;
  * A single clip for display on the clip pane. 
  * <p>
  * The clip stores a spectrogram image but no raw .wav data. 
- * Can be dealing with Gigabytes of clips so cannot store raw wav data in memory
+ * Can be dealing with GB of clips so cannot also store raw .wav 
+ * data in memory.
  * 
  * @author Jamie Macaulay 
  *
  */
-public class PAMClip {
+public class PAMClip implements Comparable<PAMClip> {
 
 	private static int DEFAULT_FFT_LEN =1024; 
 
@@ -31,7 +32,7 @@ public class PAMClip {
 	/**
 	 * Data for colours for spectrogram is stored as a short.
 	 */
-	private Spectrogram spectrogramClip; 
+	private ClipSpectrogram spectrogramClip; 
 
 	/**
 	 * The filename of the clip
@@ -63,57 +64,86 @@ public class PAMClip {
 	 */
 	private ObjectProperty<Annotation> annotation;
 
-	/**
-	 * The static grid ID. 
-	 */
-	private SimpleIntegerProperty staticGridID; 
-	
+	//	/**
+	//	 * The static grid ID. 
+	//	 */
+	//	private SimpleIntegerProperty staticGridID; 
+
 	/**
 	 * The frequency limits in Hz. 
 	 */
 	private double[] freqLims = new double[2];
-	
+
 	/**
 	 * The length of the clip in seconds. 
 	 */
 	private double lengthClip;
 
+	/**
+	 * The date time in milliseconds
+	 */
+	private long timeMillis = 0;
+
 	public PAMClip(ClipWave wave, int gridID){
 		this(wave , DEFAULT_FFT_LEN, DEFUALT_FFT_HOP, gridID); 
 	} 
 
+
 	public PAMClip(ClipWave wave, int fftLength, int fftHop, int gridID){
-
-		this.staticGridID = new SimpleIntegerProperty(gridID);  
+		//		this.staticGridID = new SimpleIntegerProperty(gridID);  
 		this.gridID=new SimpleIntegerProperty(gridID); 
-		
-		freqLims[0]=0;
-		freqLims[1]=wave.getSampleRate()/2.;
-		
-		lengthClip = wave.getLengthInSeconds(); 
 
-		this.spectrogramClip=wave.getSpectrogram(fftLength, fftHop); 
+		freqLims[0] = 0;
+		freqLims[1] = wave.getSampleRate()/2.;
+
+		lengthClip = wave.getLengthInSeconds(); 
 
 		//spectrogramClip =  DownSampleImpl.largestTriangleThreeBuckets(spectrogramClip, 50);
 		//		System.out.println("The spectrogram clip is: " +  spectrogramClip.length + " x " +  spectrogramClip[0].length);
 
 		//		System.out.println("The spectorgram size is: " + 
 		//		spectrogramClip.getAbsoluteSpectrogramData().length + "x" +spectrogramClip.getAbsoluteSpectrogramData()); 
-		this.audioPlay=wave.getAudioPlay(); 
+		audioPlay = wave.getAudioPlay(); 
 
-		this.fileName=new SimpleStringProperty(wave.getFileName()); 
+		fileName = new SimpleStringProperty(wave.getFileName()); 
 
-		//use the file name as the ID because this allows easy exporting of data and alos allows for 
+		//use the file name as the ID because this allows easy exporting of data and also allows for 
 		//clustering algorithm to be reoloaded. Condition of program is therefore that no two file names 
 		//can be equal. 
-		this.iD=new SimpleStringProperty(new File(wave.getFileName()).getName()); 
+		iD = new SimpleStringProperty(new File(wave.getFileName()).getName()); 
 
 		//create the annotation property
-		this.annotation= new SimpleObjectProperty<Annotation>(); 
+		annotation = new SimpleObjectProperty<Annotation>(); 
 
+		//set the time in  milliseconds - VERY important for allowing clips to be 
+		//matched to files...
+		timeMillis = wave.getTimeMillis();
+		
+		if (wave.getSampleAmplitudes()!=null) {
+			//load the spectrogram. Can be null
+			spectrogramClip = wave.getSpectrogram(fftLength, fftHop); 
+		}
+		
 		//do not want the raw wave data in memory so wave is not saved
 		wave = null; //garbage collector probably gets rid of this anyway but makes me feel better. 
 	} 
+
+
+	/**
+	 * Clear the audio data from the clip. It will 
+	 * need to be reloaded from the file. 
+	 */
+	public void clearAudioData() {
+		spectrogramClip = null; 
+	}
+
+	/**
+	 * Set the audio data for a clip. 
+	 * @param spectrogramClip
+	 */
+	public void setAudioData(ClipSpectrogram spectrogramClip) {
+		this.spectrogramClip = spectrogramClip; 
+	}
 
 
 	@SuppressWarnings("unused")
@@ -134,10 +164,10 @@ public class PAMClip {
 	 * Get the spectrogram data for the clip. 
 	 * @return the spectrogram object
 	 */
-	public Spectrogram getSpectrogram() {
+	public ClipSpectrogram getSpectrogram() {
 		return spectrogramClip;
 	}
-	
+
 
 	/**
 	 * Get the audio play. This plays the audio files.
@@ -214,13 +244,13 @@ public class PAMClip {
 		return this.annotation;
 	}
 
-	/**
-	 * Get the static grid ID. 
-	 * @return the static grid id
-	 */
-	public int getStaticGridID() {
-		return staticGridID.get();
-	}
+	//	/**
+	//	 * Get the static grid ID. 
+	//	 * @return the static grid id
+	//	 */
+	//	public int getStaticGridID() {
+	//		return staticGridID.get();
+	//	}
 
 	/**
 	 * Get the filename associated with the clip. 
@@ -237,7 +267,7 @@ public class PAMClip {
 	public double[] getFreqLims() {
 		return this.freqLims;
 	}
-	
+
 	/**
 	 * Get the clip length in seconds
 	 * @return the clip length in seconds. 
@@ -246,6 +276,29 @@ public class PAMClip {
 		return this.lengthClip;
 	}
 
+
+	/**
+	 * Get the time of the clip in milliseconds. 
+	 * @return the time of the clip in millis. 
+	 */
+	public long getTimeMillis() {
+		return timeMillis;
+	}
+
+	/**
+	 * Set the date time of the clip in milliseconds. 
+	 * @param timemillis
+	 */
+	public void setTimemillis(long timemillis) {
+		this.timeMillis = timemillis;
+	}
+
+	@Override
+	public int compareTo(PAMClip o) {
+		long compareage=o.getTimeMillis();
+		/* For Ascending order*/
+		return (int) (this.timeMillis-compareage);
+	}
 
 
 }

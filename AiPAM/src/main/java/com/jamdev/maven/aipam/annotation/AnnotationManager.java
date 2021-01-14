@@ -164,9 +164,9 @@ public class AnnotationManager {
 			String folderName = data.get(i).getAnnotationGroupName();
 			//remove invalid characters
 			folderName = folderName.replaceAll("[^A-Za-z0-9()\\[\\]]", "");
-			String newfileDir = file.getPath()+"/"+folderName;
+			String newfileDir = file.getPath()+	File.separator+folderName;
 			for (int j=0; j<data.get(i).getPamClips().size(); j++) {
-				files.add(newfileDir + "/" + data.get(i).getPamClips().get(j).getID());
+				files.add(newfileDir + File.separator + data.get(i).getPamClips().get(j).getID());
 			}
 		}
 		return files;

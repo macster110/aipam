@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.math3.stat.descriptive.rank.Median;
+
 import javafx.scene.paint.Color;
 
 
@@ -181,21 +183,21 @@ public class AiPamUtils {
 			ret *= mult.get(i).longValue();
 		return ret;
 	}
-	
+
 	/**
-     * Product of an int array
-     * @param mult the elements
-     *            to calculate the sum for
-     * @return the product of this array
-     */
-    public static int prod(int... mult) {
-        if (mult.length < 1)
-            return 0;
-        int ret = 1;
-        for (int i = 0; i < mult.length; i++)
-            ret *= mult[i];
-        return ret;
-    }
+	 * Product of an int array
+	 * @param mult the elements
+	 *            to calculate the sum for
+	 * @return the product of this array
+	 */
+	public static int prod(int... mult) {
+		if (mult.length < 1)
+			return 0;
+		int ret = 1;
+		for (int i = 0; i < mult.length; i++)
+			ret *= mult[i];
+		return ret;
+	}
 
 
 
@@ -241,8 +243,75 @@ public class AiPamUtils {
 		}
 		return maxValue;
 	}
-	
-	
+
+	/**
+	 * Finds the maximum value of an array
+	 * @param cc - the array to find maximum value in
+	 * @return the maximum value in the array 
+	 */
+	public static int max(int[] numbers) {
+		int maxValue = numbers[0];
+		for(int i=1;i<numbers.length;i++){
+			if(numbers[i] > maxValue){
+				maxValue = numbers[i];
+			}
+		}
+		return maxValue;
+	}
+
+
+	/**
+	 * Creates an array of numbers between two values. A bit like the MATLAB syntax x = 1:4:30; 
+	 * @param from - the start of the array.
+	 * @param jump - the jump between each value in the array. 
+	 * @param to - the end of the array. 
+	 */
+	public static double[] makeArr(double from, double jump, double to) {
+		//create the array size. 
+		double[] arr = new double[(int) Math.floor((to-from)/(double) jump)]; 
+
+		double n=from; 
+		for(int i=0;i<arr.length;i++){
+			arr[i]=n; 
+			n=n+jump; 
+		}
+		return arr;
+	}
+
+	/**
+	 * Creates an array of numbers between two values. A bit like the MATLAB syntax x = 1:4:30; 
+	 * @param from - the start of the array.
+	 * @param jump - the jump between each value in the array. 
+	 * @param to - the end of the array. 
+	 */
+	public static int[] makeArr(int from, int jump, int to) {
+		//create the array size. 
+		int[] arr = new int[(int) Math.floor((to-from)/(double) jump)]; 
+
+		int n=from; 
+		for(int i=0;i<arr.length;i++){
+			arr[i]=n; 
+			n=n+jump; 
+		}
+		return arr;
+	}
+
+	//	/**
+	//	 * Create an array with ascending values between start and end with a specified jump.
+	//	 * @param start - the start value.
+	//	 * @param end  - the end value.
+	//	 * @param jump - the jump between values. 
+	//	 * @return the array. 
+	//	 */
+	//	public static int[] makeArray(int start, int end, int jump) {
+	//		int[] newArray = new int[(int) Math.ceil((end-start)/jump)]; 
+	//		int n=0; 
+	//		for(int i=start;i<=end;i=i+jump){
+	//			newArray[n] = i; 
+	//			n++;
+	//		}
+	//		return newArray;
+	//	}
 
 	/**
 	 * Finds the minimum value of a matrix
@@ -304,7 +373,7 @@ public class AiPamUtils {
 			}
 		}
 	}
-	
+
 	/**
 	 * Print a 2D double array
 	 * @param array - the array 
@@ -318,7 +387,7 @@ public class AiPamUtils {
 		}
 		System.out.println("");
 	}
-	
+
 	/**
 	 * Print a 2D int array
 	 * @param array - the array 
@@ -331,6 +400,32 @@ public class AiPamUtils {
 			}
 		}
 		System.out.println("");
+	}
+
+	/**
+	 * Calculate the median value of a double[] array. 
+	 * @param duration - the array 
+	 * @return the median value of the array
+	 */
+	public static double median(double[] duration) {
+		Median median = new Median();
+		double medianValue = median.evaluate(duration);
+		return medianValue;
+	}
+
+	/**
+	 * Calculate the median value of an int[] array. 
+	 * @param duration - the array 
+	 * @return the median value of the array
+	 */
+	public static double median(int[] duration) {
+		double[] arr = new double[duration.length];
+		int n=0; 
+		for (int d: duration) {
+			arr[n]= d; 
+			n++;
+		}
+		return  median(arr) ;
 	}
 
 

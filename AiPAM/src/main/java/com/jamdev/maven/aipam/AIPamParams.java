@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jamdev.maven.aipam.annotation.Annotation;
+import com.jamdev.maven.aipam.clips.datetime.DateTimeParams;
+import com.jamdev.maven.aipam.clips.datetime.StandardDateTimeParams;
 import com.jamdev.maven.aipam.clustering.Params;
 import com.jamdev.maven.aipam.clustering.tsne.TSNEParams;
 import com.jamdev.maven.aipam.featureExtraction.FeatureExtraction;
@@ -18,6 +20,7 @@ import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
 public class AIPamParams implements Cloneable  {
 
 	public static int MAX_CHANNELS = 32; 
+	
 	//Audio import settings
 	
 	/**
@@ -40,6 +43,16 @@ public class AIPamParams implements Cloneable  {
 	 * The a folder that contain audio files. 
 	 */
 	public String audioFolder = "";
+	
+	/**
+	 * The maximum number of clips per page. 
+	 */
+	public int maxPageClips = 100; 
+	
+	/**
+	 * Paramters for the datetime
+	 */
+	public DateTimeParams datetimeSettings = new StandardDateTimeParams(); 
 
 
 	//FFT settings 
@@ -105,7 +118,7 @@ public class AIPamParams implements Cloneable  {
 	/**
 	 * True to show user prompts. Can get annoying if you know how to use SOudnSort so can be disabled. 
 	 */
-	public boolean showUserPrompts = true;
+	public boolean showUserPrompts = false;
 
 	/**
 	 * Show features on clip pane instead of spectrograms 

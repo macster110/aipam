@@ -13,7 +13,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -92,7 +91,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 
 	private Pane createPane() {
-
+	
 		VBox holder = new VBox();
 		holder.setSpacing(5); 
 		holder.setMaxWidth(300);
@@ -142,7 +141,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 
 		ObservableList<Double> defaultClipTimes = FXCollections.observableArrayList(); 
-		defaultClipTimes.addAll(0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 7.5, 10.0, 15.0, 20.0, 30.0, 40.0);
+		defaultClipTimes.addAll(0.001, 0.002, 0.004, 0.01, 0.015, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 7.5, 10.0, 15.0, 20.0, 30.0, 40.0);
 		clipLengthBox = new ComboBox<Double>(defaultClipTimes); 
 		clipLengthBox.setEditable(false);
 		clipLengthBox.getSelectionModel().select(3.0);
@@ -220,6 +219,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 		}
 
 		else {
+			//everything is oK
 			audioInfoLabel.setText(String.format("No. Files: % d \nNo.Corrupt Files: %d \nChannels: %d \nSample Rate: %.0f \n"
 					+ "Press 'Generate Clips to import", 
 					audioInfo.nFiles, audioInfo.nFilesCorrupt, audioInfo.channels, audioInfo.sampleRate));
@@ -231,6 +231,8 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 			this.setAllowNotify(false);
 			setUpDecimatorBox(audioInfo, aiParams); 
 			setUpChannelBox(audioInfo, aiParams);
+			setUpTrimBox(audioInfo, aiParams);
+
 			this.setAllowNotify(true);
 
 			//			System.out.println("SET AUDIO INFO: decimatorBox: " + decimatorBox.getValue()); 
@@ -241,10 +243,37 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 		setUpDecimatorBox(null, null); 
 		setUpChannelBox(null, null);
-
+		
 		//now notify the setting listeners that the audio file settings have changed. 
 		this.notifySettingsListeners();
 	}
+
+	
+	/**
+	 * Set up the trim box. 
+	 * @param audioInfo - the current audio information.
+	 * @param aiParams
+	 */
+	private void setUpTrimBox(AudioInfo audioInfo, AIPamParams aiParams) {
+		
+		System.out.println("AudioImport: Median file length: " + audioInfo.medianFilelength+ "  max length: " + audioInfo.maxFileLength);
+		
+		ObservableList<Double> trims = clipLengthBox.getItems();
+		
+		int index = -1; 
+		for (int i=0; i<trims.size(); i++) {
+			if (trims.get(i)>audioInfo.medianFilelength) {
+				index = i; 
+				break;
+			}
+		}
+		
+		if (index == -1) index = trims.size()-1; //the max trim is shorter than the max length.
+		index = Math.max(0, index-1); //choose the trim size before the median length
+		
+		clipLengthBox.getSelectionModel().select(index); 
+	}
+
 
 	/**
 	 * Set the decimator values- these obviously have to be less than the Nyquist frequency
@@ -269,9 +298,9 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 			}
 			else decimatorBox.getSelectionModel().selectLast(); //select the current sample rate: default not decimation 
 		}
-
 	}
 
+	
 	/**
 	 * Set up the channel box
 	 * @param audioInfo - the current audio information
@@ -306,18 +335,29 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 	 */
 	public class ClipSizeConverter extends StringConverter<Double>
 	{
+		
+		private double millisthresh = 0.1; //seconds
 
 		@Override
 		public String toString(Double object) {
 			//add a seconds value
-			return String.format("%.1f s", object);
+			if (object>millisthresh)
+				return String.format("%.1f s", object);
+			else {
+				return String.format("%.0f ms", object*1000);
+			}
+				
 		}
 
 		@Override
 		public Double fromString(String string) {
 			//remove all letters from value and try to parse the double
 			String str = string.replaceAll("[^\\d.]", "");
-			return Double.parseDouble(str); 
+			Double result =  Double.parseDouble(str); 
+			if (str.contains("ms")) {
+				result = result/1000.0; 
+			}
+			return result; 
 		}
 
 	}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="1" failures="0" name="org.jamdev.maven.aipam.AppTest" time="0.002" errors="0" skipped="0">
+<testsuite tests="1" failures="0" name="org.jamdev.maven.aipam.AppTest" time="0.003" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="java.vm.version" value="14.0.2+12"/>
@@ -22,14 +22,14 @@
 "/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="os.name" value="Mac OS X"/>
-    <property name="classworlds.conf" value="/Users/au671271/soundsort/.metadata/.plugins/org.eclipse.m2e.launching/launches/m2conf17408814003302868737.tmp"/>
+    <property name="classworlds.conf" value="/Users/au671271/soundsort/.metadata/.plugins/org.eclipse.m2e.launching/launches/m2conf7326649106981773749.tmp"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
     <property name="java.library.path" value="/Users/au671271/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
     <property name="jdk.debug" value="release"/>
     <property name="java.class.version" value="58.0"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
-    <property name="os.version" value="10.15.6"/>
+    <property name="os.version" value="10.16"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="user.home" value="/Users/au671271"/>
     <property name="user.timezone" value="Europe/Copenhagen"/>
@@ -56,5 +56,5 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
   </properties>
-  <testcase classname="org.jamdev.maven.aipam.AppTest" name="testApp" time="0.002"/>
+  <testcase classname="org.jamdev.maven.aipam.AppTest" name="testApp" time="0.003"/>
 </testsuite>

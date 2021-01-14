@@ -199,12 +199,22 @@
 			<artifactId>algs4</artifactId>
 			<version>1.0.3</version>
 		</dependency>
+
+
+		<!--jpam project - utilities -->
 		<dependency>
-			<groupId>jamdev</groupId>
-			<artifactId>jtorch4pam</artifactId>
-			<version>0.0.3</version>
-			<type>pom</type>
+			<groupId>org.jamdev</groupId>
+			<artifactId>jpamutils</artifactId>
+			<version>0.0.1</version>
 		</dependency>
+
+		<!--jpam project -  Deep learning java library -->
+		<dependency>
+			<groupId>org.jamdev</groupId>
+			<artifactId>jdl4pam</artifactId>
+			<version>0.0.8</version>
+		</dependency>
+		
 	</dependencies>
 
 

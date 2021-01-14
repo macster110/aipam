@@ -1,7 +1,8 @@
 package com.jamdev.maven.aipam.featureExtraction.specNoiseReduction;
 
+import org.jamdev.jpamutils.spectrogram.ComplexArray;
+
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
-import com.jamdev.maven.aipam.utils.ComplexArray;
 
 /**
  * Interface for multiple plugins to the spectrogram noise

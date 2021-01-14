@@ -2,7 +2,7 @@ package com.jamdev.maven.aipam.clips;
 
 import java.io.File;
 
-import com.jamdev.maven.aipam.utils.Spectrogram;
+import com.jamdev.maven.aipam.utils.ClipSpectrogram;
 import com.jamdev.maven.aipam.utils.WavFile;
 
 public class WavClipWave implements ClipWave {
@@ -19,7 +19,7 @@ public class WavClipWave implements ClipWave {
 	/**
 	 * Get spectrogram
 	 */
-	private Spectrogram spectrogram;
+	private ClipSpectrogram spectrogram;
 	
 	/**
 	 * The wav file class. 
@@ -31,16 +31,37 @@ public class WavClipWave implements ClipWave {
 	 */
 	private int[] data;
 	
+	
+	
 	/**
 	 * The samplerate
 	 */
-	private int sampleRate; 
+	private int sampleRate;
 	
+	/**
+	 * The time in millis datenum
+	 */
+	private long date;
 	
-	public WavClipWave(WavFile wavFile, int[] data, int sampleRate) {
+	/**
+	 * The total number of sample sin the file. 
+	 */
+	private long numSamples; 
+	
+	/**
+	 * 
+	 * @param wavFile
+	 * @param data
+	 * @param datalength
+	 * @param sampleRate
+	 * @param date
+	 */
+	public WavClipWave(WavFile wavFile, int[] data, int sampleRate, long date, long numSamples) {
 		this.wavFile= wavFile;
 		this.data = data; 
 		this.sampleRate = sampleRate;
+		this.date= date; 
+		this.numSamples = numSamples; 
 		audioPlay = new StandardAudioPlayJFX(wavFile.getFile()); 
 	}
 	
@@ -70,8 +91,8 @@ public class WavClipWave implements ClipWave {
 	}
 
 	@Override
-	public Spectrogram getSpectrogram(int fftLength, int fftHop) {
-		return new Spectrogram(this, fftLength, fftHop);
+	public ClipSpectrogram getSpectrogram(int fftLength, int fftHop) {
+		return new ClipSpectrogram(this, fftLength, fftHop);
 	}
 
 
@@ -82,12 +103,17 @@ public class WavClipWave implements ClipWave {
 
 	@Override
 	public double getLengthInSeconds() {
-		return data.length/(double)  getSampleRate();
+		return numSamples/(double)  getSampleRate();
 	}
 
 	@Override
 	public int getSampleRate() {
 		return sampleRate;
+	}
+
+	@Override
+	public long getTimeMillis() {
+		return date;
 	}
 
 	

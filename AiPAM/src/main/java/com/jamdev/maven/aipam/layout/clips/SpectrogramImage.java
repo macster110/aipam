@@ -10,6 +10,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 /**
+ * 
  * Draws the image of a spectrogram on a canvas. 
  * 
  * @author Jamie Macaulay 
@@ -77,11 +78,14 @@ public class SpectrogramImage {
 		WritableImage specImage = new WritableImage(data.length, data[0].length); 
 
 		PixelWriter writer = specImage.getPixelWriter(); 
+	
+		//System.out.println("Write spec data to image: " + 20*Math.log10(data[0][0]) + " clims[0] : " + clims[0]);
 
 		for (int i=0; i<data.length; i++) {
 			for (int j=0; j<data[0].length; j++) {
 				if (log)
-					writer.setColor(i, data[0].length-1-j, calcColour(20*Math.log10(data[i][j])));
+					//FIXME - need to work out a better way to make sensible log numbers
+					writer.setColor(i, data[0].length-1-j, calcColour(20*Math.log10(data[i][j])+60));
 				else 
 					writer.setColor(i, data[0].length-1-j, calcColour(data[i][j])); 
 

@@ -17,7 +17,7 @@ import com.jamdev.maven.aipam.layout.clips.FullClipPane;
 import com.jamdev.maven.aipam.layout.clips.SpectrogramImage;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.utils.AiPamUtils;
-import com.jamdev.maven.aipam.utils.Spectrogram;
+import com.jamdev.maven.aipam.utils.ClipSpectrogram;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
@@ -245,7 +245,7 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 	 * @param colourArray - the default colour array. 
 	 * @return the feature image. 
 	 */
-	public static SpectrogramImage getFeatureImage(Spectrogram spectrogram, FeatureExtraction featureExtractor, double[] colourlims, ColourArray colourArray) {
+	public static SpectrogramImage getFeatureImage(ClipSpectrogram spectrogram, FeatureExtraction featureExtractor, double[] colourlims, ColourArray colourArray) {
 		double[][] featureData = featureExtractor.getFeatures(spectrogram); 
 
 
@@ -285,7 +285,7 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 	 * @param spectrogram - the spectrogram
 	 * @return the image of the features. 
 	 */
-	public 	SpectrogramImage getFeatureImage(Spectrogram spectrogram) {
+	public 	SpectrogramImage getFeatureImage(ClipSpectrogram spectrogram) {
 		
 		FeatureExtraction featureExtractor = featureExtractionManager.getCurrentFeatureExtractor(); 
 		ColourArray colourArray = this.aiPamView.getCurrentColourArray(); 

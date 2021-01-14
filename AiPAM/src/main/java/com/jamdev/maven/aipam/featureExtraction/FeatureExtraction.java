@@ -1,7 +1,7 @@
 package com.jamdev.maven.aipam.featureExtraction;
 
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
-import com.jamdev.maven.aipam.utils.Spectrogram;
+import com.jamdev.maven.aipam.utils.ClipSpectrogram;
 
 import javafx.scene.Node;
 
@@ -24,7 +24,7 @@ public interface FeatureExtraction {
 	 * @param spectrogram - the spectrogram data to run feature extraction on. 
 	 * @return array containing extracted features. 
 	 */
-	public double[][] getFeatures(Spectrogram spectrogram);
+	public double[][] getFeatures(ClipSpectrogram spectrogram);
 
 	/**
 	 * Get a dynamic settings pane. 

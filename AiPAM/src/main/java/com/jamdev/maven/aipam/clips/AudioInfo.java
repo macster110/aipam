@@ -38,6 +38,16 @@ public class AudioInfo {
 	 * The number of corrupt files. 
 	 */
 	public int nFilesCorrupt;
+	
+	/**
+	 * The maximum file length in seconds.
+	 */
+	public double maxFileLength;
+	
+	/**
+	 * The maximum file length in seconds.
+	 */
+	public double medianFilelength;
 
 	/**
 	 * The path to the audio file. 

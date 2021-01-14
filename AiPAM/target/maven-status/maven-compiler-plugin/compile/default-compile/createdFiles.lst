@@ -109,6 +109,7 @@ com/jamdev/maven/aipam/featureExtraction/specNoiseReduction/AverageSubtraction.c
 com/jamdev/maven/aipam/layout/AnnotationPane$1.class
 com/jamdev/maven/aipam/clustering/snapToGrid/SimpleLAPJVListener.class
 com/jamdev/maven/aipam/clustering/snapToGrid/shortestPath/BruteIndexMinPQ.class
+com/jamdev/maven/aipam/layout/detectionDisplay/ClipDetectionDisplay.class
 com/jamdev/maven/aipam/layout/PlayBackPane.class
 com/jamdev/maven/aipam/AiPamController.class
 com/jamdev/maven/aipam/layout/ProgressBarPane.class
