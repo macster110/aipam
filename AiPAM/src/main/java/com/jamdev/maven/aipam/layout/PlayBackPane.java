@@ -207,5 +207,10 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 	public DoubleBinding volumeProperty() {
 		return this.volume.valueProperty().divide(100);
 	}
+	
+	@Override
+	public String getDescription() {
+		return "Audio playback settings";
+	}
 
 }

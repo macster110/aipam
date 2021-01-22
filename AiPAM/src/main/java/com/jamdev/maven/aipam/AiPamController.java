@@ -26,6 +26,7 @@ public class AiPamController {
 
 
 
+
 	public int verbose = 1; 
 
 	/**
@@ -129,6 +130,12 @@ public class AiPamController {
 	  * There is a new user prompt
 	 */
 	public static final int USER_PROMPT = 17; 
+	
+	/**
+	 * Some general settings have changed
+	 */
+	public static final int GENERAL_SETTINGS_CHANGED=18;
+
 
 	/**
 	 * The cluster manager
@@ -223,25 +230,16 @@ public class AiPamController {
 
 
 	/**
-	 * Load the audio data. 
-	 * @param selectedDirectory - the directory for the clips
-	 */
-	public void loadAudioData(File selectedDirectory) {
-		loadAudioData( selectedDirectory, true); 
-	}
-
-
-	/**
 	 * Load the audio data. This checks the audio files and creates a list of potential clips but it 
 	 * does not load in the audio data or load the spectrograms. That is handled by the nextPage() function. 
 	 * @param selectedDirectory - the directory for the clips
 	 * @param loadClips - true to load the clips. False checks the files. 
 	 */
-	public void loadAudioData(File selectedDirectory, boolean loadClips) {
+	public void loadAudioData(File selectedDirectory) {
 		
 		this.lastAiParams = aiPamParams.clone(); 
 		this.lastAiParams.clusterParams = null; //indicates no clustering has taken place since last audio import. 
-		if (!loadClips) lastAiParams.decimatorSR=null; //so that the algorithm know stuff has not been loaded yet. 
+		this.lastAiParams.decimatorSR=null; //so that the algorithm know stuff has not been loaded yet. 
 				
 		Task<Integer> task = pamClipManager.importClipsTask(selectedDirectory, this.aiPamParams);
 		
@@ -253,11 +251,7 @@ public class AiPamController {
 		});
 		
 		task.setOnSucceeded((value)->{
-			if (loadClips)
-				updateMessageListeners(END_FILE_LOAD, task); 
-			else 
 				updateMessageListeners(END_FILE_HEADER_LOAD, task); 
-
 		});
 
 		Thread th = new Thread(task);
@@ -277,6 +271,12 @@ public class AiPamController {
 		this.lastAiParams.clusterParams = null; //indicates no clustering has taken place since last audio import. 
 				
 		Task<Integer> task = pamClipManager.nextClipPageTask(aiPamParams, forward);
+		
+		if (task == null) {
+			//TODO - add warning
+			return; 
+		}
+		
 		
 		updateMessageListeners(START_PAGE_LOAD, task); 
 

@@ -160,6 +160,7 @@
 			<artifactId>jmetro</artifactId>
 			<version>11.6.14-RC-07</version>
 		</dependency>
+
 		<!-- Allows the importing of SVG files for icons. -->
 		<dependency>
 			<groupId>de.codecentric.centerdevice</groupId>
@@ -208,14 +209,35 @@
 			<version>0.0.1</version>
 		</dependency>
 
-		<!--jpam project -  Deep learning java library -->
+		<!--jpam project - Deep learning java library -->
 		<dependency>
 			<groupId>org.jamdev</groupId>
 			<artifactId>jdl4pam</artifactId>
 			<version>0.0.8</version>
 		</dependency>
-		
+
+
+		<!-- https://mvnrepository.com/artifact/com.github.afester.javafx/FranzXaver -->
+		<dependency>
+			<groupId>com.github.afester.javafx</groupId>
+			<artifactId>FranzXaver</artifactId>
+			<version>0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.xmlgraphics</groupId>
+					<artifactId>batik-ext</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xml-apis</artifactId>
+				</exclusion>
+			</exclusions>
+
+		</dependency>
+
+
 	</dependencies>
+
 
 
 	<build>

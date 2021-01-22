@@ -141,7 +141,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 
 		ObservableList<Double> defaultClipTimes = FXCollections.observableArrayList(); 
-		defaultClipTimes.addAll(0.001, 0.002, 0.004, 0.01, 0.015, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 7.5, 10.0, 15.0, 20.0, 30.0, 40.0);
+		defaultClipTimes.addAll(-1.0, 0.001, 0.002, 0.004, 0.006, 0.008, 0.01, 0.015, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 7.5, 10.0, 15.0, 20.0, 30.0, 40.0);
 		clipLengthBox = new ComboBox<Double>(defaultClipTimes); 
 		clipLengthBox.setEditable(false);
 		clipLengthBox.getSelectionModel().select(3.0);
@@ -269,7 +269,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 		}
 		
 		if (index == -1) index = trims.size()-1; //the max trim is shorter than the max length.
-		index = Math.max(0, index-1); //choose the trim size before the median length
+		index = Math.max(0, index); //choose the trim size before the median length
 		
 		clipLengthBox.getSelectionModel().select(index); 
 	}
@@ -292,11 +292,13 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 				decimatorBox.getItems().add(decimatorSR.get(n)); 
 				n++;
 			}
-			//now try an set from current params
-			if (decimatorBox.getItems().indexOf(aiPamView.getAIParams().decimatorSR)!=-1) {
-				decimatorBox.getSelectionModel().select(aiParams.decimatorSR);
-			}
-			else decimatorBox.getSelectionModel().selectLast(); //select the current sample rate: default not decimation 
+//			//now try an set from current params
+//			if (decimatorBox.getItems().indexOf(aiPamView.getAIParams().decimatorSR)!=-1) {
+//				decimatorBox.getSelectionModel().select(aiParams.decimatorSR);
+//			}
+//			else {
+				decimatorBox.getSelectionModel().selectLast(); //select the current sample rate: default not decimation 
+//			}
 		}
 	}
 
@@ -340,6 +342,7 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 		@Override
 		public String toString(Double object) {
+			if (object<=0) return "No trim";
 			//add a seconds value
 			if (object>millisthresh)
 				return String.format("%.1f s", object);
@@ -429,6 +432,13 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 			break;
 		} 
 
+	}
+
+
+	@Override
+	public String getDescription() {
+		return "Audio import settings such as file selection, \n"
+				+ "decimator frequency and clip length";
 	}
 
 }

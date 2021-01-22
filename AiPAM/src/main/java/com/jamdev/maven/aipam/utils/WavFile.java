@@ -317,6 +317,9 @@ public class WavFile extends AudioFileReader
 	 * @return the byte array for one channel. 
 	 */
 	public static byte[] trim(AudioFormat wavHeader, byte[] bytes, int maxSamples) {
+		
+		//do nothing. 
+		if (maxSamples<=0) return bytes;
 
 		int bytePerSample = wavHeader.getSampleSizeInBits() / 8; 
 		int numSamples = bytes.length / bytePerSample; 

@@ -140,7 +140,7 @@ public class AIPamView extends BorderPane {
 	private BorderPane userPromptPane;
 
 	/**
-	 * Holds the center stakc of nodes
+	 * Holds the center stack of nodes
 	 */
 	private StackPane centerStackPane;
 
@@ -363,7 +363,7 @@ public class AIPamView extends BorderPane {
 		//			e.printStackTrace();
 		//		}
 
-		aiPamContol.loadAudioData(selectedDirectory, false);
+		aiPamContol.loadAudioData(selectedDirectory);
 	}
 
 
@@ -380,7 +380,7 @@ public class AIPamView extends BorderPane {
 	 * @param updateType - the update type. 
 	 */
 	public void notifyUpdate(int updateType, Object data) {
-		//		System.out.println("AIPamView: notifyUpdate: " +updateType + " " + data);
+		System.out.println("AIPamView: notifyUpdate: " +updateType + " " + data);
 		switch (updateType) {
 		
 		case AiPamController.START_FILE_LOAD:
@@ -389,7 +389,6 @@ public class AIPamView extends BorderPane {
 			showProgressPane(true); 
 			this.progressPane.setTask((Task) data);
 			break;
-			
 		case AiPamController.START_PAGE_LOAD:
 			this.clipPane.clearSpecImages();
 			this.clusterGraphPane.clearGraph(); 
@@ -436,7 +435,7 @@ public class AIPamView extends BorderPane {
 			break; 
 		case AiPamController.END_FILE_HEADER_LOAD:
 			showProgressPane(false); 
-			controlPane.getAudioImportPane().notifyUpdate(AiPamController.END_FILE_HEADER_LOAD, null);
+			controlPane.notifyUpdate(updateType, null);
 			checkSettings();
 			break;
 		case AiPamController.NO_AUDIO_DIRECTORY:
@@ -581,6 +580,7 @@ public class AIPamView extends BorderPane {
 	public static void setButtonIcon(Labeled button, FontAwesomeIcon icon, Pos pos) {
 		FontAwesomeIconView iconViewSettings = new FontAwesomeIconView(icon); 
 		iconViewSettings.setGlyphSize(AIPamView.iconSize);
+		iconViewSettings.getStyleClass().add("-fx-fill: TEXT_FILL");
 		iconViewSettings.setFill(AIPamView.defaultTitleColour);
 		button.setAlignment(pos);
 		button.setGraphicTextGap(15);
@@ -589,7 +589,7 @@ public class AIPamView extends BorderPane {
 
 
 	public Image getClusterIcon() {
-		return getIcon("Cluster.svg"); 
+		return getIcon("clustering/Cluster.svg"); 
 	}
 
 
@@ -631,7 +631,7 @@ public class AIPamView extends BorderPane {
 	 */
 	public void importAcoustic() {
 		controlPane.getParams(this.aiPamContol.getParams()); 
-		aiPamContol.importClips(); 
+		aiPamContol.nextPage(true);
 	}
 
 	/**

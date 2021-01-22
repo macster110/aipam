@@ -196,4 +196,11 @@ public class SpectNoisePane extends DynamicSettingsPane<SpecNoiseReductionParams
 
 	}
 
+
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

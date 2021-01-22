@@ -105,13 +105,11 @@ public class StandardAudioImporter implements AudioImporter {
 
 		int sampleRate = (int) format.getSampleRate();
 						
-
 		// load data
 		AudioInputStream inputStream  = wavFile.getAudioInputStream(); 
 
 		int numSamples = getNumSamples(inputStream.available(), wavFile.getAudioFileFormat());
-		
-		
+	
 		//first downsample
 		//now downsample the data if need bed 
 		byte[] data;
@@ -148,9 +146,8 @@ public class StandardAudioImporter implements AudioImporter {
 			//		}
 
 			if (channels==1) {
-				//no need to do anythiong else. 
+				//no need to do anything else. 
 				data=WavFile.trim( format, data,  maxSamples); 
-
 			}
 			else {
 				//extract single channel data 

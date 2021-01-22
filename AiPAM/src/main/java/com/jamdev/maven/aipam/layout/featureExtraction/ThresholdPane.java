@@ -107,5 +107,11 @@ public class ThresholdPane extends DynamicSettingsPane<ThresholdParams> {
 		
 	}
 
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
 

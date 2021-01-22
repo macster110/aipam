@@ -34,8 +34,6 @@ public interface SettingsPane<T> {
 	 */
 	public Node getIcon();
 	
-	
-	
 	/**
 	 * Get the title of the pane. 
 	 * @return the title of the pane. 
@@ -48,5 +46,11 @@ public interface SettingsPane<T> {
 	 * @param stuff - a potential object, can be null.
 	 */
 	public void notifyUpdate(int flag, Object stuff);
+
+	/**
+	 * Get a description of the pane. 
+	 * @return a description of the pane. 
+	 */
+	public String getDescription();
 
 }

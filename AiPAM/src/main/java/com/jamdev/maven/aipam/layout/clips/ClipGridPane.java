@@ -104,9 +104,15 @@ public class ClipGridPane extends BorderPane {
 	}
 
 
-	public int[] getClipsSize(int nClips) {
-		//TODO- clips can be bigger if there are less of them
-		return new int[] {100,100};
+	public int[] getClipsSize(PAMClip pamClip, int nClips) {
+		if (aiPamView.getAIParams().maximumClipLength>0) {
+			//clips have been trimmed so they are all the same length
+			return new int[] {100,100};
+		}
+		///clips have no trimming so the width needs to be reflect the clip length
+		double medianLen = aiPamView.getAIControl().getAudioInfo().medianFilelength;
+		int width = (int) (100.0*pamClip.getClipLength()/medianLen);
+		return new int[] {width,100};
 	}
 
 	/**
@@ -136,7 +142,6 @@ public class ClipGridPane extends BorderPane {
 				try {
 					this.updateTitle("Generating Clip Images");
 
-					int[] clipSize = getClipsSize(pamClips.size()); 
 
 					double memoryMB ;
 					for (int i=0; i<pamClips.size(); i++) {
@@ -144,6 +149,8 @@ public class ClipGridPane extends BorderPane {
 						
 						//clips which have no pane are not shown. 
 						if (pamClips.get(i).getSpectrogram()==null) continue;
+						
+						int[] clipSize = getClipsSize(pamClips.get(i), pamClips.size()); 
 						
 						UtilsFX.runAndWait(() -> {
 							//must run on FX thread as generates an image. 
@@ -184,6 +191,8 @@ public class ClipGridPane extends BorderPane {
 		};
 		return task; 
 	}
+	
+
 
 	/**
 	 * Layout all the clips in order of their gridID flag. 
@@ -193,6 +202,7 @@ public class ClipGridPane extends BorderPane {
 		System.out.println("ClipGridPane: Layout clips: "); 
 		//make sure that all the clips are cleared
 		tilePane.getChildren().clear();
+		tilePane.setTileAlignment(Pos.CENTER_LEFT);
 		
 		//we need to find all the clips in order of their clip ID. Sort the list so 
 		//grid ID's are in ascending order.
@@ -201,6 +211,7 @@ public class ClipGridPane extends BorderPane {
 		//now simply add to the pane. 
 		for (int i=0; i<currentPamClips.size(); i++) {
 			this.tilePane.getChildren().add(currentPamClips.get(i)); 
+		 	TilePane.setAlignment(currentPamClips.get(i), Pos.CENTER_LEFT);
 		}
 	}
 

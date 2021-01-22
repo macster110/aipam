@@ -327,4 +327,9 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 
 	}
 
+	@Override
+	public String getDescription() {
+		return "Manual annotation settings";
+	}
+
 }

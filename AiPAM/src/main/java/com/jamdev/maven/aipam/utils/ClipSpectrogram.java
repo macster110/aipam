@@ -22,7 +22,7 @@ public class ClipSpectrogram extends org.jamdev.jpamutils.spectrogram.Spectrogra
 	public ClipSpectrogram(WavClipWave wavClipWave, int fftLength, int fftHop) {
 		super(new AudioData(wavClipWave.getSampleAmplitudes(), wavClipWave.getSampleRate()), fftLength, fftHop);
 		
-		System.out.println("Create spectrogram: " + wavClipWave.getSampleAmplitudes()[0]);
+		//System.out.println("Create spectrogram: " + wavClipWave.getSampleAmplitudes()[0]);
 	}
 
 	/**

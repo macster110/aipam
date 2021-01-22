@@ -108,15 +108,16 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 			setOverlayColour(); 
 		});
 
-
 		Tooltip tooltip = new Tooltip(
 				new File(clip.getFileName()).getName() +"\n"
 						+ "Cluster ID: " + clip.getGridID() + "\n"
 						+ "Original ID: " +  clip.getGridID());
 		Tooltip.install(this, tooltip);
+		
+		//TEMP
+		imageCanvas.getGraphicsContext2D().fillText(String.valueOf(clip.getGridID()), 10, 10);
 
 		setOverlayColour(); 
-
 	}
 
 	private void setOverlayColour() {
@@ -149,6 +150,8 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 		imageCanvas.getGraphicsContext2D().drawImage(specImage, 0, 0, imageCanvas.getWidth(), imageCanvas.getHeight(), 
 				0,0, specImage.getWidth(), specImage.getHeight());
 		//		imageCanvas.getGraphicsContext2D().fillOval(2, 2, 10, 10); 
+		
+		//
 	}
 
 

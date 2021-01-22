@@ -159,7 +159,7 @@ public class SimpleAnnotation implements Annotation {
 		
 		MLStructure clips = new MLStructure("clips", new int[] { getPamClips().size(),1});
 		for (int i=0; i< getPamClips().size(); i++) {
-			clips.setField("clipID", new MLChar(null, getPamClips().get(i).getID()), i);
+			clips.setField("clipID", new MLChar(null, getPamClips().get(i).getClipName()), i);
 			clips.setField("clipgridID", SettingsImportExport.mlInt(getPamClips().get(i).getGridID()), i); 
 		}
 		

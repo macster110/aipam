@@ -208,5 +208,11 @@ public class TSNEClusterPane extends DynamicSettingsPane<TSNEParams> {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public String getDescription() {
+		return "Unsupervised machine learning such as \n"
+				+ "clustering algorithms e.g. TSNE";
+	}
 
 }

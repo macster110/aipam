@@ -4,6 +4,7 @@ import org.controlsfx.control.ToggleSwitch;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AITheme;
+import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 
@@ -31,7 +32,9 @@ public class GeneralSettingsPane extends DynamicSettingsPane<AIPamParams> {
 	
 	private VBox mainPane;
 
-	private ToggleSwitch showPromptsSwitch; 
+	private ToggleSwitch showPromptsSwitch;
+
+	private ToggleSwitch showCollpaseMenuSwitch; 
 
 	public GeneralSettingsPane(AIPamView aiPamView) {
 		this.aiPamView=aiPamView; 
@@ -66,14 +69,29 @@ public class GeneralSettingsPane extends DynamicSettingsPane<AIPamParams> {
 
 		Label label = new Label("Show user prompts");
 		//label.getStyleClass().add("label-title2");
-		HBox hBox = new HBox(); 
-		hBox.setAlignment(Pos.CENTER_LEFT);
-		hBox.setSpacing(5);
-		hBox .getChildren().addAll(showPromptsSwitch, label); 
+		HBox usePromptHolder = new HBox(); 
+		usePromptHolder.setAlignment(Pos.CENTER_LEFT);
+		usePromptHolder.setSpacing(5);
+		usePromptHolder .getChildren().addAll(showPromptsSwitch, label); 
+		
+		
+		//user options ot display all clips as features. 
+		showCollpaseMenuSwitch = new ToggleSwitch(); 
+		showCollpaseMenuSwitch.selectedProperty().addListener((obs, oldVal, newVal)->{
+					notifySettingsListeners();
+					aiPamView.getAIControl().updateMessageListeners(AiPamController.GENERAL_SETTINGS_CHANGED, null);
+				});
+				
+		Label label2 = new Label("Collapse menu");
+		//label.getStyleClass().add("label-title2");
+		HBox menuCollpaseHolder = new HBox(); 
+		menuCollpaseHolder.setAlignment(Pos.CENTER_LEFT);
+		menuCollpaseHolder.setSpacing(5);
+		menuCollpaseHolder.getChildren().addAll(showCollpaseMenuSwitch, label2); 
 
 		mainPane = new VBox(); 
 		mainPane.setSpacing(15);
-		mainPane.getChildren().addAll(title, theme, radioButtonLight, radioButtonDark, hBox); 
+		mainPane.getChildren().addAll(title, theme, radioButtonLight, radioButtonDark, usePromptHolder, menuCollpaseHolder); 
 		
 		
 		
@@ -87,12 +105,14 @@ public class GeneralSettingsPane extends DynamicSettingsPane<AIPamParams> {
 	@Override
 	public AIPamParams getParams(AIPamParams paramsIn) {
 		paramsIn.showUserPrompts = showPromptsSwitch.isSelected(); 
+		paramsIn.collapseMenu = showCollpaseMenuSwitch.isSelected(); 
 		return paramsIn;
 	}
 
 	@Override
 	public void setParams(AIPamParams params) {
 		showPromptsSwitch.setSelected(params.showUserPrompts);
+		showCollpaseMenuSwitch.setSelected(params.collapseMenu);
 	}
 
 	@Override
@@ -113,5 +133,11 @@ public class GeneralSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public String getDescription() {
+		return "General program settings";
+	}
+
 
 }

@@ -2,6 +2,8 @@ package com.jamdev.maven.aipam.layout;
 
 import java.io.Serializable;
 
+import com.jamdev.maven.aipam.layout.utilsFX.InfernoColorMap;
+
 import javafx.geometry.Orientation;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;

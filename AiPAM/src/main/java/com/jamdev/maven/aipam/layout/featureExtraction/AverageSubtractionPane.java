@@ -111,6 +111,13 @@ public class AverageSubtractionPane  extends DynamicSettingsPane<AverageSubtract
 	}
 
 
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }
 
 

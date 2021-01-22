@@ -24,7 +24,8 @@ public class AIPamParams implements Cloneable  {
 	//Audio import settings
 	
 	/**
-	 * The maximum length of a clip in seconds.
+	 * The maximum length of a clip in seconds. -1 indicates that clips should not 
+	 * be trimmed. 
 	 */
 	public double maximumClipLength = 3; 
 
@@ -125,6 +126,10 @@ public class AIPamParams implements Cloneable  {
 	 */
 	public boolean showFeatures = false; 
 
+	/**
+	 * Show collapsed menu pane. This shows only the icons, not the text of each menu. 
+	 */
+	public boolean collapseMenu = false; 
 
 	@Override
 	public AIPamParams clone() {

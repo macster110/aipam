@@ -1,10 +1,13 @@
 package com.jamdev.maven.aipam.layout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
+import com.jamdev.maven.aipam.layout.clustering.ClusterPane;
+import com.jamdev.maven.aipam.layout.deeplearning.DeepLearningPane;
 import com.jamdev.maven.aipam.layout.featureExtraction.FeaturePane;
 import com.jamdev.maven.aipam.layout.utilsFX.FluentMenuPane;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
@@ -32,6 +35,10 @@ import javafx.scene.layout.VBox;
  *
  */
 public class ControlPane extends BorderPane {
+
+	public Integer AUDIO_GROUP = 1; 
+
+	public Integer CLASSIFIER_GROUP = 2; 
 
 	/**
 	 * Reference to the view. 
@@ -64,10 +71,18 @@ public class ControlPane extends BorderPane {
 	private MasterControlPane masterControlPane;
 
 	/**
-	 * List of control panes for changing settings.
+	 * List of control panes for changing settings. Control panes are a 
+	 * subset of the menu items
 	 *  
 	 */
 	private ArrayList<SettingsPane<AIPamParams>> controlPanes;
+
+
+	/**
+	 * List of all menu nodes. 
+	 */
+	private ArrayList<ControlPaneMenuItem> menuItems = new ArrayList<ControlPaneMenuItem>(); 
+
 
 	/**
 	 * The annotation pane. 
@@ -84,7 +99,7 @@ public class ControlPane extends BorderPane {
 	 * Menu pane which holds the settings buttons. 
 	 */
 	private FluentMenuPane menuPane;
-	
+
 	/**
 	 * Import settings button
 	 */
@@ -100,11 +115,16 @@ public class ControlPane extends BorderPane {
 	 */
 	private FeaturePane featurePane;
 
-	
+	private DeepLearningPane deepLearningPane;
+
+	private Pane menuHolderPane;
+
+
 	public ControlPane (AIPamView aiPamView) {
 		this.aiPamView=aiPamView; 
-		this.setCenter(createControPane());
+		this.setCenter(menuHolderPane = createControPane());
 		//this.setPadding(new Insets(5,5,5,5));
+		setMenuPaneCollapsed(aiPamView.getAIParams().collapseMenu); 
 	}
 
 	/**
@@ -117,12 +137,24 @@ public class ControlPane extends BorderPane {
 
 		//master control pane. 
 		masterControlPane = new MasterControlPane(aiPamView); 
+		menuItems.addAll(masterControlPane.getMenuItems());
 
-		//importing and exporting files. 		
-		Label labelSettings = new Label("Settings");
-		labelSettings.setPadding(new Insets(5,5,5,5));
-		labelSettings.getStyleClass().add("label-title1");
-		AIPamView.setButtonIcon(labelSettings, FontAwesomeIcon.GEAR); 
+//		//Create labels for the panes	
+//		Label labelSettings = new Label("General Settings");
+//		labelSettings.setPadding(new Insets(5,5,5,5));
+//		labelSettings.getStyleClass().add("label-title1");
+//		AIPamView.setButtonIcon(labelSettings, FontAwesomeIcon.GEAR); 
+//
+//		Label labelAudio = new Label("Audio");
+//		labelAudio.setPadding(new Insets(5,5,5,5));
+//		labelAudio.getStyleClass().add("label-title1");
+//		AIPamView.setButtonIcon(labelAudio, FontAwesomeIcon.GEAR); 
+//
+//		Label classificationLabel  = new Label("Classification");
+//		classificationLabel.setPadding(new Insets(5,5,5,5));
+//		classificationLabel.getStyleClass().add("label-title1");
+//		AIPamView.setButtonIcon(classificationLabel, FontAwesomeIcon.GEAR); 
+
 
 		//pane for importing audio clips. 
 		audioImportPane = new AudioImportPane(aiPamView); 
@@ -139,7 +171,7 @@ public class ControlPane extends BorderPane {
 			fftPane.getParams(aiPamView.getAIParams());
 			aiPamView.checkSettings(); 
 		});
-		
+
 		//pane for feature extraction
 		featurePane = new FeaturePane(aiPamView); 
 		featurePane.setParams(aiPamView.getAIParams());
@@ -164,6 +196,14 @@ public class ControlPane extends BorderPane {
 			aiPamView.checkSettings(); 
 		});
 
+
+		deepLearningPane = new DeepLearningPane(aiPamView); 
+		deepLearningPane.setParams(aiPamView.getAIParams());
+		deepLearningPane.addSettingsListener(()->{
+			deepLearningPane.getParams(aiPamView.getAIParams()); 
+			aiPamView.checkSettings(); 
+		});
+
 		//the annotation pane. 
 		annotationPane = new AnnotationPane(aiPamView);
 		annotationPane.setParams(aiPamView.getAIParams());
@@ -180,24 +220,26 @@ public class ControlPane extends BorderPane {
 			aiPamView.checkSettings(); 
 		});
 
-		
+
 		//layout of everything
 		holderPane.getChildren().add(masterControlPane.getPane());
-		holderPane.getChildren().add(labelSettings);
 
-		
-		
+
+		//specific settings button panes. 
 		saveSettings = new Button("Save Settings"); 
 		saveSettings.getStyleClass().add("fluent-menu-button");
 		AIPamView.setButtonIcon(saveSettings, FontAwesomeIcon.SAVE); 
 		saveSettings.prefWidthProperty().bind(holderPane.widthProperty());
 		saveSettings.setTooltip(new Tooltip(
 				"Save a settings file. This can be opened iby a new instance of the \n"
-				+ "program to restore the current settings."));
+						+ "program to restore the current settings."));
 		saveSettings.setOnAction((actiom)->{
 			this.aiPamView.saveSettings(); 
 		});
-		
+
+		//add the list of menu buttons
+		menuItems.add(new StandardPaneMenuItem(saveSettings, saveSettings.getText()));
+
 		importSettings = new Button("Load Settings"); 
 		importSettings.getStyleClass().add("fluent-menu-button");
 		AIPamView.setButtonIcon(importSettings, FontAwesomeIcon.DOWNLOAD); 
@@ -209,56 +251,82 @@ public class ControlPane extends BorderPane {
 
 		});
 		
+		//add the list of menu buttons. 
+		menuItems.add(new StandardPaneMenuItem(importSettings, importSettings.getText()));
+
+
 		//add save stuff. 
 		holderPane.getChildren().add(saveSettings);
 		holderPane.getChildren().add(importSettings);
 
-		
+
 		controlPanes = new ArrayList<SettingsPane<AIPamParams>>(); 
+
 		controlPanes.add(audioImportPane);
-
 		controlPanes.add(fftPane);
-		controlPanes.add(featurePane);
-
 		controlPanes.add(playBackPane);
+
+		controlPanes.add(featurePane);
 		controlPanes.add(clusterPane);
+		controlPanes.add(deepLearningPane);
 		controlPanes.add(annotationPane);
+
 		controlPanes.add(generalSettingsPane);
-		
+
 		menuPane = new FluentMenuPane(); 
 
 		for (int i=0; i<controlPanes.size(); i++) {
 			final Button settingsButton = new Button(controlPanes.get(i).getTitle());
 			if (controlPanes.get(i).getIcon()!=null) {
 				settingsButton.setGraphic(controlPanes.get(i).getIcon());
+				AIPamView.setButtonIcon(importSettings, FontAwesomeIcon.DOWNLOAD); 
+
 			}
 			settingsButton.prefWidthProperty().bind(holderPane.widthProperty());
 			settingsButton.getStyleClass().add("fluent-menu-button");
+
 
 			final SettingsPane<AIPamParams> settingsPane = controlPanes.get(i);
 			settingsButton.setOnAction((action)->{
 				aiPamView.showSettingsPane(settingsPane); 
 			});
 			//settingsButton.setContentDisplay(ContentDisplay.LEFT);
-			settingsButton.setContentDisplay(ContentDisplay.LEFT);
+//			settingsButton.setContentDisplay(ContentDisplay.LEFT);
 			settingsButton.setAlignment(Pos.BASELINE_LEFT);
 			settingsButton.setGraphicTextGap(15);
 
+			
+			settingsButton.setTooltip(new Tooltip(controlPanes.get(i).getDescription()));
 			//settingsButton.setTextAlignment(TextAlignment.LEFT);
 			menuPane.addMenuItem(settingsButton);		
+
+			//			settingsButton.setStyle("-fx-background-color: red;");
+			StandardPaneMenuItem menuItem = new StandardPaneMenuItem(settingsButton, controlPanes.get(i).getTitle());
+			menuItems.add(menuItem); 
+
 		}
-		
+
 
 		holderPane.getChildren().add(menuPane);
 
-
 		holderPane.getStyleClass().add("fluent-pane");
-		holderPane.setPrefWidth(200);
 
 		return holderPane; 
 	}
 
 
+	/**
+	 * Set the menu to be collapsed. 
+	 */
+	public void setMenuPaneCollapsed(boolean collapse) {
+		for (int i=0; i<menuItems.size(); i++) {
+			menuItems.get(i).showLabel(!collapse);
+		}
+		if (collapse) menuHolderPane.setPrefWidth(45);
+		else menuHolderPane.setPrefWidth(200);
+
+
+	}
 
 
 	/**
@@ -300,7 +368,7 @@ public class ControlPane extends BorderPane {
 	 */
 	public void setMenuDeselected() {
 		this.menuPane.setMenuButtonsDeselected(); 
-		
+
 	}
 
 	/**
@@ -312,7 +380,7 @@ public class ControlPane extends BorderPane {
 	}
 
 	/**
-	 * Called whenever a settings pane is programaticaly opened to highlight the relevant menu button. 
+	 * Called whenever a settings pane is programmatically opened to highlight the relevant menu button. 
 	 * @param settingsPane - the settings pane which is being opened.
 	 */
 	public void setSelectedPane(SettingsPane<AIPamParams> settingsPane) {
@@ -338,22 +406,30 @@ public class ControlPane extends BorderPane {
 	public void setControlButtonDisable(boolean disable) {
 		masterControlPane.setControlButtonDisable(disable); 
 	}
-	
+
 	/**
 	 * Send update flag. 
 	 * @param flag - the flag. 
 	 * @param stuff - object containing data. 
 	 */
 	public void notifyUpdate(int flag, Object stuff) {
+		for (int i=0; i<controlPanes.size(); i++) {
+			controlPanes.get(i).notifyUpdate(flag, stuff);
+		}	
 		switch (flag) {
-		case AiPamController.NEW_CLIP_SELECTED:
-			fftPane.notifyUpdate(flag, stuff);
-			featurePane.notifyUpdate(flag, stuff);
-			break;
-		case AiPamController.FEATURES_CHANGED:
-			featurePane.notifyUpdate(flag, stuff);
+		//		case AiPamController.NEW_CLIP_SELECTED:
+		//			fftPane.notifyUpdate(flag, stuff);
+		//			featurePane.notifyUpdate(flag, stuff);
+		//			break;
+		//		case AiPamController.FEATURES_CHANGED:
+		//			featurePane.notifyUpdate(flag, stuff);
+		//			break;
+		//		}
+		case AiPamController.GENERAL_SETTINGS_CHANGED:
+			setMenuPaneCollapsed(aiPamView.getAIParams().collapseMenu); 
 			break;
 		}
 	}
+
 
 }

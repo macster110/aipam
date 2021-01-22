@@ -1,6 +1,6 @@
 package com.jamdev.maven.aipam.clips;
 
-import java.io.File;
+import org.apache.commons.io.FilenameUtils;
 
 import com.jamdev.maven.aipam.annotation.Annotation;
 import com.jamdev.maven.aipam.utils.ClipSpectrogram;
@@ -44,10 +44,10 @@ public class PAMClip implements Comparable<PAMClip> {
 	 */
 	private AudioPlay audioPlay;
 
-	/**
-	 * The file ID
-	 */
-	private StringProperty iD;
+//	/**
+//	 * The file ID
+//	 */
+//	private StringProperty iD;
 
 	/**
 	 * The position defined by the cluster algorithm
@@ -106,11 +106,6 @@ public class PAMClip implements Comparable<PAMClip> {
 		audioPlay = wave.getAudioPlay(); 
 
 		fileName = new SimpleStringProperty(wave.getFileName()); 
-
-		//use the file name as the ID because this allows easy exporting of data and also allows for 
-		//clustering algorithm to be reoloaded. Condition of program is therefore that no two file names 
-		//can be equal. 
-		iD = new SimpleStringProperty(new File(wave.getFileName()).getName()); 
 
 		//create the annotation property
 		annotation = new SimpleObjectProperty<Annotation>(); 
@@ -174,18 +169,9 @@ public class PAMClip implements Comparable<PAMClip> {
 	 * @return the audio play
 	 */
 	public AudioPlay getAudioPlay() {
-
 		return audioPlay;
 	}
 
-	/**
-	 * 
-	 * Get a unique ID number for the clip. 
-	 * @return the ID
-	 */
-	public String getID() {
-		return iD.get(); 
-	}
 
 	/**
 	 * Get the cluster point for the clip after having been 
@@ -298,6 +284,15 @@ public class PAMClip implements Comparable<PAMClip> {
 		long compareage=o.getTimeMillis();
 		/* For Ascending order*/
 		return (int) (this.timeMillis-compareage);
+	}
+
+
+	/**
+	 * Get the unique name for the clip. This is the filename without the path. 
+	 * @return the name of the clip. 
+	 */
+	public String getClipName() {
+		return FilenameUtils.getBaseName(fileName.get());
 	}
 
 

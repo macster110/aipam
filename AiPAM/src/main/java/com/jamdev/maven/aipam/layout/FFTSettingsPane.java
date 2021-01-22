@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
+import com.jamdev.maven.aipam.clips.AudioInfo;
 import com.jamdev.maven.aipam.clips.PAMClip;
 import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
 import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
@@ -261,6 +262,32 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 	}
 		
 	
+	/**
+	 * Called when a new audio info is set. This will set the default FFT length and FFT hop
+	 * @param audioInfo - the audio info object. 
+	 * @param params - the current parameters. 
+	 */
+	private void setAudioInfo(AudioInfo audioInfo, AIPamParams params) {
+	
+		double samples = audioInfo.medianFilelength*audioInfo.sampleRate;
+		
+		//System.out.println("Set new audio info in spectrogram: " + samples);
+		
+		for (int i=0; i<fftComboBox.getItems().size(); i++) {
+			//System.out.println("Set new audio info in spectrogram: " + samples/(double) fftComboBox.getItems().get(i));
+			if (samples/(double) fftComboBox.getItems().get(i)<25) {
+				params.fftLength = fftComboBox.getItems().get(i); 
+				break;
+			}; 
+		}
+	
+		//System.out.println("Set new audio info in spectrogram: " + params.fftLength );
+		
+		params.fftHop = params.fftLength/2; 
+		
+		setParams(params);
+	}
+	
 	@Override
 	public Pane getPane() {
 		return mainPane;
@@ -279,8 +306,10 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 
 	@Override
 	public void setParams(AIPamParams params) {
-		fftComboBox.getSelectionModel().select(params.fftLength);
-		hopComboBox.getSelectionModel().select(params.fftHop);
+		//System.out.println("Set Params: " + params.fftLength);
+		
+		fftComboBox.getSelectionModel().select(Integer.valueOf(params.fftLength));
+		hopComboBox.getSelectionModel().select(Integer.valueOf(params.fftHop));
 		colourRangleSlider.setLowValue(params.colourLims[0]);
 		colourRangleSlider.setHighValue(params.colourLims[1]);
 		
@@ -317,9 +346,21 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 			ArrayList<UserPrompt> list = (ArrayList<UserPrompt> ) stuff; 
 			newUserPrompt(list);
 			break; 
+		case AiPamController.END_FILE_HEADER_LOAD:
+			setAudioInfo(this.aiPamView.getAIControl().getAudioInfo(),
+					aiPamView.getAIControl().getParams());
+			break; 
 
 		}
 	}
+	
+	@Override
+	public String getDescription() {
+		return "Spectrogram settings including FFT length, \n"
+				+ "FFT hop and colour scales";
+	}
+
+
 
 
 }

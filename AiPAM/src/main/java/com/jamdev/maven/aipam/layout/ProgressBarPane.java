@@ -87,7 +87,9 @@ public class ProgressBarPane extends BorderPane {
 		progressLabel.textProperty().unbind();
 		
 		progressBar.setProgress(0);
-	
+		
+		if (task == null) return; 
+
 		//bind the progress bar to the task progress. 
 		progressBar.progressProperty().bind(task.progressProperty());
 		//bind the cnacle button to the task cancel. 

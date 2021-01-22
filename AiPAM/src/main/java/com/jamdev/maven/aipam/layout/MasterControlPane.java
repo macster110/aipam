@@ -52,10 +52,10 @@ public class MasterControlPane {
 	 */
 	private Button importClipsButton;
 
-	/**
-	 * The cluster button
-	 */
-	private Button clusterButton;
+//	/**
+//	 * The cluster button
+//	 */
+//	private Button clusterButton;
 
 	/**
 	 * Browse to clips
@@ -67,10 +67,15 @@ public class MasterControlPane {
 	 */
 	private Animation currentAnimation; 
 	
+	/**
+	 * List of all menu nodes. 
+	 */
+	private ArrayList<ControlPaneMenuItem> menuItems = new ArrayList<ControlPaneMenuItem>(); 
+
+	
 	public MasterControlPane(AIPamView aiPamView) {
 		this.aiPamView = aiPamView; 
 		this.mainPane = createPane(); 
-		
 	}
 	
 	private Pane createPane() {
@@ -79,10 +84,10 @@ public class MasterControlPane {
 		
 		//main controls, import clips and cluster 
 		
-		Label labelHome = new Label("Controls");
-		labelHome.setPadding(new Insets(5,5,5,5));
-		labelHome.getStyleClass().add("label-title1");
-		AIPamView.setButtonIcon(labelHome, FontAwesomeIcon.HOME); 
+//		Label labelHome = new Label("Controls");
+//		labelHome.setPadding(new Insets(5,5,5,5));
+//		labelHome.getStyleClass().add("label-title1");
+//		AIPamView.setButtonIcon(labelHome, FontAwesomeIcon.HOME); 
 		
 		
 		browseButton = new Button("Browse..."); 
@@ -90,7 +95,10 @@ public class MasterControlPane {
 		AIPamView.setButtonIcon(browseButton, FontAwesomeIcon.FOLDER_OPEN_ALT); 
 		browseButton.prefWidthProperty().bind(holder.widthProperty());
 		browseButton.setTooltip(new Tooltip(
-				"Start importing clips"));
+				"Open a folder of clips"));
+		
+		menuItems.add(new StandardPaneMenuItem(browseButton, browseButton.getText()));
+
 		
 		browseButton.setOnAction((action)->{
 			aiPamView.browseAndCheckAudio();
@@ -108,28 +116,28 @@ public class MasterControlPane {
 			aiPamView.importAcoustic(); 
 		});
 
+		menuItems.add(new StandardPaneMenuItem(importClipsButton, importClipsButton.getText()));
+//		clusterButton = new Button("Cluster Clips"); 
+//		clusterButton.getStyleClass().add("fluent-menu-button");
+//		ImageView icon = UtilsFX.whitenImage(new ImageView(aiPamView.getClusterIcon())); 
+//		clusterButton.setGraphic(icon);
+//		clusterButton.setAlignment(Pos.CENTER_LEFT);
+//		clusterButton.setGraphicTextGap(15);
+//		clusterButton.prefWidthProperty().bind(holder.widthProperty());
+//		clusterButton.setTooltip(new Tooltip(
+//				"Start the clustering algorithm"));
+//		
+//		clusterButton.setOnAction((action)->{
+//			aiPamView.cluster();
+//		});
 		
-		clusterButton = new Button("Cluster Clips"); 
-		clusterButton.getStyleClass().add("fluent-menu-button");
-		ImageView icon = UtilsFX.whitenImage(new ImageView(aiPamView.getClusterIcon())); 
-		clusterButton.setGraphic(icon);
-		clusterButton.setAlignment(Pos.CENTER_LEFT);
-		clusterButton.setGraphicTextGap(15);
-		clusterButton.prefWidthProperty().bind(holder.widthProperty());
-		clusterButton.setTooltip(new Tooltip(
-				"Start the clustering algorithm"));
 		
-		clusterButton.setOnAction((action)->{
-			aiPamView.cluster();
-		});
-		
-		
-		HBox controlBox = new HBox(); 
-		controlBox.prefWidthProperty().bind(holder.widthProperty());
-		controlBox.getChildren().addAll(importClipsButton, clusterButton); 
-		
+//		HBox controlBox = new HBox(); 
+//		controlBox.prefWidthProperty().bind(holder.widthProperty());
+//		controlBox.getChildren().addAll(importClipsButton); 
+//		
 		//holder.setSpacing(5);
-		holder.getChildren().addAll(labelHome, browseButton,  importClipsButton, clusterButton); 
+		holder.getChildren().addAll(browseButton,  importClipsButton); 
 		
 		//holder.setAlignment(Pos.BASELINE_LEFT);
 
@@ -137,6 +145,10 @@ public class MasterControlPane {
 	}
 	
 	
+	public ArrayList<ControlPaneMenuItem> getMenuItems() {
+		return menuItems;
+	}
+
 	/**
 	 * 
 	 * Create a Glyph icon which can be used as graphics for various controls. 
@@ -226,7 +238,7 @@ public class MasterControlPane {
 	private void deHighLightButtons() {
 		deHighLight(browseButton);
 		deHighLight(importClipsButton);
-		deHighLight(clusterButton);
+		//deHighLight(clusterButton);
 
 	}
 
@@ -251,7 +263,7 @@ public class MasterControlPane {
 		    this.currentAnimation = highLightButton(importClipsButton);
 			break;
 		case NOTHING_CLUSTERED_YET:
-			this.currentAnimation = highLightButton(clusterButton);
+			//this.currentAnimation = highLightButton(clusterButton);
 			break;
 		case NOTHING_IMPORTED_YET:
 			this.currentAnimation = highLightButton(browseButton);
@@ -259,7 +271,7 @@ public class MasterControlPane {
 		case RECREATE_IMAGES:
 			break;
 		case RE_CLUSTER:
-			this.currentAnimation = highLightButton(clusterButton);
+			//this.currentAnimation = highLightButton(clusterButton);
 			break;
 		default:
 			break;
@@ -271,7 +283,7 @@ public class MasterControlPane {
 	public void setControlButtonDisable(boolean disable) {
 		browseButton.setDisable(disable);
 		importClipsButton.setDisable(disable);
-		clusterButton.setDisable(disable);
+		//clusterButton.setDisable(disable);
 	}
 
 
