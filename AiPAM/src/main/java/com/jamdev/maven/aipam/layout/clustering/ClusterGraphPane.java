@@ -114,7 +114,7 @@ public class ClusterGraphPane extends BorderPane {
 				featureExtraction=aiPamView.getAIControl().getFeatureExtractionManager().getCurrentFeatureExtractor(); 
 			}
 			
-			image = new PamClipPane(pamClips.get(i), 30, 30, aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims, featureExtraction); 
+			image = new PamClipPane(pamClips.get(i), 30, 30, aiPamView.getAIParams().spectrogramParams, aiPamView.getCurrentColourArray(), featureExtraction); 
 			image.setSelectionManager(aiPamView.getClipSelectionManager());
 //			image = new SpectrogramImage(pamClips.get(i).getSpectrogram(), 
 //        			aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 

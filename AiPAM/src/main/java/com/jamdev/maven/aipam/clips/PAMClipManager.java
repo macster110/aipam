@@ -79,6 +79,7 @@ public class PAMClipManager {
 
 			@Override
 			protected Integer call() throws Exception {
+
 				//progress is in intermediate mode. 
 				ArrayList<PAMClip> pamClips = new ArrayList<PAMClip>();
 
@@ -148,10 +149,10 @@ public class PAMClipManager {
 									currentClips=pamClips; 
 									return n; //cancel stuff 
 								}
-								pamClip = new PAMClip(waveClip, params.fftLength, params.fftHop, n); 
+								pamClip = new PAMClip(waveClip, n); 
+								pamClip.clearAudioData(); // don't want to be storing any audio data here - just in case. 
 								pamClips.add(pamClip); 
 								n++;
-
 							}
 						}
 
@@ -197,7 +198,12 @@ public class PAMClipManager {
 	 * @param params - the current AIParams. 
 	 * @param forward - true of the page is moving forward. 
 	 */
-	private boolean newClipsIDs(AIPamParams params, boolean forward) {
+	private synchronized boolean newClipsIDs(AIPamParams params, boolean forward) {
+		/**
+		 * NOTE: be extremely careful here - any changes to array length and signs e.g. <= can result in lots 
+		 * of weird errors. A nasty bit of code but it deals with a bunch of scenarios such as clustered clips 
+		 * being out of time order etc. 
+		 */
 
 		int[] newClipsIds;
 		if (currentPageClips == null || currentClips.size()<=params.maxPageClips) {
@@ -221,8 +227,8 @@ public class PAMClipManager {
 			int ii = 0;
 			if (forward) {
 
-				ii = clipIndex(currentClips, clipIndex(currentPageClips)[1])+1;
-				System.out.println("Clip start index A: " + ii + " " + "  " + clipIndex(currentPageClips)[1]); 
+				ii = clipIndex(currentClips, clipMinMaxIndex(currentPageClips)[1])+1;
+				System.out.println("Clip start index A: " + ii + " " + "  " + clipMinMaxIndex(currentPageClips)[1]); 
 				if (ii>=currentClips.size()-1) return false; //keep same clip IDs
 				//so move forward from the last clip and save the IDs - remember the clips are in chronological order. 
 				while (i<params.maxPageClips && ii<currentClips.size()) {
@@ -232,21 +238,23 @@ public class PAMClipManager {
 				}
 			}
 			else {
-				ii = clipIndex(currentClips, clipIndex(currentPageClips)[0])-1;
-				System.out.println("Clip start index B: " + ii + " " + currentClips.size() + currentPageClips[currentPageClips.length-1]); 
+				ii = clipIndex(currentClips, clipMinMaxIndex(currentPageClips)[0])-1;
+				System.out.println("Clip start index B: " + ii + " " + currentClips.size() + "  " +  currentPageClips[currentPageClips.length-1]); 
 				if (ii<0) return false; //keep same clip IDs
 				//if (ii-params.maximumClipLength<0) return; //keep same clip IDs
 				//so move backward from the last clip and save the IDs - remember the clips are in chronological order. 
-				while (i<params.maxPageClips && ii>0) {
+				while (i<params.maxPageClips && ii>=0) {
 					newClipsIds[i] = currentClips.get(ii).getGridID();
 					i++;
 					ii--;
 				}
 			}
 			if (i>0) {
-				newClipsIds = Arrays.copyOf(newClipsIds, i-1);
+				//is not i-1 because i is an index and for this is a length. Because i++ at end of loop 
+				//it's equal to the length of array, already. 
+				newClipsIds = Arrays.copyOf(newClipsIds, i);
 			}
-			System.out.println("New page IDs: i " + i + " ii: " + ii); 
+			//System.out.println("New page IDs: i " + i + " ii: " + ii + " len: " + newClipsIds.length); 
 		}
 		this.currentPageClips = newClipsIds;
 		//very import as search function assume a sorted array
@@ -271,7 +279,7 @@ public class PAMClipManager {
 	//	}
 
 	/**
-	 * Check whether a clip is on the page. 
+	 * Check what position the clipsID is in a list of clips. 
 	 */
 	private int clipIndex(ArrayList<PAMClip> currentClips, int clipID) {
 		for(int i = 0 ; i<currentClips.size(); i++){
@@ -283,42 +291,50 @@ public class PAMClipManager {
 		//		int index = Arrays.binarySearch(newClipIds, pamClip.getGridID());
 		//		return index>=0; 
 	}
-
-	/**
-	 * Get the page clips. 
-	 * @return the page clips. 
-	 */
-	private ArrayList<PAMClip> getPageClips(int[] clipIDs){
-		ArrayList<PAMClip> pageClips = new  ArrayList<PAMClip> (); 
-		for (int i=0; i<currentClips.size() ; i++) {
-			//need to load the clips to 
-			if (checkClipInPage(currentClips.get(i), clipIDs)) {
-				pageClips.add(currentClips.get(i)); 
-			}
-		}
-		return pageClips;
-	}
+//
+//	/**
+//	 * Get the page clips. 
+//	 * @return the page clips. 
+//	 */
+//	private ArrayList<PAMClip> getClips(int[] clipIDs){
+//		ArrayList<PAMClip> pageClips = new  ArrayList<PAMClip> (); 
+//		
+//		int ind;
+//		for (int i=0; i<clipIDs.length ; i++) {
+//			//need to load the clips to 
+//			ind = clipIndex(currentClips, clipIDs[i])
+//			if (checkClipInPage(currentClips.get(i), clipIDs)) {
+//				pageClips.add(currentClips.get(i)); 
+//			}
+//		}
+//		return pageClips;
+//	}
 
 	/**
 	 * Get the index of the clips specified by clipIDs which have the 
 	 * lowest and highest time value. 
 	 */
-	private int[] clipIndex(int[] clipIDs) {
+	private int[] clipMinMaxIndex(int[] clipIDs) {
 
 		long maximum = Long.MIN_VALUE;
 		long minimum = Long.MAX_VALUE;
 		int iMax = -1; 
 		int iMin = -1; 
 
-		ArrayList<PAMClip>  pageClips = getPageClips(clipIDs);
-
-		for(int i = 0 ; i<pageClips.size(); i++){
-			if (pageClips.get(i).getTimeMillis()<minimum) {
-				minimum = pageClips.get(i).getTimeMillis();
+		PAMClip clip; 
+		int ind; 
+		for(int i = 0 ; i<clipIDs.length; i++){
+			
+			ind = clipIndex(currentClips, clipIDs[i]);
+			if (ind<0) continue;
+			clip = currentClips.get(ind); 
+			
+			if (clip.getTimeMillis()<minimum) {
+				minimum =clip.getTimeMillis();
 				iMin = i; 
 			}	
-			if (pageClips.get(i).getTimeMillis()>maximum) {
-				maximum = pageClips.get(i).getTimeMillis();
+			if (clip.getTimeMillis()>maximum) {
+				maximum = clip.getTimeMillis();
 				iMax = i; 
 			}
 		}
@@ -399,7 +415,7 @@ public class PAMClipManager {
 						for (ClipWave waveClip: waveClips) {
 							for (PAMClip pamClip : currentClips) {
 								if (pamClip.getTimeMillis() == waveClip.getTimeMillis()) {
-									pamClip.setAudioData(waveClip.getSpectrogram(params.fftLength, params.fftHop));
+									pamClip.setAudioData(waveClip);
 									//									System.out.println("nextClipPageTask: Spectrogram data: " + pamClip.getSpectrogram().getAbsoluteSpectrogram()[3][3]); 
 									count++; 
 									break; 
@@ -460,5 +476,39 @@ public class PAMClipManager {
 	public AudioInfo getCurrentAudioInfo() {
 		return currentAudioInfo;
 	}
+
+	/**
+	 * Check whether there clips which are not shown currently in the page to be loaded. 
+	 * @return true of there are clips beyond the current page to be loaded. 
+	 */
+	public boolean hasNextClips() {
+
+		if (currentClips == null) return false; 
+		else if (currentPageClips==null) return true; //something weird going on
+
+		int ii = clipIndex(currentClips, clipMinMaxIndex(currentPageClips)[1])+1;
+
+		//System.out.println("Next clips: " + ii + "  of " +  currentClips.size()); 
+		if (ii>=currentClips.size()-1) return false; 
+		
+		return true; 
+
+	}
+
+	/**
+	 * Check whether there are clips which are not shown currently in the page to be loaded. 
+	 * @return true of there are clips before the current page to be loaded. 
+	 */
+	public boolean hasPrevClips() {
+		if (currentClips == null) return false; 
+		else if (currentPageClips==null) return true; //something weird going on
+
+		int ii = clipIndex(currentClips, clipMinMaxIndex(currentPageClips)[0]);
+		System.out.println("Prev clips: " + ii + "  of " +  currentClips.size() +  "  min grid ID: " + clipMinMaxIndex(currentPageClips)[0]); 
+		if (ii<=0) return false;
+		
+		return true; 
+	}
+
 
 }

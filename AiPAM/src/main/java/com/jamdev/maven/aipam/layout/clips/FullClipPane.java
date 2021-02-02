@@ -1,6 +1,7 @@
 package com.jamdev.maven.aipam.layout.clips;
 
 import com.jamdev.maven.aipam.clips.PAMClip;
+import com.jamdev.maven.aipam.clips.SpecParams;
 import com.jamdev.maven.aipam.layout.AIPamView;
 import com.jamdev.maven.aipam.layout.ColourArray;
 
@@ -23,7 +24,7 @@ public class FullClipPane extends BorderPane {
 	
 	double[] colourLims = new double[] {20, 100};  
 	
-	
+	SpecParams specParams = new SpecParams(); 
 	
 	/**
 	 * Full clip pane shows a full szied clip of the spectrogram data.
@@ -38,7 +39,7 @@ public class FullClipPane extends BorderPane {
 	 * @param pamClip
 	 */
 	public void setPamClip(PAMClip pamClip) {
-		SpectrogramImage image = new SpectrogramImage(pamClip.getSpectrogram().getAbsoluteSpectrogram(), 
+		SpectrogramImage image = new SpectrogramImage(pamClip.getSpectrogram(specParams.fftLength, specParams.fftHop).getAbsoluteSpectrogram(), 
 				colourArray, colourLims); 
 		
 		ImageView imageView = new ImageView(image.getSpecImage(300, 300));

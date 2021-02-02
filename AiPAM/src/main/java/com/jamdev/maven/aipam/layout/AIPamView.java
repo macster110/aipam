@@ -22,6 +22,7 @@ import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.animation.TranslateTransition;
 import javafx.beans.binding.DoubleBinding;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
@@ -34,6 +35,7 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -42,6 +44,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import jfxtras.styles.jmetro.MDL2IconFont;
 
 /**
@@ -166,7 +169,9 @@ public class AIPamView extends BorderPane {
 	/**
 	 * True if the progress pane is showing. 
 	 */
-	private boolean progressPaneShowing; 
+	private boolean progressPaneShowing;
+
+
 
 	public AIPamView(AiPamController aiPamControl, Stage primaryStage, Pane root) {
 
@@ -271,14 +276,19 @@ public class AIPamView extends BorderPane {
 	private Pane createClipPane() {
 		//create the clip pane
 		clipPane= new ClipGridPane(this); 
+
+	
+		final Button nextButton = new Button(); 
+		nextButton.setPrefSize(40, 100);
+//		MDL2IconFont iconFont1 = new MDL2IconFont("\uE893");
+//		iconFont1.setSize(30);
+//		iconFont1.setMaxSize(30, 30);
 		
-		StackPane stackPane = new StackPane(); 
-		stackPane.getChildren().add(clipPane); 
+		FontAwesomeIconView iconFont1 = new FontAwesomeIconView(FontAwesomeIcon.FORWARD); 
+		iconFont1.setGlyphSize(AIPamView.iconSize);
+		iconFont1.setFill(Color.WHITE);
 		
-		
-		Button nextButton = new Button(); 
-		MDL2IconFont iconFont1 = new MDL2IconFont("\uE893");
-		iconFont1.setSize(30);
+
 		nextButton.setGraphic(iconFont1);
 		nextButton.setOnAction((action)->{
 			//move to the previous section. 
@@ -286,10 +296,17 @@ public class AIPamView extends BorderPane {
 		});
 		
 		
-		Button prevButton = new Button(); 
-		MDL2IconFont iconFont2 = new MDL2IconFont("\uE892"
-				+ "");
-		iconFont2.setSize(30);
+		final Button prevButton = new Button(); 
+		prevButton.setPrefSize(40, 100);
+//		MDL2IconFont iconFont2 = new MDL2IconFont("\uE892"
+//				+ "");
+//		iconFont2.setSize(30);
+//		iconFont2.setMaxSize(30, 30);
+		
+		FontAwesomeIconView iconFont2 = new FontAwesomeIconView(FontAwesomeIcon.BACKWARD); 
+		iconFont2.setGlyphSize(AIPamView.iconSize);
+		iconFont2.setFill(Color.WHITE);
+		
 		prevButton.setGraphic(iconFont2);
 		prevButton.setOnAction((action)->{
 			//move to the next section
@@ -297,10 +314,60 @@ public class AIPamView extends BorderPane {
 		});
 		StackPane.setAlignment(prevButton, Pos.CENTER_LEFT);
 		StackPane.setAlignment(nextButton, Pos.CENTER_RIGHT);
+	
+		final TranslateTransition ttPrev = new TranslateTransition(Duration.millis(50), prevButton);
+		final TranslateTransition ttNext = new TranslateTransition(Duration.millis(50), nextButton);
+
+		
+		StackPane stackPane = new StackPane(); 
+		stackPane.getChildren().add(clipPane); 
+		stackPane.setOnMouseMoved((event)->{
+			if (aiPamContol.getPamClipManager().hasPrevClips()) {
+				prevButton.setVisible(true); 
+				buttonAnimation(event,  prevButton,  ttPrev, false);
+			}
+			else {
+				prevButton.setVisible(false); 
+			}
+			
+			if (aiPamContol.getPamClipManager().hasNextClips()) {
+				nextButton.setVisible(true); 
+				buttonAnimation(event,  nextButton,  ttNext, true);
+			}
+			else {
+				nextButton.setVisible(false); 
+			}
+		});
 
 		stackPane.getChildren().addAll(prevButton, nextButton); 
 		
 		return stackPane; 
+	}
+	
+	/**
+	 * The button animation for shoeing buttons as the mouse comes close. 
+	 * @param pane - the pane 
+	 * @param button - the button
+	 * @param ttPrev - the animation (creating new animations is slow )
+	 */
+	private void buttonAnimation(MouseEvent event, Button prevButton, TranslateTransition ttPrev, boolean forward) {
+		double dtranslate = 60; 
+		if (!forward) dtranslate = -1*dtranslate; 
+		
+		//System.out.println("Button translate: " + prevButton.getTranslateX());
+		
+		if (Math.abs(event.getX()-prevButton.getLayoutX())>150 && prevButton.getTranslateX()==0) {
+			//System.out.println("Hide button: " );
+			//hide the button
+			ttPrev.setToX(dtranslate);
+			ttPrev.play();
+		}
+		else if (Math.abs(event.getX()-prevButton.getLayoutX())<150 && prevButton.getTranslateX()==dtranslate){
+			//System.out.println("Show button: " );
+			//show the button
+			ttPrev.setToX(0);
+			ttPrev.play();
+		}
 	}
 
 
@@ -474,8 +541,10 @@ public class AIPamView extends BorderPane {
 	 */
 	private void generateSpectrogramClips() {
 		//not very neat but need to update control params so that they know last colour limits 
-		this.aiPamContol.getLastAiParams().colourLims= this.getAIParams().colourLims;
-		this.aiPamContol.getLastAiParams().spectrogramColour= this.getAIParams().spectrogramColour; 
+		this.aiPamContol.getLastAiParams().spectrogramParams.colourLims= this.getAIParams().spectrogramParams.colourLims;
+		this.aiPamContol.getLastAiParams().spectrogramParams.spectrogramColour= this.getAIParams().spectrogramParams.spectrogramColour; 
+		this.aiPamContol.getLastAiParams().spectrogramParams.fftHop= this.getAIParams().spectrogramParams.fftHop;
+		this.aiPamContol.getLastAiParams().spectrogramParams.fftLength= this.getAIParams().spectrogramParams.fftLength; 
 
 		clipPane.clearSpecImages(); 
 		Task<Integer> task  = clipPane.generateSpecImagesTask(this.aiPamContol.getPAMClips());
@@ -515,7 +584,7 @@ public class AIPamView extends BorderPane {
 	 * Convenience function to get the colour limits from current parameters.
 	 */
 	public double[] getClims() {
-		return this.aiPamContol.getParams().colourLims;
+		return this.aiPamContol.getParams().spectrogramParams.colourLims;
 	}
 
 
@@ -524,8 +593,8 @@ public class AIPamView extends BorderPane {
 	 * @return the current colour array type. 
 	 */
 	public ColourArray getCurrentColourArray() {
-		if (this.colourArray==null || colourArray.getColorArrayType()!=aiPamContol.getParams().spectrogramColour) {
-			colourArray = ColourArray.createStandardColourArray(N_COLS, this.aiPamContol.getParams().spectrogramColour); 
+		if (this.colourArray==null || colourArray.getColorArrayType()!=aiPamContol.getParams().spectrogramParams.spectrogramColour) {
+			colourArray = ColourArray.createStandardColourArray(N_COLS, this.aiPamContol.getParams().spectrogramParams.spectrogramColour); 
 			System.out.println("Colour Array: " + colourArray.getColour(0) + " " + colourArray.getColour(colourArray.getNumbColours()-1)); 
 		}
 		return colourArray;

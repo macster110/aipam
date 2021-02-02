@@ -39,18 +39,6 @@ public class ClipGridPane extends BorderPane {
 	 */
 	public ArrayList<PamClipPane> currentPamClips;
 
-	public ArrayList<PamClipPane> getCurrentPamClips() {
-		return currentPamClips;
-	}
-
-	/**
-	 * Get current clips. 
-	 * @return the current clips. 
-	 */
-	public ArrayList<PamClipPane> getCurrentClipPanes() {
-		return currentPamClips;
-	}
-
 	/**
 	 * Reference to the view.
 	 */
@@ -127,8 +115,11 @@ public class ClipGridPane extends BorderPane {
 		//work out the number of clips that have a spectrogram - these are hte only ones that will be displayed in the page. 
 		int nClips =0 ; 
 		for (PAMClip pamClip: pamClips) {
-			if (pamClip.getSpectrogram()!=null) nClips++; 
+			if (pamClip.getSpectrogram(aiPamView.getAIParams().spectrogramParams.fftLength, aiPamView.getAIParams().spectrogramParams.fftLength)!=null) nClips++; 
 		}
+		
+		System.out.println("NCLIPS TO LOAD: " + nClips); 
+		
 		int[] gridSize = ClusterSnapGrid.calcGridSize(nClips);
 		
 		tilePane.setPrefColumns(gridSize[0]);
@@ -148,7 +139,7 @@ public class ClipGridPane extends BorderPane {
 						final int ii=i; 
 						
 						//clips which have no pane are not shown. 
-						if (pamClips.get(i).getSpectrogram()==null) continue;
+						if (pamClips.get(i).getSpectrogram(aiPamView.getAIParams().spectrogramParams.fftLength, aiPamView.getAIParams().spectrogramParams.fftLength)==null) continue;
 						
 						int[] clipSize = getClipsSize(pamClips.get(i), pamClips.size()); 
 						
@@ -158,8 +149,9 @@ public class ClipGridPane extends BorderPane {
 							if (aiPamView.getAIParams().showFeatures) {
 								featureExtraction=aiPamView.getAIControl().getFeatureExtractionManager().getCurrentFeatureExtractor(); 
 							}
-
-							final PamClipPane pamClipPane = new PamClipPane(pamClips.get(ii), clipSize[0], clipSize[1], aiPamView.getCurrentColourArray(), aiPamView.getClims(), featureExtraction);
+							
+							final PamClipPane pamClipPane = new PamClipPane(pamClips.get(ii), clipSize[0], clipSize[1], 
+									 aiPamView.getAIParams().spectrogramParams,  aiPamView.getCurrentColourArray(), featureExtraction);
 							pamClipPane.setSelectionManager(aiPamView.getClipSelectionManager()); 
 							//add child on the fx pane
 							//tilePane.getChildren().add(pamClipPane); 
@@ -206,7 +198,7 @@ public class ClipGridPane extends BorderPane {
 		
 		//we need to find all the clips in order of their clip ID. Sort the list so 
 		//grid ID's are in ascending order.
-		Collections.sort(currentPamClips);
+		//Collections.sort(currentPamClips); //FIXME - need to sort this out.
 		
 		//now simply add to the pane. 
 		for (int i=0; i<currentPamClips.size(); i++) {
@@ -222,6 +214,23 @@ public class ClipGridPane extends BorderPane {
 	public Pane getTilePane() {
 		return tilePane;
 	}
+	
+	/**
+	 * Get the current clips. 
+	 * @return the current clips.
+	 */
+	public ArrayList<PamClipPane> getCurrentPamClips() {
+		return currentPamClips;
+	}
+
+	/**
+	 * Get current clips. 
+	 * @return the current clips. 
+	 */
+	public ArrayList<PamClipPane> getCurrentClipPanes() {
+		return currentPamClips;
+	}
+
 	
 
 }

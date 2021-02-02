@@ -91,19 +91,23 @@ public class UserPrompts {
 //				+ " New channels: " + aiPamContol.getParams().channel);
 
 		boolean reimport = false; 
-		if (aiPamContol.getLastAiParams().fftHop!=aiPamContol.getParams().fftHop) reimport = true;
-		if (aiPamContol.getLastAiParams().fftLength!=aiPamContol.getParams().fftLength) reimport = true;
-
+		
 		if (aiPamContol.getLastAiParams().maximumClipLength!=aiPamContol.getParams().maximumClipLength) reimport = true;
 		if (aiPamContol.getLastAiParams().decimatorSR!=aiPamContol.getParams().decimatorSR) reimport = true;
 		if (aiPamContol.getLastAiParams().channel!=aiPamContol.getParams().channel) reimport = true;
 		//if (!aiPamContol.getLastAiParams().audioFolder.equals(aiPamContol.getParams().audioFolder)); reimport = true;
 
 		boolean reCalcImage = false; 
-		if (!aiPamContol.getLastAiParams().spectrogramColour.equals(aiPamContol.getParams().spectrogramColour)) reCalcImage=true;
-		if (aiPamContol.getLastAiParams().colourLims[0]!=aiPamContol.getParams().colourLims[0]) reCalcImage=true;
-		if (aiPamContol.getLastAiParams().colourLims[1]!=aiPamContol.getParams().colourLims[1]) reCalcImage=true;
-		 if (aiPamContol.getParams().showFeatures)  reCalcImage = false; //only need this if showing raw spectrograms. 
+		
+		if (aiPamContol.getLastAiParams().spectrogramParams.fftHop!=aiPamContol.getParams().spectrogramParams.fftHop) reCalcImage = true;
+		//System.out.println("FFT Length: " + reCalcImage + "  " + aiPamContol.getLastAiParams().spectrogramParams.fftHop + "  " + aiPamContol.getParams().spectrogramParams.fftHop);
+		if (aiPamContol.getLastAiParams().spectrogramParams.fftLength!=aiPamContol.getParams().spectrogramParams.fftLength) reCalcImage = true;
+		//System.out.println("FFT Hop: " + reCalcImage);
+
+		if (!aiPamContol.getLastAiParams().spectrogramParams.spectrogramColour.equals(aiPamContol.getParams().spectrogramParams.spectrogramColour)) reCalcImage=true;
+		if (aiPamContol.getLastAiParams().spectrogramParams.colourLims[0]!=aiPamContol.getParams().spectrogramParams.colourLims[0]) reCalcImage=true;
+		if (aiPamContol.getLastAiParams().spectrogramParams.colourLims[1]!=aiPamContol.getParams().spectrogramParams.colourLims[1]) reCalcImage=true;
+		if (aiPamContol.getParams().showFeatures)  reCalcImage = false; //only need this if showing raw spectrograms. 
 		
 		//cluster messages
 		boolean reFeatureImages = false; 

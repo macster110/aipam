@@ -42,7 +42,7 @@ public interface ClipWave {
 	 * Get the sample amplitudes in bit format 
 	 * @return the sample amplitude in bits. 
 	 */
-	public int[] getSampleAmplitudes();
+	public short[] getSampleAmplitudes();
 
 	/**
 	 * Get the length of the file in seconds. 
@@ -55,5 +55,11 @@ public interface ClipWave {
 	 * @return the sample rate. 
 	 */
 	public int getSampleRate();
+
+	/**
+	 * Set the sample amplitudes. Set to null to remove the sample data and save memory. 
+	 * @param the sample amplitudes. 
+	 */
+	public void setSampleAmplitudes(short[] amplitudes);
 
 }

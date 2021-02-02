@@ -3,14 +3,14 @@ package com.jamdev.maven.aipam.clips;
 import org.apache.commons.io.FilenameUtils;
 
 import com.jamdev.maven.aipam.annotation.Annotation;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import com.jamdev.maven.aipam.utils.ClipSpectrogram;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 
 /**
  * 
@@ -25,29 +25,20 @@ import javafx.beans.property.StringProperty;
  */
 public class PAMClip implements Comparable<PAMClip> {
 
-	private static int DEFAULT_FFT_LEN =1024; 
-
-	private static int DEFUALT_FFT_HOP = 512; 
+//	private static int DEFAULT_FFT_LEN =1024; 
+//
+//	private static int DEFUALT_FFT_HOP = 512; 
 
 	/**
 	 * Data for colours for spectrogram is stored as a short.
 	 */
 	private ClipSpectrogram spectrogramClip; 
 
-	/**
-	 * The filename of the clip
-	 */
-	public StringProperty fileName;
 
-	/**
-	 * The audio play is stored so the clip can be played. 
-	 */
-	private AudioPlay audioPlay;
-
-//	/**
-//	 * The file ID
-//	 */
-//	private StringProperty iD;
+	//	/**
+	//	 * The file ID
+	//	 */
+	//	private StringProperty iD;
 
 	/**
 	 * The position defined by the cluster algorithm
@@ -75,52 +66,32 @@ public class PAMClip implements Comparable<PAMClip> {
 	private double[] freqLims = new double[2];
 
 	/**
-	 * The length of the clip in seconds. 
-	 */
-	private double lengthClip;
-
-	/**
 	 * The date time in milliseconds
 	 */
 	private long timeMillis = 0;
 
+	/**
+	 * The clip wave - holds the raw data of the data. 
+	 */
+	private ClipWave clipWave;
+
+
 	public PAMClip(ClipWave wave, int gridID){
-		this(wave , DEFAULT_FFT_LEN, DEFUALT_FFT_HOP, gridID); 
-	} 
-
-
-	public PAMClip(ClipWave wave, int fftLength, int fftHop, int gridID){
+		
 		//		this.staticGridID = new SimpleIntegerProperty(gridID);  
+		this.clipWave = wave; 
+		
 		this.gridID=new SimpleIntegerProperty(gridID); 
 
 		freqLims[0] = 0;
 		freqLims[1] = wave.getSampleRate()/2.;
-
-		lengthClip = wave.getLengthInSeconds(); 
-
-		//spectrogramClip =  DownSampleImpl.largestTriangleThreeBuckets(spectrogramClip, 50);
-		//		System.out.println("The spectrogram clip is: " +  spectrogramClip.length + " x " +  spectrogramClip[0].length);
-
-		//		System.out.println("The spectorgram size is: " + 
-		//		spectrogramClip.getAbsoluteSpectrogramData().length + "x" +spectrogramClip.getAbsoluteSpectrogramData()); 
-		audioPlay = wave.getAudioPlay(); 
-
-		fileName = new SimpleStringProperty(wave.getFileName()); 
-
+		
 		//create the annotation property
 		annotation = new SimpleObjectProperty<Annotation>(); 
 
 		//set the time in  milliseconds - VERY important for allowing clips to be 
 		//matched to files...
 		timeMillis = wave.getTimeMillis();
-		
-		if (wave.getSampleAmplitudes()!=null) {
-			//load the spectrogram. Can be null
-			spectrogramClip = wave.getSpectrogram(fftLength, fftHop); 
-		}
-		
-		//do not want the raw wave data in memory so wave is not saved
-		wave = null; //garbage collector probably gets rid of this anyway but makes me feel better. 
 	} 
 
 
@@ -129,15 +100,21 @@ public class PAMClip implements Comparable<PAMClip> {
 	 * need to be reloaded from the file. 
 	 */
 	public void clearAudioData() {
-		spectrogramClip = null; 
+		clipWave.setSampleAmplitudes(null); 
 	}
 
 	/**
 	 * Set the audio data for a clip. 
 	 * @param spectrogramClip
 	 */
-	public void setAudioData(ClipSpectrogram spectrogramClip) {
-		this.spectrogramClip = spectrogramClip; 
+	public void setAudioData(ClipWave wave) {
+		//System.out.println("Set sample amplitudes"); 
+		if (wave==null) {
+			this.clipWave.setSampleAmplitudes(null); 
+		}
+		else {
+			this.clipWave.setSampleAmplitudes(wave.getSampleAmplitudes()); 
+		}
 	}
 
 
@@ -159,7 +136,11 @@ public class PAMClip implements Comparable<PAMClip> {
 	 * Get the spectrogram data for the clip. 
 	 * @return the spectrogram object
 	 */
-	public ClipSpectrogram getSpectrogram() {
+	public ClipSpectrogram getSpectrogram(int fftLength, int fftHop) {
+		if (clipWave.getSampleAmplitudes()==null) return null; 
+		if (spectrogramClip == null || spectrogramClip.getFFTLength()!=fftLength || spectrogramClip.getFFTHop()!=fftHop) {
+			return clipWave.getSpectrogram(fftLength, fftHop); 
+		}
 		return spectrogramClip;
 	}
 
@@ -169,7 +150,7 @@ public class PAMClip implements Comparable<PAMClip> {
 	 * @return the audio play
 	 */
 	public AudioPlay getAudioPlay() {
-		return audioPlay;
+		return clipWave.getAudioPlay();
 	}
 
 
@@ -243,7 +224,7 @@ public class PAMClip implements Comparable<PAMClip> {
 	 * @return the filename associated with the clip. 
 	 */
 	public String getFileName() {
-		return this.fileName.get();
+		return clipWave.getFileName(); 
 	}
 
 	/**
@@ -259,7 +240,7 @@ public class PAMClip implements Comparable<PAMClip> {
 	 * @return the clip length in seconds. 
 	 */
 	public double getClipLength() {
-		return this.lengthClip;
+		return clipWave.getLengthInSeconds(); 
 	}
 
 
@@ -282,8 +263,16 @@ public class PAMClip implements Comparable<PAMClip> {
 	@Override
 	public int compareTo(PAMClip o) {
 		long compareage=o.getTimeMillis();
-		/* For Ascending order*/
-		return (int) (this.timeMillis-compareage);
+
+		if (this.timeMillis < compareage)
+			return -1;
+		else if (this.timeMillis > compareage)
+			return 1;
+		else
+			return 0;
+
+		//		/* For Ascending order*/
+		//		return (int) (this.timeMillis-compareage);
 	}
 
 
@@ -292,7 +281,16 @@ public class PAMClip implements Comparable<PAMClip> {
 	 * @return the name of the clip. 
 	 */
 	public String getClipName() {
-		return FilenameUtils.getBaseName(fileName.get());
+		return FilenameUtils.getBaseName(getFileName());
+	}
+
+	/**
+	 * Get a string of the date time of the start of the clip. 
+	 * @return the date time as a string. 
+	 */
+	public String getDateTimeString() {
+	       DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	      return sdf.format(this.getTimeMillis());
 	}
 
 

@@ -76,7 +76,8 @@ public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 				//fingerprints[i] =ArrayUtil.flatten(pamClips.get(i).getSpectrogram());
 				//TODO - need to get features. 
 				
-				double[][] data = aiPamControl.getFeatureExtractionManager().getCurrentFeatureExtractor().getFeatures(pamClips.get(i).getSpectrogram());
+				double[][] data = aiPamControl.getFeatureExtractionManager().getCurrentFeatureExtractor().
+						getFeatures(pamClips.get(i).getSpectrogram(aiPamControl.getParams().spectrogramParams.fftLength, aiPamControl.getParams().spectrogramParams.fftHop));
 				
 //				fingerprints[i] = MatrixOps.asVector(data); 
 				fingerprints[i] = FingerPrintManager.simpleSpectrogramFingerPrint(data, 100); 

@@ -2,9 +2,11 @@ package com.jamdev.maven.aipam.layout.clips;
 
 import java.io.File;
 
+import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.annotation.SimpleAnnotation;
 import com.jamdev.maven.aipam.clips.AudioPlay;
 import com.jamdev.maven.aipam.clips.PAMClip;
+import com.jamdev.maven.aipam.clips.SpecParams;
 import com.jamdev.maven.aipam.featureExtraction.FeatureExtraction;
 import com.jamdev.maven.aipam.layout.ColourArray;
 import com.jamdev.maven.aipam.layout.featureExtraction.FeaturePane;
@@ -74,14 +76,14 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 	 * Constructor for the clip pane. 
 	 * @param clip
 	 */
-	public PamClipPane(PAMClip clip, int width, int height, ColourArray colourArray, double clims[], FeatureExtraction featureExtraction) {
+	public PamClipPane(PAMClip clip, int width, int height, SpecParams params, ColourArray colourArray, FeatureExtraction featureExtraction) {
 		this.clip=clip; 
 		this.featureExtraction  = featureExtraction; 
 		//create the pane 
 		this.getChildren().add(imageCanvas = new Canvas(width, height)); 
 
 		//clip features
-		generateSpecImage(colourArray, clims); 
+		generateSpecImage(params.fftLength, params.fftHop, colourArray, params.colourLims); 
 
 		//add an overlay pane so that the clip can be coloured.
 		this.getChildren().add(overlayPane = new Pane()); 
@@ -110,6 +112,7 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 
 		Tooltip tooltip = new Tooltip(
 				new File(clip.getFileName()).getName() +"\n"
+						+ "Time: " + clip.getDateTimeString() + "\n"
 						+ "Cluster ID: " + clip.getGridID() + "\n"
 						+ "Original ID: " +  clip.getGridID());
 		Tooltip.install(this, tooltip);
@@ -119,6 +122,8 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 
 		setOverlayColour(); 
 	}
+	
+	
 
 	private void setOverlayColour() {
 		//bit ugly but meh
@@ -137,12 +142,12 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 	/**
 	 * Generate the spectrogram image. 
 	 */
-	public void generateSpecImage(ColourArray colourArray, double[] clims) {
+	public void generateSpecImage(int fftLength, int fftHop, ColourArray colourArray, double[] clims) {
 
 		if (featureExtraction==null)
-			this.spectrogramImage = new SpectrogramImage(clip.getSpectrogram().getAbsoluteSpectrogram(), colourArray, clims); 
+			this.spectrogramImage = new SpectrogramImage(clip.getSpectrogram(fftLength, fftHop).getAbsoluteSpectrogram(), colourArray, clims); 
 		else {
-			this.spectrogramImage = FeaturePane.getFeatureImage(clip.getSpectrogram(), featureExtraction, clims, colourArray); 
+			this.spectrogramImage = FeaturePane.getFeatureImage(clip.getSpectrogram(fftLength, fftHop), featureExtraction, clims, colourArray); 
 		}
 		//draw the image onto the canvas. 
 		//		imageCanvas.getGraphicsContext2D().drawImage(spectrogramImage.getWritableImage(), 0, 0);

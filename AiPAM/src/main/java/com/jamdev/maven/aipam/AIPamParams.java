@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jamdev.maven.aipam.annotation.Annotation;
+import com.jamdev.maven.aipam.clips.SpecParams;
 import com.jamdev.maven.aipam.clips.datetime.DateTimeParams;
 import com.jamdev.maven.aipam.clips.datetime.StandardDateTimeParams;
 import com.jamdev.maven.aipam.clustering.Params;
@@ -58,26 +59,13 @@ public class AIPamParams implements Cloneable  {
 
 	//FFT settings 
 
+	
 	/**
-	 * The fft length for clip spectrograms. 
+	 * Parameters for generating a spectrogram. Includes information such as FFT length, FFT hop, 
+	 * and information for colour maps. 
 	 */
-	public int fftLength = 512; 
-
-	/**
-	 * The fft hop for clip spectrograms
-	 */
-	public int fftHop = 256;
-
-	/**
-	 * The colour array type for the clip spectrograms. 
-	 */
-	public ColourArrayType spectrogramColour = ColourArrayType.GREY; 
-
-	/**
-	 * The colour limits for the spectrogram. Closer limits usually increase contrast.
-	 */
-	public double[] colourLims = new double[]{20, 100};  
-	//	public double[] colourLims = new double[]{0, 100};  
+	public SpecParams spectrogramParams = new SpecParams(); 
+	
 	
 	//playback settings
 	
@@ -137,6 +125,8 @@ public class AIPamParams implements Cloneable  {
 		try {
 			 AIPamParams cloneParams = (AIPamParams) super.clone();
 			 cloneParams.clusterParams= clusterParams.clone(); 
+			 cloneParams.spectrogramParams= spectrogramParams.clone(); 
+
 			return cloneParams;
 		}
 		catch (Exception e) {

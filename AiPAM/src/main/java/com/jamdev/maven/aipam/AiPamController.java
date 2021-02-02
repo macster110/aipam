@@ -261,7 +261,7 @@ public class AiPamController {
 	
 	
 	/**
-	 * Load the audio data and calculate the spectrograms for a page of lcisp. 
+	 * Load the audio data and calculate the spectrograms for a page of stuff. 
 	 * @param selectedDirectory - the directory for the clips
 	 * @param loadClips - true to load the clips. False checks the files. 
 	 */
@@ -427,7 +427,7 @@ public class AiPamController {
 			exportTask.cancel(true);
 		}
 		
-		exportTask = 	this.clipExporter.exportClipTask(annotatedClips, exportedClips, this.aiPamParams); 
+		exportTask = this.clipExporter.exportClipTask(annotatedClips, exportedClips, this.aiPamParams); 
 		
 		updateMessageListeners(START_CLIP_EXPORT, exportTask); 
 
@@ -453,6 +453,14 @@ public class AiPamController {
 	 */
 	public FeatureExtractionManager getFeatureExtractionManager() {
 		return this.featureExtractionManager; 
+	}
+
+	/**
+	 * Get the PAM clip manager - this handles loading clips into memory. 
+	 * @return the pam clip manager. 
+	 */
+	public PAMClipManager getPamClipManager() {
+		return this.pamClipManager;
 	}
 
 

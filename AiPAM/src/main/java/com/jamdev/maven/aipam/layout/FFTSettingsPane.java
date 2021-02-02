@@ -54,7 +54,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 	private Pane mainPane;
 	
 	/**
-	 * Combo box whiohc shows possible colour type.s 
+	 * Combo box which shows possible colour type.s 
 	 */
 	private ComboBox<String> colorType;
 	
@@ -108,15 +108,16 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		fftComboBox.getSelectionModel().select(8); // 512 samples default
 		fftComboBox.setOnAction((action)->{
 			notifySettingsListeners();
+			updateSpecImage(this.currentPreviewClip);
 		});
 
 		fftComboBox.setTooltip(new Tooltip(
-							"The FFT length is the length of each chunk used to calculate a \n"
-						+ " spectrogram. The chunk lengths are in sample bins. The way the FFT calculation works means \n"
-						+ " that larger chunks allow for better frequency resolution, however because they require \n"
+						  "The FFT length is the length of each chunk used to calculate a \n"
+						+ "spectrogram. The chunk lengths are in sample bins. The way the FFT calculation works means \n"
+						+ "that larger chunks allow for better frequency resolution, however because they require \n"
 						+ "more samples time resolution is lost. Therefore a balance is required between larger chunks \n"
 						+ "giving better frequency resolution and smaller chunks giving better time resolution. In \n"
-						+ "passive acoustic monitoring chunk sizes are usually 512 ->2048 "));
+						+ "passive acoustic monitoring chunk sizes are usually 512 -> 2048 "));
 
 		Label fftHopLabel = new Label("FFT Hop");
 		fftHopLabel.getStyleClass().add("label-title2");
@@ -128,6 +129,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 				+ "the samples before a new FFT chunk is calculated. Often the hop is half the FFT length \n"));  
 		hopComboBox.setOnAction((action)->{
 			notifySettingsListeners();
+			updateSpecImage(this.currentPreviewClip);
 		});
 		
 		Label colourScale = new Label("Colour Scales");
@@ -241,7 +243,6 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		clipPreviewHolder.setTop(colourScale);
 		clipPreviewHolder.setCenter(new Label("Select an imported clip to see a preview\nThis can be used to test colour scales"));
 
-
 		return clipPreviewHolder; 
 	}
 	
@@ -251,7 +252,7 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 	 */
 	private void updateSpecImage(PAMClip pamClip) {
 		if (pamClip==null) return; 
-		SpectrogramImage image = new SpectrogramImage(pamClip.getSpectrogram().getAbsoluteSpectrogram(), 
+		SpectrogramImage image = new SpectrogramImage(pamClip.getSpectrogram(aiPamView.getAIParams().spectrogramParams.fftLength, aiPamView.getAIParams().spectrogramParams.fftHop).getAbsoluteSpectrogram(), 
 				this.aiPamView.getCurrentColourArray(), new double[] {colourRangleSlider.getLowValue(), 
 						colourRangleSlider.getHighValue()}); 
 		
@@ -276,14 +277,14 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		for (int i=0; i<fftComboBox.getItems().size(); i++) {
 			//System.out.println("Set new audio info in spectrogram: " + samples/(double) fftComboBox.getItems().get(i));
 			if (samples/(double) fftComboBox.getItems().get(i)<25) {
-				params.fftLength = fftComboBox.getItems().get(i); 
+				params.spectrogramParams.fftLength = fftComboBox.getItems().get(i); 
 				break;
 			}; 
 		}
 	
 		//System.out.println("Set new audio info in spectrogram: " + params.fftLength );
 		
-		params.fftHop = params.fftLength/2; 
+		params.spectrogramParams.fftHop = params.spectrogramParams.fftLength/2; 
 		
 		setParams(params);
 	}
@@ -295,12 +296,12 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 
 	@Override
 	public AIPamParams getParams(AIPamParams paramsIn) {	
-		paramsIn.fftLength	=fftComboBox.getValue();
-		paramsIn.fftHop		=hopComboBox.getValue();
-		paramsIn.colourLims = new double[] {colourRangleSlider.getLowValue(), 
+		paramsIn.spectrogramParams.fftLength	= fftComboBox.getValue();
+		paramsIn.spectrogramParams.fftHop		= hopComboBox.getValue();
+		paramsIn.spectrogramParams.colourLims 	= new double[] {colourRangleSlider.getLowValue(), 
 				colourRangleSlider.getHighValue()}; 
 		//System.out.println("ColourLimits: " + paramsIn.colourLims[0] + "   " + paramsIn.colourLims[1]); 
-		paramsIn.spectrogramColour = ColourArray.getColorArrayType(colorType.getValue()); 
+		paramsIn.spectrogramParams.spectrogramColour = ColourArray.getColorArrayType(colorType.getValue()); 
 		return paramsIn;
 	}
 
@@ -308,15 +309,15 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 	public void setParams(AIPamParams params) {
 		//System.out.println("Set Params: " + params.fftLength);
 		
-		fftComboBox.getSelectionModel().select(Integer.valueOf(params.fftLength));
-		hopComboBox.getSelectionModel().select(Integer.valueOf(params.fftHop));
-		colourRangleSlider.setLowValue(params.colourLims[0]);
-		colourRangleSlider.setHighValue(params.colourLims[1]);
+		fftComboBox.getSelectionModel().select(Integer.valueOf(params.spectrogramParams.fftLength));
+		hopComboBox.getSelectionModel().select(Integer.valueOf(params.spectrogramParams.fftHop));
+		colourRangleSlider.setLowValue(params.spectrogramParams.colourLims[0]);
+		colourRangleSlider.setHighValue(params.spectrogramParams.colourLims[1]);
 		
 //		System.out.println("Set colour lims: " + params.colourLims[0] + "   " + 
 //		params.colourLims[1] + "  " + colourRangleSlider.getMax()); 		
 		
-		colorType.getSelectionModel().select(ColourArray.getName(params.spectrogramColour));
+		colorType.getSelectionModel().select(ColourArray.getName(params.spectrogramParams.spectrogramColour));
 		colourRangleSlider.setColourArrayType(ColourArray.getColorArrayType(colorType.getValue())); 
 	}
 	

@@ -81,10 +81,10 @@ public class SettingsImportExport {
 		
 
 		//the FFT settings
-		MLInt32 fftLength=mlInt(aiPamParam.fftLength);
-		MLInt32 fftHop=mlInt(aiPamParam.fftHop);
-		MLChar colourArrayType=new MLChar(null, ColourArray.getName(aiPamParam.spectrogramColour)); 
-		MLDouble colourLimits=new MLDouble(null, aiPamParam.colourLims , 2); 
+		MLInt32 fftLength=mlInt(aiPamParam.spectrogramParams.fftLength);
+		MLInt32 fftHop=mlInt(aiPamParam.spectrogramParams.fftHop);
+		MLChar colourArrayType=new MLChar(null, ColourArray.getName(aiPamParam.spectrogramParams.spectrogramColour)); 
+		MLDouble colourLimits=new MLDouble(null, aiPamParam.spectrogramParams.colourLims , 2); 
 		
 		//playback
 		MLDouble volume=mlDouble(aiPamParam.volume);
@@ -186,10 +186,10 @@ public class SettingsImportExport {
 			aiPamParams.decimatorSR=decimatorSR.get(0).intValue();
 			
 			//spectrogram settings. 
-			aiPamParams.fftHop=fftHop.get(0).intValue();
-			aiPamParams.fftLength=fftLength.get(0).intValue();
-			aiPamParams.colourLims = new double[]{colourLimits.get(0), colourLimits.get(1)}; 
-			aiPamParams.spectrogramColour= ColourArray.getColorArrayType(colourArrayType.getString(0)) ;
+			aiPamParams.spectrogramParams.fftHop=fftHop.get(0).intValue();
+			aiPamParams.spectrogramParams.fftLength=fftLength.get(0).intValue();
+			aiPamParams.spectrogramParams.colourLims = new double[]{colourLimits.get(0), colourLimits.get(1)}; 
+			aiPamParams.spectrogramParams.spectrogramColour= ColourArray.getColorArrayType(colourArrayType.getString(0)) ;
 			
 			//play back
 			aiPamParams.volume = volume.get(0);

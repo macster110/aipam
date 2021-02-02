@@ -28,7 +28,11 @@ import uk.me.berndporr.iirj.Butterworth;
  */
 public class StandardAudioImporter implements AudioImporter {
 
-
+	/**
+	 * The default bit size to encode bits as. This will mean that some 24-bit files are downs-sampled. 
+	 */
+	private static final int DEFAULT_BIT_SIZE = 16; 
+	
 	/**
 	 * The datetime parser for wav files. 
 	 */
@@ -98,6 +102,7 @@ public class StandardAudioImporter implements AudioImporter {
 		AudioFormat format = wavFile.getAudioFileFormat().getFormat(); 
 
 		long dateTime = datetimeParser.getTimeFromFile(audioFile);
+		System.err.println("Imported date time: " + dateTime);
 
 		int channels = format.getChannels(); 
 
@@ -138,7 +143,7 @@ public class StandardAudioImporter implements AudioImporter {
 		//		}
 		//		else { 
 
-		int[] samples = null;
+		short[] samplesShort = null;
 		if (saveWave) {
 
 			data = new byte[inputStream.available()];
@@ -155,7 +160,8 @@ public class StandardAudioImporter implements AudioImporter {
 				data= WavFile.trim( format, data,  maxSamples); 
 			}
 
-			samples = WavFile.getSampleAmplitudes(format, data);
+			int [] samples = WavFile.getSampleAmplitudes(format, data);
+			double bitSize = Math.pow(2, format.getSampleSizeInBits()); 
 
 			//return new WavClipWave(wavFile, WavFile.getSampleAmplitudes(format, data)); 
 
@@ -167,7 +173,7 @@ public class StandardAudioImporter implements AudioImporter {
 				butterworth.lowPass(4,format.getSampleRate(), decimatorSr/2);
 
 				double[] wavArray = new double[samples.length]; 
-				double bitSize = Math.pow(2, format.getSampleSizeInBits()); 
+				
 				for (int i=0; i<wavArray.length; i++) {
 					wavArray[i] = butterworth.filter((double) samples[i]/bitSize);
 				}
@@ -181,15 +187,28 @@ public class StandardAudioImporter implements AudioImporter {
 
 				int[] samplesDecimated = new int[wavArray.length]; 
 				for (int i=0; i<wavArray.length; i++) {
-					samplesDecimated[i]=(int) (bitSize*wavArray[i]);
+					//we want to always convert down to a 16-bit number
+					samplesDecimated[i]=(short) (bitSize*wavArray[i]);
 				}
 
 				samples=samplesDecimated; 
 			}
+			
+			/**
+			 * samples are in int forma and so can be 24 bit etc. Now down-sample the amplitude to 16 bit so that it can be short 
+			 * and save memory
+			 */
+			
+			double defaultBitSize = Math.pow(2, DEFAULT_BIT_SIZE); 
 
+			samplesShort = new short[samples.length]; 
+
+			for (int i=0; i<samples.length; i++) {
+				samplesShort[i] = (short) (defaultBitSize*(samples[i]/bitSize)); 
+			}
 		}
 
-		return new WavClipWave(wavFile, samples, sampleRate, dateTime, numSamples); 
+		return new WavClipWave(wavFile, samplesShort, sampleRate, dateTime, numSamples); 
 
 		//System.out.println("singleChan: " + singleChan.length + " all bytes: " + data.length );
 

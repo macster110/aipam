@@ -294,8 +294,8 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 		//		System.out.println("Min max " + " min: " + AiPamUtils.min(featureData) + " max: " + AiPamUtils.max(featureData)); 
 
 		double[] colourlims = new double[2];
-		colourlims[0] = this.aiPamView.getAIControl().getParams().colourLims[0];
-		colourlims[1] = this.aiPamView.getAIControl().getParams().colourLims[1];
+		colourlims[0] = this.aiPamView.getAIControl().getParams().spectrogramParams.colourLims[0];
+		colourlims[1] = this.aiPamView.getAIControl().getParams().spectrogramParams.colourLims[1];
 		
 		return  getFeatureImage( spectrogram,  featureExtractor, colourlims,  colourArray); 
 	}
@@ -310,7 +310,8 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 
 		if (pamClip==null) return; 
 
-		SpectrogramImage image =  getFeatureImage(pamClip.getSpectrogram()); 
+		SpectrogramImage image =  getFeatureImage(pamClip.getSpectrogram(aiPamView.getAIControl().getParams().spectrogramParams.fftLength, 
+				aiPamView.getAIControl().getParams().spectrogramParams.fftHop)); 
 
 		specImage.setImage(image.getSpecImage(200, 200));	
 

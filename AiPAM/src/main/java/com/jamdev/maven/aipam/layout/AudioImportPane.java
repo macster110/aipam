@@ -404,7 +404,6 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 		this.setAllowNotify(true);
 
-
 	}
 
 

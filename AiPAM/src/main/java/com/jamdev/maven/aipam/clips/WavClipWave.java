@@ -29,7 +29,7 @@ public class WavClipWave implements ClipWave {
 	/**
 	 * The raw .wav file data in bin format e.g. 16 bit is +32000
 	 */
-	private int[] data;
+	private short[] data;
 	
 	
 	
@@ -56,7 +56,7 @@ public class WavClipWave implements ClipWave {
 	 * @param sampleRate
 	 * @param date
 	 */
-	public WavClipWave(WavFile wavFile, int[] data, int sampleRate, long date, long numSamples) {
+	public WavClipWave(WavFile wavFile, short[] data, int sampleRate, long date, long numSamples) {
 		this.wavFile= wavFile;
 		this.data = data; 
 		this.sampleRate = sampleRate;
@@ -97,7 +97,7 @@ public class WavClipWave implements ClipWave {
 
 
 	@Override
-	public int[] getSampleAmplitudes() {
+	public short[] getSampleAmplitudes() {
 		return data;
 	}
 
@@ -114,6 +114,11 @@ public class WavClipWave implements ClipWave {
 	@Override
 	public long getTimeMillis() {
 		return date;
+	}
+
+	@Override
+	public void setSampleAmplitudes(short[] amplitudes) {
+		this.data=amplitudes; 
 	}
 
 	

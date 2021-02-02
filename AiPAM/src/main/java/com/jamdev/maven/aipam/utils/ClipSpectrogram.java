@@ -6,7 +6,7 @@ import org.jamdev.jpamutils.wavFiles.AudioData;
 import com.jamdev.maven.aipam.clips.WavClipWave;
 
 /**
- * Bespoke spectrogram class inspired by DeepLearning4j Spectrogram class. 
+ * Default spectrogram class inspired by DeepLearning4j Spectrogram class. 
  * 
  * @author Jamie Macaulay
  *

@@ -2,6 +2,9 @@ package com.jamdev.maven.aipam.clips.datetime;
 
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.FileTime;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,7 +59,7 @@ public class StandardDateTimeParser implements DateTimeParser {
 			"yyyy-MM-dd HH_mm_ss", // Avisoft.
 			"yyyy-MM-dd_HH-mm-ss", // y2000 Cornell pop up data
 			"yyyyMMddHHmmss", //Tanzania survey (recorder using 'bul filerename' program)
-			"yyyy-MM-dd HH-mm-ss" // RS Orca recorder. index 32. Must remain at this position !!!!
+			"yyyy-MM-dd HH-mm-ss", // RS Orca recorder. index 32. Must remain at this position !!!!
 	};
 
 
@@ -120,7 +123,7 @@ public class StandardDateTimeParser implements DateTimeParser {
 		if (lastNum < 0) return 0;
 
 		String numbers = fileName.substring(firstNum, lastNum+1);
-		//		System.out.println(numbers);
+		System.out.println(numbers);
 
 
 		//Default time stamps
@@ -144,9 +147,11 @@ public class StandardDateTimeParser implements DateTimeParser {
 			return cl.getTimeInMillis();
 		}
 
-		//None of the formats worked.
+	
 		setLastFormat("Unparsable date format: " + numbers);
-		return 0;
+		
+		System.err.println("Unparseable data format: " + file.lastModified());
+		return 	file.lastModified();
 	}
 
 	private long forcedDataFormat(File file, String forcedDateFormat) {
