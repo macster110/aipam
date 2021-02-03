@@ -151,7 +151,7 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 		}
 		//draw the image onto the canvas. 
 		//		imageCanvas.getGraphicsContext2D().drawImage(spectrogramImage.getWritableImage(), 0, 0);
-		Image specImage = spectrogramImage.getSpecImage((int) imageCanvas.getWidth(), (int) imageCanvas.getWidth()); 
+		Image specImage = spectrogramImage.getSpecImage((int) imageCanvas.getWidth(), (int) imageCanvas.getHeight()); 
 		imageCanvas.getGraphicsContext2D().drawImage(specImage, 0, 0, imageCanvas.getWidth(), imageCanvas.getHeight(), 
 				0,0, specImage.getWidth(), specImage.getHeight());
 		//		imageCanvas.getGraphicsContext2D().fillOval(2, 2, 10, 10); 

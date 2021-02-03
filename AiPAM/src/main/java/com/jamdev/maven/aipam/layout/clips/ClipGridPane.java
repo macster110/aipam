@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 
 /**
  * Pane which shows all the clips.
@@ -29,10 +30,12 @@ import javafx.scene.layout.TilePane;
  */
 public class ClipGridPane extends BorderPane {
 
+	public static final double TILE_SPACING = 5; 
+
 	/**
 	 * The tile pane which holds the tiles. 
 	 */
-	private TilePane tilePane;
+	private VBox tilePane;
 
 	/**
 	 * The current clips. 
@@ -44,6 +47,17 @@ public class ClipGridPane extends BorderPane {
 	 */
 	private AIPamView aiPamView;
 
+	/**
+	 * The grid size to use. 
+	 */
+	private int[] gridSize;
+
+	/** 
+	 * The total time of all clips in the pane.  
+	 * 
+	 */
+	private double totalClipTime = 0 ;
+
 	public ClipGridPane(AIPamView aiPamView) {
 		this.aiPamView=aiPamView; 
 		this.setCenter(createPane());
@@ -54,11 +68,12 @@ public class ClipGridPane extends BorderPane {
 	 * @return the clip pane. 
 	 */
 	private Node createPane() {
-		
-		tilePane = new TilePane();
+
+		tilePane = new VBox();
 		tilePane.setPadding(new Insets(5));
-		tilePane.setVgap(2);
-		tilePane.setHgap(2);
+		tilePane.setSpacing(TILE_SPACING);
+		//		tilePane.setVgap(2);
+		//		tilePane.setHgap(2);
 		//tilePane.setPrefColumns(4);
 
 		HBox hbox = new HBox();
@@ -100,8 +115,11 @@ public class ClipGridPane extends BorderPane {
 		///clips have no trimming so the width needs to be reflect the clip length
 		double medianLen = aiPamView.getAIControl().getAudioInfo().medianFilelength;
 		int width = (int) (100.0*pamClip.getClipLength()/medianLen);
-		return new int[] {width,100};
+		return new int[] {width, 100};
 	}
+	
+	
+
 
 	/**
 	 * Task for spectrogram data. 
@@ -109,21 +127,25 @@ public class ClipGridPane extends BorderPane {
 	 * @return the 
 	 */
 	public Task<Integer> generateSpecImagesTask(ArrayList<PAMClip> pamClips) {
-		
+
 		if (pamClips==null) return null; 
 
 		//work out the number of clips that have a spectrogram - these are hte only ones that will be displayed in the page. 
 		int nClips =0 ; 
+		totalClipTime = 0;
 		for (PAMClip pamClip: pamClips) {
-			if (pamClip.getSpectrogram(aiPamView.getAIParams().spectrogramParams.fftLength, aiPamView.getAIParams().spectrogramParams.fftLength)!=null) nClips++; 
+			if (pamClip.getSpectrogram(aiPamView.getAIParams().spectrogramParams.fftLength, 
+					aiPamView.getAIParams().spectrogramParams.fftLength)!=null) {
+				
+				nClips++; 
+				totalClipTime += pamClip.getClipLength();
+			}
 		}
-		
-		System.out.println("NCLIPS TO LOAD: " + nClips); 
-		
-		int[] gridSize = ClusterSnapGrid.calcGridSize(nClips);
-		
-		tilePane.setPrefColumns(gridSize[0]);
-//
+
+		//		System.out.println("NCLIPS TO LOAD: " + nClips); 
+
+		gridSize = ClusterSnapGrid.calcGridSize(nClips);
+		//
 		currentPamClips= new ArrayList<PamClipPane>(); 
 
 		Task<Integer> task = new Task<Integer>() {
@@ -137,21 +159,21 @@ public class ClipGridPane extends BorderPane {
 					double memoryMB ;
 					for (int i=0; i<pamClips.size(); i++) {
 						final int ii=i; 
-						
+
 						//clips which have no pane are not shown. 
 						if (pamClips.get(i).getSpectrogram(aiPamView.getAIParams().spectrogramParams.fftLength, aiPamView.getAIParams().spectrogramParams.fftLength)==null) continue;
-						
+
 						int[] clipSize = getClipsSize(pamClips.get(i), pamClips.size()); 
-						
+
 						UtilsFX.runAndWait(() -> {
 							//must run on FX thread as generates an image. 
 							FeatureExtraction featureExtraction=null; 
 							if (aiPamView.getAIParams().showFeatures) {
 								featureExtraction=aiPamView.getAIControl().getFeatureExtractionManager().getCurrentFeatureExtractor(); 
 							}
-							
+
 							final PamClipPane pamClipPane = new PamClipPane(pamClips.get(ii), clipSize[0], clipSize[1], 
-									 aiPamView.getAIParams().spectrogramParams,  aiPamView.getCurrentColourArray(), featureExtraction);
+									aiPamView.getAIParams().spectrogramParams,  aiPamView.getCurrentColourArray(), featureExtraction);
 							pamClipPane.setSelectionManager(aiPamView.getClipSelectionManager()); 
 							//add child on the fx pane
 							//tilePane.getChildren().add(pamClipPane); 
@@ -164,12 +186,12 @@ public class ClipGridPane extends BorderPane {
 						memoryMB = Runtime.getRuntime().totalMemory()/1000./1000.; 
 						this.updateMessage(String.format("Generating image %d of %d | Memory usage: %.2f MB",i,  pamClips.size(), memoryMB));
 					}
-					
+
 					updateProgress(-1, pamClips.size());
 					memoryMB = Runtime.getRuntime().totalMemory()/1000./1000.; 
 					updateMessage(String.format("Drawing %d  images | Memory usage: %.2f MB",  pamClips.size(), memoryMB));
 					//need to do this all in a oner or get this classic NGCnvas null pointer. 
-					Platform.runLater(()->layoutClips()); 
+					Platform.runLater(()->layoutClips(gridSize)); 
 
 					//Thread.sleep(3000); // give the FX thread some time to load the images with scroll bar still showing 
 					return pamClips.size();
@@ -183,38 +205,80 @@ public class ClipGridPane extends BorderPane {
 		};
 		return task; 
 	}
-	
 
+	
 
 	/**
 	 * Layout all the clips in order of their gridID flag. 
 	 */
+	public void layoutClips() {
+		layoutClips(this.gridSize);
+	}
+
+
+
+	/**
+	 * Layout all the clips in order of their gridID flag. 
+	 * @param - the size of the grid in width and height
+	 */
 	@SuppressWarnings("unchecked")
-	public void layoutClips(){
+	public void layoutClips(int[] gridSize){
 		System.out.println("ClipGridPane: Layout clips: "); 
 		//make sure that all the clips are cleared
 		tilePane.getChildren().clear();
-		tilePane.setTileAlignment(Pos.CENTER_LEFT);
-		
+		//tilePane.setTileAlignment(Pos.CENTER_LEFT);
+
+
 		//we need to find all the clips in order of their clip ID. Sort the list so 
 		//grid ID's are in ascending order.
 		//Collections.sort(currentPamClips); //FIXME - need to sort this out.
-		
+
 		//now simply add to the pane. 
+		HBox hBox = null; 
+		double rowTime = 0; 
+		
 		for (int i=0; i<currentPamClips.size(); i++) {
-			this.tilePane.getChildren().add(currentPamClips.get(i)); 
-		 	TilePane.setAlignment(currentPamClips.get(i), Pos.CENTER_LEFT);
+			
+			if (isNewRow(i, rowTime)) {
+				if (hBox!=null) {
+					tilePane.getChildren().add(hBox);
+				}
+				hBox = new HBox(); 
+				hBox.setSpacing(5);
+				rowTime=0;
+			}
+			rowTime=rowTime+currentPamClips.get(i).getPamClip().getClipLength();
+			hBox.getChildren().add(currentPamClips.get(i)); 
+			//TilePane.setAlignment(currentPamClips.get(i), Pos.CENTER_LEFT);
+		}
+		tilePane.getChildren().add(hBox);
+	}
+
+	/**
+	 * Check whether there is a new clip row. 
+	 * @param i - the current clip index. 
+	 * @param rowTime - the total time of clips in the current row in seconds. 
+	 * @return true to start a new row. 
+	 */
+	private boolean isNewRow(int i, double rowTime) {
+		if ( this.aiPamView.getAIParams().maximumClipLength==-1) {
+			//check the total time of the row. 
+			return rowTime>(totalClipTime/gridSize[1]) || i==0;
+		}
+		else {
+			//the same number of clips per row so just use grid size
+			return i%gridSize[0] == 0;
 		}
 	}
 
 	/**
 	 * The tile pane. 
-	 * @return
+	 * @return the pane which shows tiles. 
 	 */
 	public Pane getTilePane() {
 		return tilePane;
 	}
-	
+
 	/**
 	 * Get the current clips. 
 	 * @return the current clips.
@@ -231,6 +295,6 @@ public class ClipGridPane extends BorderPane {
 		return currentPamClips;
 	}
 
-	
+
 
 }
