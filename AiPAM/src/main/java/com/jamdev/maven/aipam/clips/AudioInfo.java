@@ -53,4 +53,9 @@ public class AudioInfo {
 	 * The path to the audio file. 
 	 */
 	public String file; 
+	
+	/**
+	 * Flag for the type of data. 
+	 */
+	public int dataType; 
 }

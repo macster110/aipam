@@ -101,6 +101,14 @@ public class PAMClip implements Comparable<PAMClip> {
 	 */
 	public void clearAudioData() {
 		clipWave.setSampleAmplitudes(null); 
+		spectrogramClip = null; 
+	}
+	
+	/**
+	 * Clear the spectrogram data. Helps to release memory. 
+	 */
+	public void clearSpectrogram() {
+		spectrogramClip = null; 
 	}
 
 	/**

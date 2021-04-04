@@ -80,6 +80,7 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 		this.clip=clip; 
 		this.featureExtraction  = featureExtraction; 
 		//create the pane 
+		
 		this.getChildren().add(imageCanvas = new Canvas(width, height)); 
 
 		//clip features

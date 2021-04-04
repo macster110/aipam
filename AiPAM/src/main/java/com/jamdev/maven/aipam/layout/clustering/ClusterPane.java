@@ -1,33 +1,20 @@
 package com.jamdev.maven.aipam.layout.clustering;
 
-import java.io.File;
 import java.io.InputStream;
-
-import org.apache.batik.anim.dom.SVGOMDocument;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.clustering.tsne.TSNEParams;
 import com.jamdev.maven.aipam.layout.AIPamView;
 import com.jamdev.maven.aipam.layout.TSNEClusterPane;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
-import com.jamdev.maven.aipam.layout.utilsFX.PamSVGIcon;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsListener;
 
-import afester.javafx.svg.GradientPolicy;
 import afester.javafx.svg.SvgLoader;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 /**
  * Pane for clustering algorithms.

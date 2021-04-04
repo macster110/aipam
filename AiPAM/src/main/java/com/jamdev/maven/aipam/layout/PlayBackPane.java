@@ -185,7 +185,8 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 	public Node getIcon() {
 		FontAwesomeIconView iconView = new FontAwesomeIconView(FontAwesomeIcon.PLAY); 
 		iconView.setGlyphSize(AIPamView.iconSize);
-		iconView.setFill(Color.WHITE);
+		//iconView.setFill(Color.WHITE);
+		//iconView.setStyle("-fx-fill: TEXT_FILL;");
 		return iconView;
 	}
 

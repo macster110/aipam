@@ -10,7 +10,18 @@
     TEXT_FILL: black;
     TEXT_USER_PROMPT: blue;
 
+}
 
     /*Override JMetro*/
     ACCENT_COLOR: #26C223; /*For high lights, toggle buttons etc.**/
+
+.root{
+	-icons-color: black;
+}
+
+.glyph-icon{
+	-fx-text-fill: -icons-color;
+	-fx-fill: -icons-color;
+}
+
 }

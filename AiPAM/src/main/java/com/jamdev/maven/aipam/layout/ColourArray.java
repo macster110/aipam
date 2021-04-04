@@ -148,6 +148,7 @@ public class ColourArray implements Cloneable, Serializable{
 			break;
 		case MATLAB:
 			array = createMATLABArray(nPoints);
+			break;
 		case INFERNO:
 			array =createInfronArray(nPoints); 
 			break;

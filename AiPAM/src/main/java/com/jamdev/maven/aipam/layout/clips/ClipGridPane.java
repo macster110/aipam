@@ -31,6 +31,16 @@ import javafx.scene.layout.VBox;
 public class ClipGridPane extends BorderPane {
 
 	public static final double TILE_SPACING = 5; 
+	
+	/**
+	 * The maximum allowed length of a clip
+	 */
+	public static final int MAX_CLIP_PIXEL_LEN = 1000; //4K  
+
+	/**
+	 * The default clip length
+	 */
+	public static final int DEFUALT_CLIP_PIXEL_LEN = 100; //4K  
 
 	/**
 	 * The tile pane which holds the tiles. 
@@ -110,12 +120,34 @@ public class ClipGridPane extends BorderPane {
 	public int[] getClipsSize(PAMClip pamClip, int nClips) {
 		if (aiPamView.getAIParams().maximumClipLength>0) {
 			//clips have been trimmed so they are all the same length
-			return new int[] {100,100};
+			return new int[] {DEFUALT_CLIP_PIXEL_LEN, DEFUALT_CLIP_PIXEL_LEN};
 		}
 		///clips have no trimming so the width needs to be reflect the clip length
 		double medianLen = aiPamView.getAIControl().getAudioInfo().medianFilelength;
-		int width = (int) (100.0*pamClip.getClipLength()/medianLen);
-		return new int[] {width, 100};
+		double maxLen = aiPamView.getAIControl().getAudioInfo().maxFileLength; 
+		
+		//what if we have some absolutely massive canvas and some wee ones too - that is going to cause an issues. So 
+		//have to make a decision as to what is going to be the maximum. 
+		
+//		System.out.println("maxLen: " + maxLen +  " medianLen " + medianLen 
+//				+ "  PAMClip len: " + pamClip.getClipLength()
+//				+ " r1: " + (medianLen/maxLen)
+//				+ " r2: " + ((double) DEFUALT_CLIP_PIXEL_LEN/MAX_CLIP_PIXEL_LEN)); 
+
+		
+		int width; 
+		if ((medianLen/maxLen) > ((double) DEFUALT_CLIP_PIXEL_LEN/MAX_CLIP_PIXEL_LEN)) {
+			//we have a problem - need to use max length. 
+			//todo BROKEM
+			width = (int) (MAX_CLIP_PIXEL_LEN*pamClip.getClipLength()/maxLen);
+		}
+		else {
+			 width = (int) (DEFUALT_CLIP_PIXEL_LEN*pamClip.getClipLength()/medianLen);
+		}
+		
+		System.out.println("Width: " + width); 
+		
+		return new int[] {Math.min(MAX_CLIP_PIXEL_LEN, width), 100};
 	}
 	
 	
@@ -155,13 +187,13 @@ public class ClipGridPane extends BorderPane {
 				try {
 					this.updateTitle("Generating Clip Images");
 
-
 					double memoryMB ;
 					for (int i=0; i<pamClips.size(); i++) {
 						final int ii=i; 
 
 						//clips which have no pane are not shown. 
-						if (pamClips.get(i).getSpectrogram(aiPamView.getAIParams().spectrogramParams.fftLength, aiPamView.getAIParams().spectrogramParams.fftLength)==null) continue;
+						if (pamClips.get(i).getSpectrogram(aiPamView.getAIParams().spectrogramParams.fftLength, 
+								aiPamView.getAIParams().spectrogramParams.fftLength)==null) continue;
 
 						int[] clipSize = getClipsSize(pamClips.get(i), pamClips.size()); 
 
@@ -178,6 +210,9 @@ public class ClipGridPane extends BorderPane {
 							//add child on the fx pane
 							//tilePane.getChildren().add(pamClipPane); 
 							currentPamClips.add(pamClipPane);
+							
+							pamClips.get(ii).clearSpectrogram(); 
+
 						});
 
 
@@ -190,8 +225,10 @@ public class ClipGridPane extends BorderPane {
 					updateProgress(-1, pamClips.size());
 					memoryMB = Runtime.getRuntime().totalMemory()/1000./1000.; 
 					updateMessage(String.format("Drawing %d  images | Memory usage: %.2f MB",  pamClips.size(), memoryMB));
+				
+					
 					//need to do this all in a oner or get this classic NGCnvas null pointer. 
-					Platform.runLater(()->layoutClips(gridSize)); 
+					Platform.runLater(()->layoutClips()); 
 
 					//Thread.sleep(3000); // give the FX thread some time to load the images with scroll bar still showing 
 					return pamClips.size();
@@ -208,12 +245,6 @@ public class ClipGridPane extends BorderPane {
 
 	
 
-	/**
-	 * Layout all the clips in order of their gridID flag. 
-	 */
-	public void layoutClips() {
-		layoutClips(this.gridSize);
-	}
 
 
 
@@ -222,7 +253,7 @@ public class ClipGridPane extends BorderPane {
 	 * @param - the size of the grid in width and height
 	 */
 	@SuppressWarnings("unchecked")
-	public void layoutClips(int[] gridSize){
+	public void layoutClips(){
 		System.out.println("ClipGridPane: Layout clips: "); 
 		//make sure that all the clips are cleared
 		tilePane.getChildren().clear();

@@ -2,6 +2,7 @@ package com.jamdev.maven.aipam.clips;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,26 +14,47 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.jamdev.jpamutils.wavFiles.WavFile;
+import org.jamdev.pambinaries.audiomoth.AudioMothTData;
+import org.jamdev.pambinaries.audiomoth.AudioMothTFile;
+
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.clips.datetime.DateTimeParser;
 import com.jamdev.maven.aipam.clips.datetime.StandardDateTimeParser;
 import com.jamdev.maven.aipam.utils.AiPamUtils;
 import com.jamdev.maven.aipam.utils.ArrayScaler;
-import com.jamdev.maven.aipam.utils.WavFile;
 
 import uk.me.berndporr.iirj.Butterworth;
 /**
- * Standard audio importer for single .wav clips
+ * Standard audio importer for clips. This handles multiple file types such as AudioMoth clips, 
+ * wav file clips, and PAMGuard binary files. 
+ * 
+ * 
  * @author Jamie Macaulay 
  *
  */
 public class StandardAudioImporter implements AudioImporter {
+	
+	/**
+	 * The file type is a wave clip. 
+	 */
+	public static final int WAV_CLIP = 0; 
+	
+	/**
+	 * AudioMoth trigger file 
+	 */
+	public static final int AUDIO_MOTH = 1; 
+	
+	/**
+	 *  PAMGUARD binary file
+	 */
+	public static final int PG_BINARY = 2; 
 
 	/**
 	 * The default bit size to encode bits as. This will mean that some 24-bit files are downs-sampled. 
 	 */
 	private static final int DEFAULT_BIT_SIZE = 16; 
-	
+
 	/**
 	 * The datetime parser for wav files. 
 	 */
@@ -45,33 +67,55 @@ public class StandardAudioImporter implements AudioImporter {
 	@Override
 	public ArrayList<ClipWave> importAudio(File audioFile, AIPamParams aiPamParams, AudioImporterListener audioImporterListener, boolean saveWave) {
 
-		//FIXME
-		//The Wave class is actually a bit naff but integrates with deeplearning4j so we 
-		//need it. It does not handle multi-channel .wav files very well. So we need to open a multi channel
-		//wav file, get the byte stream for 1 channel, alter the header so it's single channel and then 
-		//use the Wave(wavHeader, byte[]) constructor instead of the direct file constructor. 
-		//Messy but best option untill the deeplearning4j library is updated. 
+		ArrayList<ClipWave> waves = null; 
 
-		//first open the file
+		//now lets figure out what type of file we have. 
+		if (AudioMothTFile.isAudioMothTFile(audioFile)) {
+			//is this an AudioMoth trigger file?
+			ArrayList<AudioMothTData> audioMothChunks;
+			try {
+				
+				audioMothChunks = AudioMothTFile.loadTFile(audioFile);
 
-		// reads the first 44 bytes for header
-		try {
-			//a wave 
-			ClipWave wave = initWaveWithInputStream(audioFile, aiPamParams.channel, aiPamParams.maximumClipLength, aiPamParams.decimatorSR, saveWave); 
+				System.out.println("Load AudioMothTFile: N: " + audioMothChunks.size()); 
 
-			//add to arrya because that is is what interface needs.  
-			ArrayList<ClipWave> waves = new ArrayList<ClipWave>();
-			waves.add(wave); 
-			return waves; 
+				waves = new ArrayList<ClipWave>();
+				for (AudioMothTData audioMothTData : audioMothChunks) {
+					waves.add(new WavClipWave(audioFile, audioMothTData.wave, (int) audioMothTData.sR, audioMothTData.timeMillis, audioMothTData.wave.length)); 
+					
+//					System.out.println("Load AudioMothTFile: duration: " + (audioMothTData.wave.length/audioMothTData.sR)
+//							+ " timeMillis: " + audioMothTData.timeMillis + " sR: " + audioMothTData.sR); 
+//					System.out.println("Length: " + waves.get(waves.size()-1).getLengthInSeconds()); 
 
-		} catch (IOException | UnsupportedAudioFileException| NullPointerException e) {
-			e.printStackTrace();
-			return null;
+				}
+				return waves; 
+			} catch (UnsupportedAudioFileException | IOException | ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			} 
+		}
+		else {
+			//we have wav files so assume each wav fiel is a clip. 
+			// reads the first 44 bytes for header
+			try {
+				//a wave 
+				ClipWave wave = initWaveWithInputStream(audioFile, aiPamParams.channel, aiPamParams.maximumClipLength, aiPamParams.decimatorSR, saveWave); 
+
+				//add to arrya because that is is what interface needs.  
+				waves = new ArrayList<ClipWave>();
+				waves.add(wave); 
+				return waves; 
+
+			} catch (IOException | UnsupportedAudioFileException| NullPointerException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 
 	}
 
-	
+
 	/**
 	 * Get the number of samples. 
 	 * @param audioFileFormat - the audio format. 
@@ -80,10 +124,10 @@ public class StandardAudioImporter implements AudioImporter {
 	private int getNumSamples(int bytes, AudioFileFormat audioFileFormat) {
 		//System.out.println("Byte length: "+ bytes);
 		return (int) (bytes
-		        /(double)  (audioFileFormat.getFormat().getFrameSize()));
+				/(double)  (audioFileFormat.getFormat().getFrameSize()));
 	}
-	
-	
+
+
 	/**
 	 * Open a .wav file and extract a single channel of the raw byte data. Then package this single channel 
 	 * data into a wave class. Not ideal but .wav e does not handle multi-channel .wav files very well. 
@@ -95,10 +139,10 @@ public class StandardAudioImporter implements AudioImporter {
 	 * @throws WavFileException 
 	 * @throws UnsupportedAudioFileException 
 	 */
-	private ClipWave initWaveWithInputStream(File audioFile, int channel, double maxLen, int decimatorSr, boolean saveWave) throws IOException, UnsupportedAudioFileException {
+	public ClipWave initWaveWithInputStream(File audioFile, int channel, double maxLen, int decimatorSr, boolean saveWave) throws IOException, UnsupportedAudioFileException {
 		// reads the first 44 bytes for header
 		WavFile wavFile = new  WavFile(audioFile);
-		
+
 		AudioFormat format = wavFile.getAudioFileFormat().getFormat(); 
 
 		long dateTime = datetimeParser.getTimeFromFile(audioFile);
@@ -109,14 +153,14 @@ public class StandardAudioImporter implements AudioImporter {
 		int maxSamples=(int) (format.getSampleRate()*maxLen);
 
 		int sampleRate = (int) format.getSampleRate();
-						
+
 		// load data
 		AudioInputStream inputStream  = wavFile.getAudioInputStream(); 
 
 		int numSamples = getNumSamples(inputStream.available(), wavFile.getAudioFileFormat());
-	
-		//first downsample
-		//now downsample the data if need bed 
+
+		//first down sample
+		//now down sample the data if need bed 
 		byte[] data;
 		//		if (decimatorSr < format.getSampleRate()) {
 		//
@@ -173,7 +217,7 @@ public class StandardAudioImporter implements AudioImporter {
 				butterworth.lowPass(4,format.getSampleRate(), decimatorSr/2);
 
 				double[] wavArray = new double[samples.length]; 
-				
+
 				for (int i=0; i<wavArray.length; i++) {
 					wavArray[i] = butterworth.filter((double) samples[i]/bitSize);
 				}
@@ -193,12 +237,12 @@ public class StandardAudioImporter implements AudioImporter {
 
 				samples=samplesDecimated; 
 			}
-			
+
 			/**
-			 * samples are in int forma and so can be 24 bit etc. Now down-sample the amplitude to 16 bit so that it can be short 
+			 * samples are in int format and so can be 24 bit etc. Now down-sample the amplitude to 16 bit so that it can be short 
 			 * and save memory
 			 */
-			
+
 			double defaultBitSize = Math.pow(2, DEFAULT_BIT_SIZE); 
 
 			samplesShort = new short[samples.length]; 
@@ -208,7 +252,7 @@ public class StandardAudioImporter implements AudioImporter {
 			}
 		}
 
-		return new WavClipWave(wavFile, samplesShort, sampleRate, dateTime, numSamples); 
+		return new WavClipWave(wavFile.getFile(), samplesShort, sampleRate, dateTime, numSamples); 
 
 		//System.out.println("singleChan: " + singleChan.length + " all bytes: " + data.length );
 
@@ -256,7 +300,7 @@ public class StandardAudioImporter implements AudioImporter {
 
 				channels[j]=format.getFormat().getChannels();
 				sampleRate[j] = (float) format.getFormat().getSampleRate();
-				duration[j]  = getNumSamples(wavFile.byteLength, format);
+				duration[j]  = getNumSamples(wavFile.getByteLength(), format);
 
 
 				audioImporterListener.updateProgress((j/(double) files.size()), j, files.size()); 
@@ -282,7 +326,6 @@ public class StandardAudioImporter implements AudioImporter {
 		chnnlListElements.remove(new Integer(-1));
 		srListElements.remove(new Float(-1.0));
 
-
 		AudioInfo audioInfo = new AudioInfo();
 
 		//		System.out.println(" chnnlListElements: " + chnnlListElements);
@@ -296,7 +339,7 @@ public class StandardAudioImporter implements AudioImporter {
 		audioInfo.nFiles=files.size();
 		audioInfo.nFilesCorrupt = unopenablefiles; 
 		audioInfo.file = audioFileDirectory.getAbsolutePath();
-		
+
 		//System.out.println("Max sample duration: " +  AiPamUtils.max(duration));
 		audioInfo.maxFileLength = AiPamUtils.max(duration)/audioInfo.sampleRate;
 		audioInfo.medianFilelength = AiPamUtils.median(duration)/audioInfo.sampleRate;

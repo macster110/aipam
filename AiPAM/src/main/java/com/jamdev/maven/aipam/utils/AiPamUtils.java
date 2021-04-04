@@ -21,6 +21,11 @@ import javafx.scene.paint.Color;
 public class AiPamUtils {
 
 	/**
+	 * The maximum number of allowed channels 
+	 */
+	private static final int MAX_CHANNELS = 32;
+
+	/**
 	 * Get a list of files within a directory and sub directories.
 	 * @param directoryName - the name of the directory. 
 	 * @param type - the file extension (null for all file types)
@@ -427,6 +432,135 @@ public class AiPamUtils {
 		}
 		return  median(arr) ;
 	}
+
+
+	/**
+	 * Turn a bitmap into an array of channel numbers. 
+	 * @param channelMap channel map
+	 * @return channel list array
+	 */
+	public static int[] getChannelArray(int channelMap) {
+		int nChan = getNumChannels(channelMap);
+		//		if (nChan <= 0) { // better to return an empty array to avoid null pointer exceptions. 
+		//			return null;
+		//		}
+		int[] channels = new int[nChan];
+		for (int i = 0; i < nChan; i++) {
+			channels[i] = getNthChannel(i, channelMap);
+		}
+		return channels;
+	}
+
+
+	/**
+	 * Get the number of channels present in this bitmap. 
+	 * (calls Integer.bitCount(...))
+	 * @param channelBitmap channel map
+	 * @return number of bits set.
+	 */
+	public static int getNumChannels(int channelBitmap) {
+		return Integer.bitCount(channelBitmap);
+	}
+
+	/**
+	 * Works out the index of a particular channel in a channel list - often,
+	 * if channelBitmap is a set of continuous channels starting with 0, then
+	 * the channel pos is the same as the single channel number. However, if there
+	 * are gaps in the channelBitmap, then the channel pos will be < than the 
+	 * channel Number.
+	 * @param singleChannel
+	 * @param channelBitmap
+	 * @return the channel position in the channel list or -1 if it isn't available
+	 */
+	public static int getChannelPos(int singleChannel, int channelBitmap) {
+
+		int channelPos = 0;
+
+		if ((1<<singleChannel & channelBitmap) == 0) return -1;
+
+		for (int i = 0; i < singleChannel; i++) {
+			if ((1<<i & channelBitmap) != 0) {
+				channelPos++;
+			}
+		}
+
+		return channelPos;
+	}
+
+	/**
+	 * 		
+	 * Get's the number of the nth used channel in a bitmap. e.g. if the 
+	 * channelBitmap were 0xc (1100), then the 0th channel would be 2 and the 
+	 * 1st channel would be 3.
+	 * @param singleChannel nth channel in a list 
+	 * @param channelBitmap bitmap of all used channels. 
+	 * @return true channel number or -1 if the channel is not in the map. 
+	 */
+	public static int getNthChannel(int singleChannel, int channelBitmap) {
+		/*
+		 * get's the number of the nth used channel in a bitmap. e.g. if the 
+		 * channelBitmap were 0xc (1100), then the 0th channel would be 2 and the 
+		 * 1st channel would be 3.
+		 */
+		int countedChannels = 0;
+		for (int i = 0; i < MAX_CHANNELS; i++) {
+			if ((channelBitmap & (1<<i)) != 0) {
+				if (++countedChannels > singleChannel) return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Convert a short array to a double array assuming 16 bit scaling i..e the maximum short is 1.0 when converted to double.
+	 * @param arr - the short array
+	 */
+	public static double[] short2double(short[] arr) {
+
+		double[] arrd = new double[arr.length]; 
+
+		double scaleFactor= Math.pow(2, 16);  
+
+		for (int i=0; i<arr.length; i++) {
+			arrd[i]=arr[i]/scaleFactor; 
+		}
+
+		return arrd; 
+
+	}
+
+
+	/**
+	 * Convert a short array to a double array assuming 16 bit scaling i..e the maximum short is 1.0 when converted to double.
+	 * @param arr - the short array
+	 */
+	public static double[][] short2double(short[][] arr) {
+
+		double scaleFactor= Math.pow(2, 16);  
+
+
+		double[][] arrdd = new double[arr.length][];  
+
+		double[] arrd;
+		for (int j=0; j<arr.length; j++) {
+
+			arrd = new double[arr[j].length]; 
+
+			for (int i=0; i<arr[j].length; i++) {
+				arrd[i]=arr[j][i]/scaleFactor; 
+			}
+
+			arrdd[j] = arrd; 
+
+		}
+
+		return arrdd; 
+
+	}
+
+
+
+
 
 
 

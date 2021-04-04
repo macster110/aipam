@@ -16,7 +16,14 @@
 }
 
 
+.root{
+    -icons-color: TEXT_FILL;
+}
 
+.glyph-icon{
+    -fx-text-fill: -icons-color;
+    -fx-fill: -icons-color;
+}
 
 /*******************************************************************************
  *                                                                             *

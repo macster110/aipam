@@ -4,6 +4,7 @@ package com.jamdev.maven.aipam.layout;
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.clips.AudioInfo;
+import com.jamdev.maven.aipam.clips.StandardAudioImporter;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -220,9 +221,9 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 
 		else {
 			//everything is oK
-			audioInfoLabel.setText(String.format("No. Files: % d \nNo.Corrupt Files: %d \nChannels: %d \nSample Rate: %.0f \n"
-					+ "Press 'Generate Clips to import", 
-					audioInfo.nFiles, audioInfo.nFilesCorrupt, audioInfo.channels, audioInfo.sampleRate));
+			audioInfoLabel.setText(String.format("File Type: %s \nNo. Files: % d \nNo.Corrupt Files: %d \nChannels: %d \nSample Rate: %.0f \n"
+					+ "Press 'Import Clips' to import", 
+					getDataTypeString(audioInfo.dataType), audioInfo.nFiles, audioInfo.nFilesCorrupt, audioInfo.channels, audioInfo.sampleRate));
 		
 		
 			textField.setText(audioInfo.file); 
@@ -248,7 +249,29 @@ public class AudioImportPane extends DynamicSettingsPane<AIPamParams>{
 		this.notifySettingsListeners();
 	}
 
-	
+	/**
+	 * Get the string for the current data type. 
+	 * @param dataType - the data type. 
+	 * @return the name of the data type. 
+	 */
+	private String getDataTypeString(int dataType) {
+		String name = "Audio file";
+		switch (dataType) {
+		case StandardAudioImporter.WAV_CLIP:
+			name = ".wav files";
+			break; 
+		case StandardAudioImporter.AUDIO_MOTH:
+			name = "AudioMoth trigger files";
+
+			break; 
+		case StandardAudioImporter.PG_BINARY:
+			name = "PAMGuard data files";
+			break;
+		}
+		return name; 
+	}
+
+
 	/**
 	 * Set up the trim box. 
 	 * @param audioInfo - the current audio information.

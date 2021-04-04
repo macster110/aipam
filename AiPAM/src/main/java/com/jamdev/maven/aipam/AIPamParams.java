@@ -9,9 +9,7 @@ import com.jamdev.maven.aipam.clips.datetime.DateTimeParams;
 import com.jamdev.maven.aipam.clips.datetime.StandardDateTimeParams;
 import com.jamdev.maven.aipam.clustering.Params;
 import com.jamdev.maven.aipam.clustering.tsne.TSNEParams;
-import com.jamdev.maven.aipam.featureExtraction.FeatureExtraction;
 import com.jamdev.maven.aipam.featureExtraction.FeatureParams;
-import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
 
 /**
  * Parameters for the AIPAM. 
@@ -20,6 +18,9 @@ import com.jamdev.maven.aipam.layout.ColourArray.ColourArrayType;
  */
 public class AIPamParams implements Cloneable  {
 
+	/**
+	 * The maximum number of allowed channels. 
+	 */
 	public static int MAX_CHANNELS = 32; 
 	
 	//Audio import settings
@@ -49,7 +50,7 @@ public class AIPamParams implements Cloneable  {
 	/**
 	 * The maximum number of clips per page. 
 	 */
-	public int maxPageClips = 100; 
+	public int maxPageClips = 2000; 
 	
 	/**
 	 * Paramters for the datetime
@@ -57,8 +58,7 @@ public class AIPamParams implements Cloneable  {
 	public DateTimeParams datetimeSettings = new StandardDateTimeParams(); 
 
 
-	//FFT settings 
-
+	//FFT settings
 	
 	/**
 	 * Parameters for generating a spectrogram. Includes information such as FFT length, FFT hop, 
