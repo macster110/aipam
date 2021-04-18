@@ -425,7 +425,7 @@ public abstract class ScrollingPlotSegmenter {
 		}
 		
 		ArrayList<PlotSegment> plotSegments = findPlotSegmentChunk(pamDataUnit.getTimeMilliseconds(), 
-				(long) (pamDataUnit.getTimeMilliseconds()+pamDataUnit.getDurationInMilliseconds())); 
+				 (pamDataUnit.getTimeMilliseconds()+pamDataUnit.getDurationInMilliseconds())); 
 		
 		//System.out.println("draw data unit: UID" + pamDataUnit.getUID() + " Image chunk: " + writableImageChunk); 
 
