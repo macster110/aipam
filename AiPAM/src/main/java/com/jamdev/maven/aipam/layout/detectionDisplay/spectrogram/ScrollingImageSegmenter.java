@@ -61,7 +61,7 @@ public abstract class ScrollingImageSegmenter {
 	/**
 	 * The start time of the image buffer in milliseconds time. 
 	 */
-	private long imageBufferStart = -1;
+	private double imageBufferStart = -1;
 
 	/**
 	 * 	The buffer needs checked. 
@@ -163,7 +163,7 @@ public abstract class ScrollingImageSegmenter {
 	 * Get the image pixel time for a given millis. This is the total pixels form the first image segment in the buffer. 
 	 * @param timeMillis - the time in millis. 
 	 */
-	public double getImagePixelTime(long timeMillis) {
+	public double getImagePixelTime(double timeMillis) {
 		if (imageBufferStart==-1) return -1; 
 		else {
 			return (timeMillis - imageBufferStart)/millisPerPixel; 
@@ -225,7 +225,7 @@ public abstract class ScrollingImageSegmenter {
 	 * @param - the start time in milliseconds.
 	 * @return the writable image segment. 
 	 */
-	private WritableImageSegment findWritableImageChunk(long dataUnitStartTime) {
+	private WritableImageSegment findWritableImageChunk(double dataUnitStartTime) {
 
 		if (this.millisPerPixel<=0 || this.millisPerPixel>=Double.POSITIVE_INFINITY) return null; //no point in messing around. 
 
@@ -246,7 +246,7 @@ public abstract class ScrollingImageSegmenter {
 			//start image an ensure the other images have their time updated. 
 
 			int pixelsBack = 0;
-			long newBufferStart = imageBufferStart; 
+			double newBufferStart = imageBufferStart; 
 
 			while (dataUnitStartTime<newBufferStart) {
 				pixelsBack = pixelsBack + imageWidth; 
@@ -550,8 +550,8 @@ public abstract class ScrollingImageSegmenter {
 		 * Convenience function the start time in milliseconds. 
 		 * @return the start time of the image in millis
 		 */
-		public long getMillisStart() {
-			return imageBufferStart + ((long) (pixelstart*millisPerPixel));
+		public double getMillisStart() {
+			return imageBufferStart + (pixelstart*millisPerPixel);
 		}
 
 
@@ -559,8 +559,8 @@ public abstract class ScrollingImageSegmenter {
 		 * Convenience function the start time in milliseconds. 
 		 * @return the end time of the image in millis
 		 */
-		public long getMillisEnd() {
-			return imageBufferStart + ((long) ((pixelstart+this.getWidth())*millisPerPixel));
+		public double getMillisEnd() {
+			return imageBufferStart + (pixelstart+this.getWidth())*millisPerPixel;
 		}
 
 

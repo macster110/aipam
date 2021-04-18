@@ -7,7 +7,7 @@ package com.jamdev.maven.aipam.layout.detectionDisplay;
  */
 public class AcousticDataUnit implements PAMDataUnit {
 	
-	long timeMillis = 0;
+	double timeMillis = 0;
 	
 	/**
 	 * The sample rate. 
@@ -24,18 +24,37 @@ public class AcousticDataUnit implements PAMDataUnit {
 	 */
 	private double duration;
 
-	public AcousticDataUnit(short[][] audioData, float samplerate, long startTime) {
+	/**
+	 * Unique identifier. 
+	 */
+	private long uid;
+
+	public AcousticDataUnit(short[][] audioData, float samplerate, double startTime) {
 		this.timeMillis = startTime; 
 		this.samplerate = samplerate; 
 		this.audioData = audioData; 
 	
-		System.out.println("Duration samples: " + audioData[0].length); 
 		//calculate the duration in seconds. 
-		this.duration = 1000.*audioData[0].length/samplerate; 
+		this.duration = 1000.*(audioData[0].length/samplerate); 
+		
+		//System.out.println("Duration: " + duration);
+	}
+	
+	public AcousticDataUnit(short[][] audioData, float samplerate, double startTime, long uid) {
+		this(audioData,  samplerate, startTime); 
+		this.setUID(uid);
+	}
+
+	/**
+	 * Set the UID. 
+	 * @param uid
+	 */
+	private void setUID(long uid) {
+		this.uid = uid; 
 	}
 
 	@Override
-	public long getTimeMilliseconds() {
+	public double getTimeMilliseconds() {
 		return timeMillis;
 	}
 	
@@ -60,11 +79,11 @@ public class AcousticDataUnit implements PAMDataUnit {
 		return duration;
 	}
 
-	@Override
-	public long getUID() {
-		//TODO //meh...
-		return timeMillis;
-	}
+//	@Override
+//	public long getUID() {
+//		//TODO //meh...
+//		return timeMillis;
+//	}
 
 	public long getTimeNanoseconds() {
 		return (long) (duration*1e6);
@@ -72,6 +91,11 @@ public class AcousticDataUnit implements PAMDataUnit {
 
 	public int getChannelBitmap() {
 		return 1;
+	}
+
+	@Override
+	public long getUID() {
+		return this.uid;
 	}
 
 }

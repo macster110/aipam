@@ -31,5 +31,14 @@ public class WaveformPlot extends TimeDisplayPlot {
 		//System.out.println("Add data: " +  dataUit.getTimeMilliseconds() + " " + dataUit.getDurationInMilliseconds() + " nanonseconds:   " +  ((AcousticDataUnit)dataUit).getTimeNanoseconds());
 		rawWavePlotManager.addRawData((AcousticDataUnit) dataUit, channelBitMap, projector, channelBitMap);
 	}
+	
+	@Override
+	public void reset() {
+		rawWavePlotManager.clear();
+		getDataProvider().requestData((long) (this.getPlotProjector().getXAxis().getMinVal()), 
+				(long) (this.getPlotProjector().getXAxis().getMaxVal()));  
+
+		reDraw();
+	}
 
 }

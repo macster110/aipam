@@ -47,7 +47,7 @@ public interface DataProvider {
 	 * @param start - the start in millis date number.
 	 * @param end   - the end in millis date number.
 	 */
-	public void requestData(long start, long end);
+	public void requestData(double start, double end);
 
 	public DataLimits getDataLimits();
 

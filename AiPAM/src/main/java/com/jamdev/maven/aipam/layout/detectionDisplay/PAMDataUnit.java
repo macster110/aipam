@@ -11,12 +11,13 @@ public interface PAMDataUnit {
 	 * Get the time  of the detection in milliseconds. 
 	 * @return
 	 */
-	long getTimeMilliseconds();
+	double getTimeMilliseconds();
 
 	double getDurationInMilliseconds();
 
 	long getUID();
 
 	float getSampleRate();
+
 
 }

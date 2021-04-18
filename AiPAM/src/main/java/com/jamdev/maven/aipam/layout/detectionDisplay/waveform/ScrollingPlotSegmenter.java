@@ -83,7 +83,7 @@ public abstract class ScrollingPlotSegmenter {
 	 */
 	private double displayWidthPixels;
 
-	private long lastTime = System.currentTimeMillis();
+	private double lastTime = System.currentTimeMillis();
 
 	private Timeline timeline; 
 
@@ -116,18 +116,18 @@ public abstract class ScrollingPlotSegmenter {
 	 * Get the location of the last image. 
 	 * @return the location of the last image. 
 	 */
-	public long getImageSegmentEnd() {
-		return (long) (imageBufferStart + (imageSegments.get(imageSegments.size()-1).getPixelStart()+imageWidth)*millisPerPixel); 
+	public double getImageSegmentEnd() {
+		return (imageBufferStart + (imageSegments.get(imageSegments.size()-1).getPixelStart()+imageWidth)*millisPerPixel); 
 	}
 
 	/**
 	 * Get the image millis time for a given pixel. This 
 	 * @param pixel - pixels form start of the first image segment in the buffer
 	 */
-	public long getImageMillisTime(double pixel) {
+	public double getImageMillisTime(double pixel) {
 		if (imageBufferStart==-1) return -1; 
 		else {
-			return (long) (imageBufferStart + pixel*millisPerPixel); 
+			return (imageBufferStart + pixel*millisPerPixel); 
 		}
 	}
 
@@ -155,7 +155,7 @@ public abstract class ScrollingPlotSegmenter {
 
 		double milliswidth = secondsWidth*1000/pixelsWidth; 
 
-		System.out.println("CHECK Millis Per Pixel Current: " + millisPerPixel + "  " + milliswidth + " secondsWidth: " + secondsWidth); 
+		//System.out.println("CHECK Millis Per Pixel Current: " + millisPerPixel + "  " + milliswidth + " secondsWidth: " + secondsWidth); 
 
 
 		if (milliswidth<millisPerPixel/2 || milliswidth>2*millisPerPixel) {
@@ -176,7 +176,7 @@ public abstract class ScrollingPlotSegmenter {
 	 * @param timeMillis - the time in milliseconds
 	 * @return - the number of x pixels into the image segment; 
 	 */
-	public double getImageXPixels(long timeMillis, PlotSegment writiableImage) {
+	public double getImageXPixels(double timeMillis, PlotSegment writiableImage) {
 		//		System.out.println("Timemillis: " + (timeMillis - writiableImage.getMillisStart()) + 
 		//				" Writable image start: " + PamCalendar.formatDBDateTime(writiableImage.getMillisStart(), true)); 
 		return (timeMillis - writiableImage.getMillisStart())/this.millisPerPixel;	
@@ -191,7 +191,13 @@ public abstract class ScrollingPlotSegmenter {
 	 * @return the plot segments. 
 	 */
 	private ArrayList<PlotSegment> findPlotSegmentChunk(double dataUnitStartTime, double dataUnitEndTime) {
-		double dataTime = dataUnitStartTime; 
+		double dataTime = dataUnitStartTime;  ///add a little bit of buffering for edge cases....
+		
+		/**
+		 * There was an error here where sometimes the last plot segment was not eign selected. Due to 
+		 * small precision erros in the timing so added a one millisecond buffer either side of the 
+		 * timeing to make sure it worked. 
+		 */
 		
 		ArrayList<PlotSegment> plotSegments = new ArrayList<PlotSegment>(); 
 		
@@ -217,7 +223,7 @@ public abstract class ScrollingPlotSegmenter {
 		PlotSegment plotSegment;
 		bufferCheck = false;
 
-		System.out.println("findPlotSegmentChunk: Buffer start: " + imageBufferStart + " millisperpixel: " + millisPerPixel + " dataUnitStart: " + dataUnitStartTime + " " + (dataUnitStartTime-imageBufferStart)); 
+//		System.out.println("findPlotSegmentChunk: Buffer start: " + imageBufferStart + " millisperpixel: " + millisPerPixel + " dataUnitStart: " + dataUnitStartTime + " " + (dataUnitStartTime-imageBufferStart)); 
 		//if there are no images create a new one
 		if (imageSegments.size()==0) {
 			imageBufferStart = dataUnitStartTime; 
@@ -233,7 +239,7 @@ public abstract class ScrollingPlotSegmenter {
 
 			while (dataUnitStartTime<newBufferStart) {
 				pixelsBack = pixelsBack + imageWidth; 
-				newBufferStart =(long) (imageBufferStart-(millisPerPixel*pixelsBack)); //doing it this way ensure pixel errors do not 
+				newBufferStart = (imageBufferStart-(millisPerPixel*pixelsBack)); //doing it this way ensure pixel errors do not 
 			}
 
 			plotSegment = new PlotSegment(imageWidth, dataSize,  0); 
@@ -244,7 +250,7 @@ public abstract class ScrollingPlotSegmenter {
 				imageSegments.get(i).setPixelStart(imageSegments.get(i).getPixelStart()-pixelsBack); 
 			}
 
-			System.out.println("2 New buffer start : old buffer: " + imageBufferStart + " new buffer: " + newBufferStart); 
+//			System.out.println("2 New buffer start : old buffer: " + imageBufferStart + " new buffer: " + newBufferStart); 
 
 			this.imageBufferStart = newBufferStart; 
 
@@ -262,7 +268,7 @@ public abstract class ScrollingPlotSegmenter {
 
 			//the image has not been found....need to create a new image
 			if (plotSegment == null) {
-				System.out.println("3 Make a new image: " + imagePixelTime + " N segments: " + imageSegments.size() + " imagePixelTime: " + imagePixelTime + " pixelstart " +  (int) Math.floor(imagePixelTime/imageWidth)*imageWidth); 
+//				System.out.println("3 Make a new image: " + imagePixelTime + " N segments: " + imageSegments.size() + " imagePixelTime: " + imagePixelTime + " pixelstart " +  (int) Math.floor(imagePixelTime/imageWidth)*imageWidth); 
 
 				//create a new segment and add to the list
 				plotSegment = new PlotSegment(imageWidth, dataSize, (int) Math.floor(imagePixelTime/imageWidth)*imageWidth); 
@@ -362,7 +368,7 @@ public abstract class ScrollingPlotSegmenter {
 			timeline = new Timeline(new KeyFrame(
 					Duration.millis(tm),
 					ae ->{
-						System.out.println("Paint images at end of timer");
+						//System.out.println("Paint images at end of timer");
 						paintImages(g, tdProjector, scrollStart);
 					}));
 			timeline.play();
@@ -382,7 +388,6 @@ public abstract class ScrollingPlotSegmenter {
 	 * @param scrollStart - the scroll start. 
 	 */
 	private void paintImages(GraphicsContext g, PlotProjector tdProjector, double scrollStart) {
-		//System.out.println("paintImages: " + this.imageSegments.size());
 		
 		g.clearRect(0, 0, tdProjector.getXPixSize(), tdProjector.getYPixSize());
 
@@ -402,9 +407,9 @@ public abstract class ScrollingPlotSegmenter {
 	 */
 	public Path2D addPlotData(PAMDataUnit  pamDataUnit, PlotProjector tdProjector, double scrollStart) {
 		
-		System.out.println("PAMDataUnit: " + pamDataUnit.getTimeMilliseconds() + " scrollStart: " + scrollStart + 
-				" duration  " + (long) (pamDataUnit.getDurationInMilliseconds()) +
-				" displayWidthPixels: " + displayWidthPixels);
+//		System.out.println("PAMDataUnit: " + pamDataUnit.getTimeMilliseconds() + " scrollStart: " + scrollStart + 
+//				" duration  " + (long) (pamDataUnit.getDurationInMilliseconds()) +
+//				" displayWidthPixels: " + displayWidthPixels);
 		
 		//check the image is OK. 
 		this.displayWidthPixels = tdProjector.getXPixSize(); 
@@ -440,7 +445,10 @@ public abstract class ScrollingPlotSegmenter {
 			//paint the image 
 			if (!aPlotSegment.searchArrayReuseSet(pamDataUnit.getUID())) {
 				/***This is where the data unit UID is stored so that it is not painted again until clear is called****/
-				aPlotSegment.addDrawnUnit(pamDataUnit.getUID()); //increase speed by not drawing unless necessary/***This is where the data unit UID is stored so that it is not painted again until clear is called****/
+				aPlotSegment.addDrawnUnit(pamDataUnit.getUID()); //increase speed by not drawing unless necessary
+				
+				
+				/***This is where the data unit UID is stored so that it is not painted again until clear is called****/
 
 				//System.out.println(" Add data to plot segments:  " + count + "  n: " + plotSegments.size());
 
@@ -572,8 +580,9 @@ public abstract class ScrollingPlotSegmenter {
 		 */
 		public boolean searchArrayReuseSet(long uidval) {
 			//super fast way to find if something is contained in a list. 
-
 			return uidVals.contains(uidval);
+			
+			//return false;
 		}
 
 		/**

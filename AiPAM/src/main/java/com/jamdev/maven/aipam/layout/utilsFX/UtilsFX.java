@@ -2,11 +2,20 @@ package com.jamdev.maven.aipam.layout.utilsFX;
 
 import java.util.concurrent.CountDownLatch;
 
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
+
+
+
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 
 public class UtilsFX {
 	
@@ -85,4 +94,48 @@ public class UtilsFX {
 	            (int)( color.getBlue() * 255 ) );
 	    }
 
+	/**
+	 * Animates a node with a flash
+	 * @param node - the node for the effect
+	 * @param col - the colour of the flash
+	 * @param radius - the raioud of the flash
+	 * @param duration - the duration of the flash in seconds
+	 */
+	public static void nodeFlashEffect(Node node, Color col, double radius, double duration ){
+		//			ColorInput effect = new ColorInput(0, 0, textBox.getWidth(), textBox.getHeight(), Paint.valueOf("#FFDDDD"));
+		//			Timeline flash = new Timeline(
+		//					  new KeyFrame(Duration.seconds(0.4), new KeyValue(effect.paintProperty(), Color.RED)),
+		//					  new KeyFrame(Duration.seconds(0.8), new KeyValue(effect.paintProperty(), Paint.valueOf("#E0DDDD"))),
+		//					  new KeyFrame(Duration.seconds(1.0), new KeyValue(effect.paintProperty(), Paint.valueOf("#DDDDDD"))));
+
+		DropShadow shadow = new DropShadow();
+		shadow.setColor(col);
+		shadow.setSpread(0.5);
+
+		Timeline shadowAnimation = getFlashTimeLine( shadow,  radius, duration);
+
+		node.setEffect(shadow);
+		shadowAnimation.setOnFinished(e -> node.setEffect(null));
+		shadowAnimation.play();
+	}
+	
+	
+	
+	/**
+	 * Get node flash timeline. This can be used to make  a node flash. 
+	 * @param node - the node for the effect
+	 * @param col - the colour of the flash
+	 * @param radius - the raioud of the flash
+	 * @return flash timeline
+	 */
+	public static Timeline getFlashTimeLine(DropShadow shadow, double radius, double duration) {
+
+
+		Timeline shadowAnimation = new Timeline(
+				new KeyFrame(Duration.ZERO, new KeyValue(shadow.radiusProperty(), 0d)),
+				new KeyFrame(Duration.seconds(duration), new KeyValue(shadow.radiusProperty(), radius)));
+		shadowAnimation.setAutoReverse(true);
+		
+		return shadowAnimation;
+	}
 }

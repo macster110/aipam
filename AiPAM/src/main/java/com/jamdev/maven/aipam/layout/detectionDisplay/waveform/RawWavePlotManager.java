@@ -36,7 +36,7 @@ public class RawWavePlotManager {
 	/**
 	 * The maximum samples per pixel. Below this raw data is just stored. 
 	 */
-	private static final double SAMPLES_PER_PIXEL_CUTOFF = 5;
+	private static final double SAMPLES_PER_PIXEL_CUTOFF = 1.5;
 
 	/**
 	 * The current detection
@@ -84,17 +84,17 @@ public class RawWavePlotManager {
 	 * @param timeMilliseconds - the time in milliseconds. 
 	 * @param plotSegment - the writable image. 
 	 */
-	private void addRawData(double[] rawData, long timeMilliseconds, long timeNano, float sR,  PlotSegment plotSegment, Color color) {
+	private void addRawData(double[] rawData, double timeMilliseconds, long timeNano, float sR,  PlotSegment plotSegment, Color color) {
 
-//		System.out.println("Add raw data: " + rawData); 
+		System.out.println("Add raw data: " + rawData + " timeMilliseconds: " + timeMilliseconds + "  plot segment start: " + plotSegment.getMillisStart()); 
 
 		//the way we do this is we apply a start sample
 		//the problem with PAMGuard in this instance is that the time in millis is a very rough measure of stuff at high sample rates. 	
 		double samplesPerPixel = (plotSegment.getScrollingPLot2DSegmenter().getMillisePerPixel()/1000.)*sR; 
 
-		System.out.println("Add raw data sample: len: " +rawData.length+  "  sample: " +  rawData[0] + " samplesPerPixel: " 
-		+ samplesPerPixel + "plot segment start millis : " + plotSegment.getMillisStart() + " end millis: " 
-				+  plotSegment.getMillisEnd() + " timeMilliseconds: " + timeMilliseconds); 
+		//		System.out.println("Add raw data sample: len: " +rawData.length+  "  sample: " +  rawData[0] + " samplesPerPixel: " 
+		//		+ samplesPerPixel + "plot segment start millis : " + plotSegment.getMillisStart() + " end millis: " 
+		//				+  plotSegment.getMillisEnd() + " timeMilliseconds: " + timeMilliseconds); 
 
 		/**
 		 * OK this is a bit of a hack. here's the issue. We use the start of the plot segment as the time reference to keep everything 
@@ -106,47 +106,66 @@ public class RawWavePlotManager {
 
 		//we take two different approaches depending on whether we are very zoomed or not. We hope that no one is using ultra small 
 		//continuous wav files... this is a little hackey but can't think of a better way
-//		if (samplesPerPixel<2.0) {
-//			timeDiffSamples = (double) sR*(timeNano - plotSegment.getExtraInfo().longValue()) / 1.e9;
-//		}
-//		else {
-			timeDiffSamples = (double) sR*(timeMilliseconds - plotSegment.getMillisStart()) / 1.e3;
-//		}
+		//		if (samplesPerPixel<2.0) {
+		//			timeDiffSamples = (double) sR*(timeNano - plotSegment.getExtraInfo().longValue()) / 1.e9;
+		//		}
+		//		else {
+		timeDiffSamples = sR*(timeMilliseconds - plotSegment.getMillisStart()) / 1.e3;
+		//		}
 
 		//we draw a line of the minimum and maximum pixels			
 		int drawPixel =  (int) ((timeDiffSamples)/samplesPerPixel); 
+
+		int drawStart = drawPixel;
 		//		
-				System.out.println("Add raw data: " 
-				+ " drawPixel: " + drawPixel + " timeNano: " + (timeNano - plotSegment.getExtraInfo().longValue())+ "  samplesPerPixel: " + samplesPerPixel); 
+				System.out.println("Add raw data: " + timeMilliseconds
+						+ " drawPixel: " + drawPixel +  "  samplesPerPixel: " + samplesPerPixel + " plot segment: " + plotSegment.getPixelStart());
 
 		if (samplesPerPixel<SAMPLES_PER_PIXEL_CUTOFF) {
+			//System.out.println("ONE PIXEL");
 			//simply save one data point for the raw data. 
 			for (int i=0; i<rawData.length; i++) {
 
 				drawPixel =  (int) ((timeDiffSamples+i)/samplesPerPixel); 
 
-				//System.out.println("Draw a pixel: "+ drawPixel + "  data len: " + plotSegment.getData().length + " y " + rawData[i]); 
+				if (i==0) {
+					System.out.println("First draw pixel: "+ drawPixel + "  data len: " + plotSegment.getData().length + " y " + rawData[i] + " plotSegment: " + plotSegment); 
+				}
 
 				if (drawPixel>=0 && drawPixel<plotSegment.getData().length) {
-					//System.out.println("Draw a pixel: "+ drawPixel); 
+					//System.out.println("Draw a pixel: "+ drawPixel + " rawData: " + rawData[i] + " plot segment: " + + plotSegment.getPixelStart()); 
 					plotSegment.getData()[drawPixel][0] = (float) rawData[i];
 					plotSegment.getColor()[drawPixel] = color; 
 
 				}
 			}
+
+			//			System.out.println("Last draw pixel: " 
+			//					+ " drawPixel: " + drawPixel);
+
 		}
 		else {
+			//System.out.println("MINMAX PIXEL");
+
+			//save only the minimum and maximum value for the plot pixel. 
 			//the amplitude limits 
-			double minX = Double.MAX_VALUE; 
-			double maxX= -Double.MAX_VALUE; 
+			double minX = Double.POSITIVE_INFINITY; 
+			double maxX= Double.NEGATIVE_INFINITY; 
 
 			//System.out.println("RAW DATA LEN: " + rawData.length + " millisPerpixel: " + plotSegment.getScrollingPLot2DSegmenter().getMillisePerPixel()); 
 
 			//now bin the
-			int count = 0; 
+			//int count = 0; 
+			double lastSample = 0;
 			for (int i=0; i<rawData.length; i++) {
 
-				if (count>=samplesPerPixel) {					
+				//had to do this because the count>samples pixel ignores the cumulative remainder and this does not work well. 
+				//TODO - does this need fixed in PG?
+				if (((int) Math.floor(i/samplesPerPixel))>(drawPixel-drawStart)) {
+
+
+					//				if (count>=samplesPerPixel) {	//FIXME - issue here with rounding...
+					//time to add the data.
 					if (drawPixel>=0 && drawPixel<plotSegment.getData().length) {
 						//add the previous pixel to the plot segment. 
 						//System.out.println("minX: " + minX + " maxX: " + maxX); 
@@ -161,19 +180,19 @@ public class RawWavePlotManager {
 					}
 
 					//move to the next pixel and reset min max
-					minX = Double.MAX_VALUE; 
-					maxX= -Double.MAX_VALUE; 
+					minX = Double.POSITIVE_INFINITY; 
+					maxX= Double.NEGATIVE_INFINITY; 
 					drawPixel++; 
 
-					count = 0; 
+					//count = 0; 
 				}
 
 				if (rawData[i]>maxX ) maxX = rawData[i]; 
 				if (rawData[i]<minX ) minX = rawData[i]; 
-				
-				//System.out.println("Count: " + count + "  drawPixel: " + drawPixel + " plotSegment.getData().length: " +  plotSegment.getData().length ); 
 
-				count++; 	
+				//ystem.out.println("Count: " + count + "  drawPixel: " + drawPixel + " plotSegment.getData().length: " +  plotSegment.getData().length ); 
+
+				//count++; 	
 			}
 
 			if (drawPixel>=0 && drawPixel<plotSegment.getData().length) {
@@ -188,6 +207,10 @@ public class RawWavePlotManager {
 				}
 				plotSegment.getColor()[drawPixel] = color; 
 			}
+
+
+			//			System.out.println("Last draw pixel: " 
+			//					+ " drawPixel: " + drawPixel + " millis drawn: " + 1000.*(drawPixel-drawStart)*samplesPerPixel/400.0);
 		}
 	}
 
@@ -237,53 +260,65 @@ public class RawWavePlotManager {
 
 
 			double tcMillis = plotSegmentData.getMillisStart();
-			
+
 			//System.out.println("scrollStart: " + scrollStart + "  plotSegmentData.getMillisStart() " + plotSegmentData.getMillisStart() );
 
 			double samplesPerPixel = (plotSegmentData.getScrollingPLot2DSegmenter().getMillisePerPixel()/1000.)*sampleRate;
 
-			//System.out.println("PP: Plot Segment millis start: " +  plotSegmentData.getMillisStart() + "  scrollStart: " + scrollStart);
-			
+			//System.out.println("PP: Plot Segment millis start: " +  plotSegmentData.getMillisStart() + "  scrollStart: " + scrollStart + " First segment: " + plotSegmentData.getData()[0][0]);
+
 			prevx1=-1; 
 			prevy1=-1; 
-			double lastMillis =-1; 
+			double lastMillis =-1.; 
 			for (int i =0; i<plotSegmentData.getData().length; i++) {				
 
 				//how many pixels to draw on the line. 
 				y1=tdProjector.getYPix(plotSegmentData.getData()[i][0]); 
 				//y1= Math.random()*100; 
-//								if (Double.isNaN(y1)) {
-//									System.out.println("Temp Y is NaN"); 
-//									y1= Math.random()*100; 
-//								}
+				//								if (Double.isNaN(y1)) {
+				//									System.out.println("Temp Y is NaN"); 
+				//									y1= Math.random()*100; 
+				//								}
 
 				g.setStroke(plotSegmentData.getColor()[i]);
 				g.setFill(plotSegmentData.getColor()[i]);
 
 				//start pixel
-				
-				x1=tdProjector.getXPix((tcMillis + i*millisPerPixel)); 
-				
-				//THE PROBLEM IS HERE SOMEWHERE!!!
-				
 
-//				if (i%500==0) {
-//					System.out.println("paintPlotData: x1: " + x1 +  " y1: " + y1 + " millisPerPixel: " + millisPerPixel +  "  tcMillis: "  + (tcMillis + i*millisPerPixel)  + "  n samples: " + plotSegmentData.getData().length ); 
-//				}
-				
-				g.strokeLine(0, 0, 50, 50); //TEMP
+				x1=tdProjector.getXPix((tcMillis + i*millisPerPixel)); 
+
+				//				//TEMP
+				//				if (i==1) {
+				//					System.out.println("PLOT DOT: " + x1 + " " + y1);
+				//					g.fillOval(x1-9/2, y1-9/4, 9, 9);
+				//				}
+				//				
+				//				
+				//				if (Double.isNaN(y1)) {
+				//					y1=-1; 
+				//				}
+				//								
+
+				//				if (i%500==0) {
+				//					System.out.println("paintPlotData: x1: " + x1 +  " y1: " + y1 + " millisPerPixel: " + millisPerPixel +  "  tcMillis: "  + (tcMillis + i*millisPerPixel)  + "  n samples: " + plotSegmentData.getData().length ); 
+				//				}
+
+				//				g.strokeLine(0, 0, 50, 50); //TEMP
 
 				if (x1>=0  && x1<=tdProjector.getXAxis().getPixSize()) {
+					
+					
 					//System.out.println("x1: " + x1 + " val (seconds) "  + (tcMillis + i*millisPerPixel)/1000. + " y1: " + y1 + "  index: " + i); 
 
 					//System.out.println("x1: " + x1 +  " y1: " + y1 + " millisPerPixel: " + millisPerPixel +  "  tcMillis: "  +tcMillis  ); 
 					if (samplesPerPixel<SAMPLES_PER_PIXEL_CUTOFF && !Double.isNaN(y1)) {
 						//System.out.println("x1: " + x1 +  " y1: " + y1 + " millisPerPixel: " + millisPerPixel +  "  tcMillis: "  +tcMillis  ); 
-						
+
 						if (samplesPerPixel<1) {
 							g.fillOval(x1-circleWidth/2, y1-circleWidth/4, circleWidth, circleWidth);
+
 						}
-						
+
 						if (prevx1>0) {
 							g.strokeLine(prevx1, prevy1, x1, y1);
 						}
@@ -313,15 +348,26 @@ public class RawWavePlotManager {
 
 			//			//FIXME
 			//			// for testing - plors where the windows are. 
-						double tC = tdProjector.getXPix(tcMillis);
-						double tCEnd = tdProjector.getXPix((tcMillis + plotSegmentData.getWidth()*millisPerPixel)/1000.);
-						y1=tdProjector.getYPix(-1); 
-						y2=tdProjector.getYPix(1); 
-						g.setStroke(Color.ORANGE);
-						g.strokeLine(tC, y1, tC, y2);
-						g.setStroke(Color.RED);
-						g.strokeLine(tCEnd-2, y1, tCEnd-2, y2);
-						g.strokeText(" Pixels: " + plotSegmentData.getPixelStart() + " tCEnd: " + tCEnd, tC+10, y1+10); 
+			
+			int firstNonNan = -1; 
+			for (int i=0; i<plotSegmentData.getData().length; i++) {
+				if (!Double.isNaN(plotSegmentData.getData()[i][0])){
+					firstNonNan = i; 
+					break; 
+				}
+			}
+			
+//			System.out.println("tcMillis: " +  tcMillis + " plot segment: " + plotSegmentData.getPixelStart() 
+//			+ " tcMillis End: " + (tcMillis + plotSegmentData.getWidth()*millisPerPixel)/1000.  + " First non NaN:  " + firstNonNan); 
+			double tC = tdProjector.getXPix(tcMillis);
+			double tCEnd = tdProjector.getXPix((tcMillis + plotSegmentData.getWidth()*millisPerPixel));
+			y1=tdProjector.getYPix(-1); 
+			y2=tdProjector.getYPix(1); 
+			g.setStroke(Color.ORANGE);
+			g.strokeLine(tC, y1, tC, y2);
+			g.setStroke(Color.RED);
+			g.strokeLine(tCEnd-2, y1, tCEnd-2, y2);
+			g.strokeText(" Pixels: " + plotSegmentData.getPixelStart() + " tCEnd: " + tCEnd, tC+10, y1+10); 
 
 
 		}
@@ -357,13 +403,13 @@ public class RawWavePlotManager {
 			PlotProjector tdProjector, int plotChannels) {
 
 
-		long timeMillis=acousticDataUnit.getTimeMilliseconds();
+		double timeMillis=acousticDataUnit.getTimeMilliseconds();
 
 		//get position on time axis
-		double tC = tdProjector.getXPix((timeMillis-scrollStart));
+		//double tC = tdProjector.getXPix((timeMillis-scrollStart));
 
-//		System.out.println("addRawData: tc: "+tC+"  timeMillis" + timeMillis + " scrollStart: " 
-//		+ scrollStart + " (timeMillis-scrollStart)/1000. "+((timeMillis-scrollStart)/1000.));
+		//		System.out.println("addRawData: tc: "+tC+"  timeMillis" + timeMillis + " scrollStart: " 
+		//		+ scrollStart + " (timeMillis-scrollStart)/1000. "+((timeMillis-scrollStart)/1000.));
 		//		if (tC < 0 || tC>tdProjector.getXAxis().getPixSize()) {
 		//			System.out.println("addRawData: outside tc: " + tC +  " " + tdProjector.getXAxis().getPixSize()); 
 		//			return null;

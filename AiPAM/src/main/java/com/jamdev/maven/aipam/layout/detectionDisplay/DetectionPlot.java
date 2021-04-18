@@ -1,11 +1,8 @@
 package com.jamdev.maven.aipam.layout.detectionDisplay;
 
-import javafx.geometry.Pos;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 /**
@@ -16,10 +13,11 @@ import javafx.scene.layout.Pane;
  */
 public abstract class DetectionPlot extends BorderPane {
 
+
 	private PlotPane plotPane = new PlotPane(); 
 
 	private PlotProjector plotProjector = new PlotProjector(); 
-	
+
 	/**
 	 * The detection plot parameters. 
 	 */
@@ -49,7 +47,7 @@ public abstract class DetectionPlot extends BorderPane {
 	public void updateAxis(double[] xminmax, double[] yminmax, double[] zminmax) {
 
 		//update the projector. 
-		
+
 		if (xminmax!=null) {
 			this.plotProjector.getXAxis().setMinVal(xminmax[0]);
 			this.plotProjector.getXAxis().setMaxVal(xminmax[1]);
@@ -64,7 +62,7 @@ public abstract class DetectionPlot extends BorderPane {
 			this.plotProjector.getZAxis().setMinVal(zminmax[0]);
 			this.plotProjector.getZAxis().setMaxVal(zminmax[1]);
 		}
-		
+
 		//now do the GUI bits. 
 		reDraw();
 
@@ -79,8 +77,8 @@ public abstract class DetectionPlot extends BorderPane {
 		addData(plotProjector, dataUnit, detectionPlotParams.plotBitMap); 
 		reDraw();
 	}
-	
-	
+
+
 	/**
 	 * Add data to the plot. This could mean simply setting a reference to the data unit or adding
 	 * it to some memory efficient plot store. 
@@ -100,7 +98,7 @@ public abstract class DetectionPlot extends BorderPane {
 	 * @param channelBitMap - the channels to plot. 
 	 */
 	public abstract void drawData(GraphicsContext g, PlotProjector projector, int channelMap); 
-	
+
 	/**
 	 * Create the plot pane. 
 	 * @return the plot pane. 
@@ -114,86 +112,165 @@ public abstract class DetectionPlot extends BorderPane {
 
 		//the holder
 		BorderPane holder = new BorderPane(); 
-		
+
 		plotPane.getPlotCanvas().widthProperty().addListener((obsval, oldVal, newVal)->{
 			this.plotProjector.getXAxis().setPixSize(newVal.doubleValue());
 			reDraw();
 			//plotPane.getPlotCanvas().getGraphicsContext2D().strokeLine(0, 0, Math.random()*50, 50);
 		});
-		
+
 		plotPane.getPlotCanvas().heightProperty().addListener((obsval, oldVal, newVal)->{
 			this.plotProjector.getYAxis().setPixSize(newVal.doubleValue());
 			reDraw();
 			//plotPane.getPlotCanvas().getGraphicsContext2D().strokeLine(0, 0, 50, 50);
 		});
-		
-//		holder.widthProperty().addListener((obsval, oldVal, newVal)->{
-//			System.out.println("Holder width: " + holder.getWidth());
-//		});
 
-//		holder.prefWidthProperty().bind(this.widthProperty());
-//		holder.prefHeightProperty().bind(this.heightProperty());
-				
-//		plotPane.getPlotCanvas().widthProperty().bind(holder.widthProperty());
-//		plotPane.getPlotCanvas().heightProperty().bind(holder.heightProperty());
-		
-		Spinner<Double> scrollSpinner = new Spinner<Double>(0.1, 10.0, 1.0, 1.0);
-		scrollSpinner.valueProperty().addListener((obsVal, oldVal, newVal)->{
-//			System.out.println("Scroll spinner changed!"); 
-			this.plotProjector.getXAxis().setPixSize(plotPane.getPlotCanvas().getWidth());
-			this.plotProjector.getYAxis().setPixSize(plotPane.getPlotCanvas().getHeight());
-			this.plotProjector.getXAxis().setMaxVal((this.plotProjector.getXAxis().getMinVal()+ newVal)*1000.);
-			
-			dataProvider.requestData((long) (this.plotProjector.getXAxis().getMinVal()), 
-					(long) (this.plotProjector.getXAxis().getMaxVal()));  
+		plotPane.setAxisVisible(false, false, true, true);
 
-			reDraw();
-		});
-		
-		Spinner<Double> scrollStartSpinner = new Spinner<Double>(0.0, 10.0, 0.0, 0.1);
-		scrollStartSpinner.valueProperty().addListener((obsVal, oldVal, newVal)->{
-			
-//			System.out.println("Scroll spinner changed!"); 
-			this.plotProjector.getXAxis().setPixSize(plotPane.getPlotCanvas().getWidth());
-			this.plotProjector.getYAxis().setPixSize(plotPane.getPlotCanvas().getHeight());
-			
-			double range = this.plotProjector.getXAxis().getMaxVal() - this.plotProjector.getXAxis().getMinVal();
-						
-			this.plotProjector.getXAxis().setMinVal(newVal*1000);
-			this.plotProjector.getXAxis().setMaxVal(newVal*1000 + range);
-
-			System.out.println("Request data between: " + (long) (this.plotProjector.getXAxis().getMinVal()) + "  " + 
-					(long) (this.plotProjector.getXAxis().getMaxVal()));
-			
-			dataProvider.requestData((long) (this.plotProjector.getXAxis().getMinVal()), 
-					(long) (this.plotProjector.getXAxis().getMaxVal())); 
-			
-			reDraw();
-		});
-		
-		
-		scrollSpinner.setEditable(true);
-		
-		HBox topBox = new HBox(); 
-		topBox.setSpacing(5);
-		topBox.setAlignment(Pos.CENTER_RIGHT);
-		
-		topBox.getChildren().addAll(new Label("Range"), scrollSpinner, new Label("Start"), scrollStartSpinner); 
-
-		holder.setTop(topBox);
+		//		holder.widthProperty().addListener((obsval, oldVal, newVal)->{
+		//			System.out.println("Holder width: " + holder.getWidth());
+		//		});
+		//
+		//		holder.prefWidthProperty().bind(this.widthProperty());
+		//		holder.prefHeightProperty().bind(this.heightProperty());
+		//				
+		//		plotPane.getPlotCanvas().widthProperty().bind(holder.widthProperty());
+		//		plotPane.getPlotCanvas().heightProperty().bind(holder.heightProperty());
+		//		
+				Button redoStore = new Button("Reset Store"); 
+				redoStore.setOnAction((action)->{
+					// TODO clear store and go again
+					reset();
+					reDraw();
+				});
+		//		
+		//		Spinner<Double> scrollRangeSpinner = new Spinner<Double>(0.1, 10.0, 1.0, 1.0);
+		//		scrollRangeSpinner.valueProperty().addListener((obsVal, oldVal, newVal)->{
+		////			System.out.println("Scroll spinner changed!"); 
+		//			this.plotProjector.getXAxis().setPixSize(plotPane.getPlotCanvas().getWidth());
+		//			this.plotProjector.getYAxis().setPixSize(plotPane.getPlotCanvas().getHeight());
+		//			
+		//			this.plotProjector.getXAxis().setMaxVal(this.plotProjector.getXAxis().getMinVal()+ (newVal)*1000.);
+		//			
+		//			dataProvider.requestData((this.plotProjector.getXAxis().getMinVal()), 
+		//					 (this.plotProjector.getXAxis().getMaxVal()));  
+		//
+		//			reDraw();
+		//		});
+		//		
+		//		Spinner<Double> scrollStartSpinner = new Spinner<Double>(0.0, 10.0, 0.0, 0.1);
+		//		scrollStartSpinner.valueProperty().addListener((obsVal, oldVal, newVal)->{
+		//			
+		////			System.out.println("Scroll spinner changed!"); 
+		//			this.plotProjector.getXAxis().setPixSize(plotPane.getPlotCanvas().getWidth());
+		//			this.plotProjector.getYAxis().setPixSize(plotPane.getPlotCanvas().getHeight());
+		//			
+		//			double range = this.plotProjector.getXAxis().getMaxVal() - this.plotProjector.getXAxis().getMinVal();
+		//						
+		//			this.plotProjector.getXAxis().setMinVal(newVal*1000);
+		//			this.plotProjector.getXAxis().setMaxVal(newVal*1000 + range);
+		//
+		//			System.out.println("Request data between: " + (this.plotProjector.getXAxis().getMinVal()) + "  " + 
+		//					(this.plotProjector.getXAxis().getMaxVal()));
+		//			
+		//			dataProvider.requestData((this.plotProjector.getXAxis().getMinVal()), 
+		//					 (this.plotProjector.getXAxis().getMaxVal())); 
+		//			
+		//			reDraw();
+		//		});
+		//		
+		//		
+		//		scrollRangeSpinner.setEditable(true);
+		//		
+		//		HBox topBox = new HBox(); 
+		//		topBox.setSpacing(10);
+		//		topBox.setAlignment(Pos.CENTER_RIGHT);
+		//		topBox.setPadding(new Insets(5,5,5,5));
+		//		
+		//		topBox.getChildren().addAll(redoStore, new Label("Range"), scrollRangeSpinner, new Label("Start"), scrollStartSpinner); 
+		//
+			holder.setTop(redoStore);
 		holder.setCenter(plotPane);
 
 		return holder;
 	}
 
+	public void reset() {
+		// TODO Auto-generated method stub
+
+	}
+
 	/**
-	 * Reapint the data on the plot. 
+	 * Change the scroll bar. 
+	 * @param currentValue - the current value in millis. 
+	 * @param visibleProperty - the visible property in millis.
 	 */
-	private void reDraw() {
-		drawData(plotPane.getPlotCanvas().getGraphicsContext2D(), plotProjector, detectionPlotParams.plotBitMap); 		
+	public void scrollChanged(double currentValue, double visibleProperty) {
+
+		//System.out.println("DetectionPlot: Current value: " + currentValue + " visibleProperty: " + visibleProperty);
+
+		this.plotProjector.getXAxis().setPixSize(plotPane.getPlotCanvas().getWidth());
+		this.plotProjector.getYAxis().setPixSize(plotPane.getPlotCanvas().getHeight());
+
+		//double range = this.plotProjector.getXAxis().getMaxVal() - this.plotProjector.getXAxis().getMinVal();
+
+		this.plotProjector.getXAxis().setMinVal(currentValue);
+		this.plotProjector.getXAxis().setMaxVal(currentValue + visibleProperty);
+
+		dataProvider.requestData((this.plotProjector.getXAxis().getMinVal()), 
+				(this.plotProjector.getXAxis().getMaxVal())); 
+		
+		//data provider now passes data to the listener. 
+
+		reDraw();
+
+	}
+
+	/**
+	 * Repaint the data on the plot. 
+	 */
+	protected void reDraw() {
+		drawData(plotPane.getPlotCanvas().getGraphicsContext2D(), plotProjector, detectionPlotParams.plotBitMap); 	
+
+		//TODO 
+		plotPane.getxAxisBottom().setMinVal(plotProjector.getYAxis().getMinVal());
+		plotPane.getxAxisBottom().setMaxVal(plotProjector.getYAxis().getMaxVal());
+
+	}
+
+	public PlotPane getPlotPane() {
+		return plotPane;
 	}
 
 
+	public void setPlotPane(PlotPane plotPane) {
+		this.plotPane = plotPane;
+	}
+
+
+	public PlotProjector getPlotProjector() {
+		return plotProjector;
+	}
+
+
+	public void setPlotProjector(PlotProjector plotProjector) {
+		this.plotProjector = plotProjector;
+	}
+
+
+	public DetectionPlotParams getDetectionPlotParams() {
+		return detectionPlotParams;
+	}
+
+
+	public void setDetectionPlotParams(DetectionPlotParams detectionPlotParams) {
+		this.detectionPlotParams = detectionPlotParams;
+	}
+
+
+	public DataProvider getDataProvider() {
+		return dataProvider;
+	}
 
 
 }
