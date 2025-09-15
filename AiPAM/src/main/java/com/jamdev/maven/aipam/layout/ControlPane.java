@@ -12,7 +12,7 @@ import com.jamdev.maven.aipam.layout.featureExtraction.FeaturePane;
 import com.jamdev.maven.aipam.layout.utilsFX.FluentMenuPane;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import org.kordamp.ikonli.javafx.FontIcon;
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -228,7 +228,7 @@ public class ControlPane extends BorderPane {
 		//specific settings button panes. 
 		saveSettings = new Button("Save Settings"); 
 		saveSettings.getStyleClass().add("fluent-menu-button");
-		AIPamView.setButtonIcon(saveSettings, FontAwesomeIcon.SAVE); 
+		AIPamView.setButtonIcon(saveSettings, "fa-save"); 
 		saveSettings.prefWidthProperty().bind(holderPane.widthProperty());
 		saveSettings.setTooltip(new Tooltip(
 				"Save a settings file. This can be opened iby a new instance of the \n"
@@ -242,7 +242,7 @@ public class ControlPane extends BorderPane {
 
 		importSettings = new Button("Load Settings"); 
 		importSettings.getStyleClass().add("fluent-menu-button");
-		AIPamView.setButtonIcon(importSettings, FontAwesomeIcon.DOWNLOAD); 
+		AIPamView.setButtonIcon(importSettings, "fa-download"); 
 		importSettings.prefWidthProperty().bind(holderPane.widthProperty());
 		importSettings.setTooltip(new Tooltip(
 				"Import settings from a .mat settings file."));
@@ -279,8 +279,6 @@ public class ControlPane extends BorderPane {
 			final Button settingsButton = new Button(controlPanes.get(i).getTitle());
 			if (controlPanes.get(i).getIcon()!=null) {
 				settingsButton.setGraphic(controlPanes.get(i).getIcon());
-				AIPamView.setButtonIcon(importSettings, FontAwesomeIcon.DOWNLOAD); 
-
 			}
 			settingsButton.prefWidthProperty().bind(holderPane.widthProperty());
 			settingsButton.getStyleClass().add("fluent-menu-button");

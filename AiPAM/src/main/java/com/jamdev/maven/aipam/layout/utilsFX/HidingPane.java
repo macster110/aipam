@@ -6,8 +6,6 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 import com.jamdev.maven.aipam.layout.AIPamView;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.control.Button;
@@ -25,6 +23,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * Hiding pane which can be added to any node. 
@@ -227,40 +226,26 @@ public class HidingPane extends StackPane {
 	 * @param button-button to style
 	 */
 	private void styleHideButton(Button button){
-		FontAwesomeIcon fontAwesomeIcon = null;
+		String iconCode = null;
 		switch (side){
-		case RIGHT:
-			//button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Resources/SidePanelShow2.png"))));
-			fontAwesomeIcon = FontAwesomeIcon.CHEVRON_RIGHT;
-			//button.getStyleClass().add("close-button-right");
-			break;
-		case LEFT:
-			//button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Resources/SidePanelHide2.png"))));
-			fontAwesomeIcon = FontAwesomeIcon.CHEVRON_LEFT;
-
-			
-			//button.getStyleClass().add("close-button-left");
-			break;
-		case TOP:
-			//button.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Resources/SidePanelUp2.png"))));
-			fontAwesomeIcon = FontAwesomeIcon.CHEVRON_UP;
-
-			//button.setPrefWidth(60); //horizontal buttons are slightly wider
-			//button.getStyleClass().add("close-button-top");
-			break;
-		case BOTTOM:
-			//utton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Resources/SidePanelDown2.png"))));
-			fontAwesomeIcon = FontAwesomeIcon.CHEVRON_DOWN;
-			//button.setPrefWidth(60); //horizontal buttons are slightly wider
-			//button.getStyleClass().add("close-button-bottom");
-			break;
+			case RIGHT:
+				iconCode = "fa-chevron-right";
+				break;
+			case LEFT:
+				iconCode = "fa-chevron-left";
+				break;
+			case TOP:
+				iconCode = "fa-chevron-up";
+				break;
+			case BOTTOM:
+				iconCode = "fa-chevron-down";
+				break;
 		}
-		FontAwesomeIconView iconViewSettings = new FontAwesomeIconView(fontAwesomeIcon); 
-		iconViewSettings.setGlyphSize(AIPamView.iconSize);
-		iconViewSettings.setFill(AIPamView.defaultTitleColour);
-		button.setGraphic(iconViewSettings); 
+		FontIcon iconViewSettings = new FontIcon(iconCode);
+		iconViewSettings.setIconSize(AIPamView.iconSize);
+		iconViewSettings.setIconColor(AIPamView.defaultTitleColour);
+		button.setGraphic(iconViewSettings);
 		button.getStyleClass().add("fluent-menu-button");
-
 	}
 	
 

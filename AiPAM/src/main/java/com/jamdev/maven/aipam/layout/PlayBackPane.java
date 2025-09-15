@@ -2,10 +2,6 @@ package com.jamdev.maven.aipam.layout;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -18,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * Pane with controls for  audio playback settings. 
@@ -103,10 +100,10 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 			aiPamView.getClipSelectionManager().autoPlayClips(null);
 		});
 		playAllButton.setTooltip(new Tooltip("Play all the clips from the start"));
-		MaterialDesignIconView iconView = new MaterialDesignIconView(MaterialDesignIcon.PLAY); 
-		iconView.setGlyphSize(33);
-		iconView.setFill(Color.WHITE);
-		playAllButton.setGraphic(iconView);
+		FontIcon playIcon = new FontIcon("mdi-play");
+		playIcon.setIconSize(33);
+		playIcon.setIconColor(Color.WHITE);
+		playAllButton.setGraphic(playIcon);
 		playAllButton.disableProperty().bind(aiPamView.getClipSelectionManager().autoPlayProperty());
 
 		stopButton = new Button(); 
@@ -114,10 +111,10 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 		stopButton.setOnAction((action)->{
 			aiPamView.getClipSelectionManager().stopClipAutoPlay();
 		});
-		iconView = new MaterialDesignIconView(MaterialDesignIcon.STOP); 
-		iconView.setGlyphSize(33);
-		iconView.setFill(Color.WHITE);
-		stopButton.setGraphic(iconView);
+		FontIcon stopIcon = new FontIcon("mdi-stop");
+		stopIcon.setIconSize(33);
+		stopIcon.setIconColor(Color.WHITE);
+		stopButton.setGraphic(stopIcon);
 		stopButton.disableProperty().bind(aiPamView.getClipSelectionManager().autoPlayProperty().not());
 	
 		
@@ -125,7 +122,7 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 		playBackPane.setSpacing(5);
 		playBackPane.getChildren().addAll(playAllButton, stopButton); 
 		
-		volumeIconLabel.setGraphic(iconView);
+		volumeIconLabel.setGraphic(stopIcon);
 
 		VBox holder = new VBox(); 
 		holder.setSpacing(5);
@@ -146,22 +143,19 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 	 * Set the label graphic depending on the volume. 
 	 */
 	private void setIconGraphic() {
-		MaterialDesignIcon icon = MaterialDesignIcon.VOLUME_OFF; 
-		
+		String iconCode = "mdi-volume-off";
 		if (volume.getValue()>0 && volume.getValue()<=25) {
-			icon=MaterialDesignIcon.VOLUME_LOW; 
+			iconCode = "mdi-volume-low";
 		}
 		if (volume.getValue()>25 && volume.getValue()<75) {
-			icon=MaterialDesignIcon.VOLUME_MEDIUM; 
+			iconCode = "mdi-volume-medium";
 		}
 		if (volume.getValue()>75) {
-			icon=MaterialDesignIcon.VOLUME_HIGH; 
+			iconCode = "mdi-volume-high";
 		}
-		
-		MaterialDesignIconView iconView = new MaterialDesignIconView(icon); 
-		iconView.setGlyphSize(33);
-		iconView.setFill(Color.WHITE);
-		
+		FontIcon iconView = new FontIcon(iconCode);
+		iconView.setIconSize(33);
+		iconView.setIconColor(Color.WHITE);
 		volumeIconLabel.setGraphic(iconView);
 	}
 
@@ -183,10 +177,8 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 
 	@Override
 	public Node getIcon() {
-		FontAwesomeIconView iconView = new FontAwesomeIconView(FontAwesomeIcon.PLAY); 
-		iconView.setGlyphSize(AIPamView.iconSize);
-		//iconView.setFill(Color.WHITE);
-		//iconView.setStyle("-fx-fill: TEXT_FILL;");
+		FontIcon iconView = new FontIcon("fa-play");
+		iconView.setIconSize(AIPamView.iconSize);
 		return iconView;
 	}
 

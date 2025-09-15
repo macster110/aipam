@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import org.controlsfx.control.NotificationPane;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.AITheme;
@@ -20,8 +21,6 @@ import com.jamdev.maven.aipam.layout.utilsFX.HidingPane;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.DoubleBinding;
 import javafx.concurrent.Task;
@@ -280,13 +279,10 @@ public class AIPamView extends BorderPane {
 	
 		final Button nextButton = new Button(); 
 		nextButton.setPrefSize(40, 100);
-//		MDL2IconFont iconFont1 = new MDL2IconFont("\uE893");
-//		iconFont1.setSize(30);
-//		iconFont1.setMaxSize(30, 30);
 		
-		FontAwesomeIconView iconFont1 = new FontAwesomeIconView(FontAwesomeIcon.FORWARD); 
-		iconFont1.setGlyphSize(AIPamView.iconSize);
-		iconFont1.setFill(Color.WHITE);
+		FontIcon iconFont1 = new FontIcon("fa-forward");
+		iconFont1.setIconSize(AIPamView.iconSize);
+		iconFont1.setIconColor(Color.WHITE);
 		
 
 		nextButton.setGraphic(iconFont1);
@@ -298,14 +294,10 @@ public class AIPamView extends BorderPane {
 		
 		final Button prevButton = new Button(); 
 		prevButton.setPrefSize(40, 100);
-//		MDL2IconFont iconFont2 = new MDL2IconFont("\uE892"
-//				+ "");
-//		iconFont2.setSize(30);
-//		iconFont2.setMaxSize(30, 30);
 		
-		FontAwesomeIconView iconFont2 = new FontAwesomeIconView(FontAwesomeIcon.BACKWARD); 
-		iconFont2.setGlyphSize(AIPamView.iconSize);
-		iconFont2.setFill(Color.WHITE);
+		FontIcon iconFont2 = new FontIcon("fa-backward");
+		iconFont2.setIconSize(AIPamView.iconSize);
+		iconFont2.setIconColor(Color.WHITE);
 		
 		prevButton.setGraphic(iconFont2);
 		prevButton.setOnAction((action)->{
@@ -634,23 +626,22 @@ public class AIPamView extends BorderPane {
 	/**
 	 * Set an icon on a button
 	 * @param button - the button to set icon on. 
-	 * @param icon - the icon type
+	 * @param iconCode - the Ikonli icon code (e.g. "fa-forward")
 	 */
-	public static void setButtonIcon(Labeled button, FontAwesomeIcon icon) {
-		setButtonIcon(button, icon, Pos.BASELINE_LEFT); 
+	public static void setButtonIcon(Labeled button, String iconCode) {
+		setButtonIcon(button, iconCode, Pos.BASELINE_LEFT);
 	}
 
 	/**
 	 * Set an icon on a button
 	 * @param button - the button to set icon on. 
-	 * @param icon - the icon type
+	 * @param iconCode - the Ikonli icon code (e.g. "fa-forward")
 	 * @param pos - the position of the icon and text. 
 	 */
-	public static void setButtonIcon(Labeled button, FontAwesomeIcon icon, Pos pos) {
-		FontAwesomeIconView iconViewSettings = new FontAwesomeIconView(icon); 
-		iconViewSettings.setGlyphSize(AIPamView.iconSize);
-		iconViewSettings.getStyleClass().add("-fx-fill: TEXT_FILL");
-		iconViewSettings.setFill(AIPamView.defaultTitleColour);
+	public static void setButtonIcon(Labeled button, String iconCode, Pos pos) {
+		FontIcon iconViewSettings = new FontIcon(iconCode);
+		iconViewSettings.setIconSize(AIPamView.iconSize);
+		iconViewSettings.setIconColor(AIPamView.defaultTitleColour);
 		button.setAlignment(pos);
 		button.setGraphicTextGap(15);
 		button.setGraphic(iconViewSettings);

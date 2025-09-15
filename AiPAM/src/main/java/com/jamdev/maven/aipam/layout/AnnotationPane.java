@@ -5,8 +5,6 @@ import com.jamdev.maven.aipam.annotation.SimpleAnnotation;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
@@ -30,6 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * Pane which allows users to edit annotations and export annotation data. 
@@ -60,10 +59,10 @@ public class AnnotationPane implements SettingsPane<AIPamParams> {
 
 	@Override
 	public Text getIcon() {
-		FontAwesomeIconView iconView = new FontAwesomeIconView(FontAwesomeIcon.PENCIL); 
-		iconView.setGlyphSize(AIPamView.iconSize);
-		iconView.setFill(Color.WHITE);
-		return iconView;
+		 FontIcon iconView = new FontIcon("fa-pencil");
+		 iconView.setIconSize(AIPamView.iconSize);
+		 iconView.setIconColor(Color.WHITE);
+		 return iconView;
 	}
 
 	private Pane createPane() {

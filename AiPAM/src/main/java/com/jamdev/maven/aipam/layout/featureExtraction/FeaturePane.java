@@ -19,8 +19,6 @@ import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.utils.AiPamUtils;
 import com.jamdev.maven.aipam.utils.ClipSpectrogram;
 
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
@@ -33,6 +31,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * Pane for feature extraction settings. 
@@ -321,8 +320,8 @@ public class FeaturePane extends DynamicSettingsPane<AIPamParams> {
 
 	@Override
 	public Node getIcon() {
-		MaterialDesignIconView iconView = new MaterialDesignIconView(MaterialDesignIcon.ZIP_BOX); 
-		iconView.setGlyphSize(AIPamView.iconSize);
+		FontIcon iconView = new FontIcon("mdi-zip-box");
+		iconView.setIconSize(AIPamView.iconSize);
 		iconView.setFill(Color.WHITE);
 		return iconView;
 	}

@@ -10,6 +10,13 @@
 
 	<name>MavenJTest</name>
 	<url>http://maven.apache.org</url>
+	
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<javafx.version>21</javafx.version>
+		<maven.compiler.target>11</maven.compiler.target>
+	</properties>
 
 
 	<repositories>
@@ -17,59 +24,7 @@
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
 		</repository>
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>bintray-jerady-maven</id>
-			<name>bintray</name>
-			<url>https://dl.bintray.com/jerady/maven</url>
-		</repository>
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>bintray-dukke-maven</id>
-			<name>bintray</name>
-			<url>https://dl.bintray.com/dukke/maven</url>
-		</repository>
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>bintray-diffplug-opensource</id>
-			<name>bintray</name>
-			<url>https://dl.bintray.com/diffplug/opensource</url>
-		</repository>
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>bintray-algs4-maven</id>
-			<name>bintray</name>
-			<url>https://dl.bintray.com/algs4/maven</url>
-		</repository>
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>bintray-macster110-jtorch4pam</id>
-			<name>bintray</name>
-			<url>https://dl.bintray.com/macster110/jtorch4pam</url>
-		</repository>
 	</repositories>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
-
-	<!-- <properties> -->
-	<!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
-	<!-- <dl4j.version>1.0.0-beta2</dl4j.version> -->
-	<!-- <maven.compiler.source>1.8</maven.compiler.source> -->
-	<!-- <maven.compiler.target>1.8</maven.compiler.target> -->
-	<!-- </properties> -->
 
 
 	<dependencies>
@@ -79,75 +34,70 @@
 			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
+		
+		
 		<!-- JavaFX 13 -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>14</version>
+			<version>${javafx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-base</artifactId>
-			<version>14</version>
+			<version>${javafx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
-			<version>14</version>
+			<version>${javafx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-graphics</artifactId>
-			<version>14</version>
+			<version>${javafx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
-			<version>14</version>
+			<version>${javafx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-web</artifactId>
-			<version>14</version>
+			<version>${javafx.version}</version>
 		</dependency>
+		
+		
 		<!-- Controls FX library -->
 		<dependency>
 			<groupId>org.controlsfx</groupId>
 			<artifactId>controlsfx</artifactId>
 			<version>11.0.1</version>
 		</dependency>
-		<!-- TSNE library -->
+		
+		<!-- Ikonli for icons in JavaFX-->
+		<!-- https://mvnrepository.com/artifact/org.kordamp.ikonli/ikonli-javafx -->
 		<dependency>
-			<groupId>com.github.lejon.T-SNE-Java</groupId>
-			<artifactId>tsne</artifactId>
-			<version>v2.5.0</version>
+		    <groupId>org.kordamp.ikonli</groupId>
+		    <artifactId>ikonli-javafx</artifactId>
+		    <version>12.4.0</version>
 		</dependency>
-		<!-- Font awesome for some icons -->
+		
 		<dependency>
-			<groupId>de.jensd</groupId>
-			<artifactId>fontawesomefx-commons</artifactId>
-			<version>11.0</version>
+		    <groupId>org.kordamp.ikonli</groupId>
+		    <artifactId>ikonli-fontawesome-pack</artifactId>
+		    <version>12.4.0</version>
 		</dependency>
+
 		<dependency>
-			<groupId>de.jensd</groupId>
-			<artifactId>fontawesomefx-controls</artifactId>
-			<version>11.0</version>
+		    <groupId>org.kordamp.ikonli</groupId>
+		    <artifactId>ikonli-materialdesign-pack</artifactId>
+		    <version>12.4.0</version>
 		</dependency>
-		<dependency>
-			<groupId>de.jensd</groupId>
-			<artifactId>fontawesomefx-materialdesignfont</artifactId>
-			<version>1.7.22-11</version>
-		</dependency>
-		<dependency>
-			<groupId>de.jensd</groupId>
-			<artifactId>fontawesomefx-materialicons</artifactId>
-			<version>2.2.0-11</version>
-		</dependency>
-		<dependency>
-			<groupId>de.jensd</groupId>
-			<artifactId>fontawesomefx-fontawesome</artifactId>
-			<version>4.7.0-11</version>
-		</dependency>
+
+
+
 		<!-- MAatFileRW for writing .mat files for settings files -->
 		<dependency>
 			<groupId>com.diffplug.matsim</groupId>
@@ -194,36 +144,44 @@
 			<artifactId>iirj</artifactId>
 			<version>1.1</version>
 		</dependency>
+		
 		<!-- Princton Algorithms, 4th Edition by Robert Sedgewick -->
+		<!-- https://mvnrepository.com/artifact/edu.princeton.cs/algs4
 		<dependency>
-			<groupId>edu.princeton.cs</groupId>
-			<artifactId>algs4</artifactId>
-			<version>1.0.3</version>
-		</dependency>
-
+		    <groupId>edu.princeton.cs</groupId>
+		    <artifactId>algs4</artifactId>
+		    <version>1.0.4</version>
+		</dependency> -->
 
 		<!--jpam project - utilities -->
 		<dependency>
-			<groupId>org.jamdev</groupId>
+			<groupId>io.github.macster110</groupId>
 			<artifactId>jpamutils</artifactId>
-			<version>0.0.4</version>
+			<version>0.0.59f</version>
 		</dependency>
 		
 		<!--jpam binaries - loads audiomoth and PG data -->
 		<dependency>
-			<groupId>org.jamdev</groupId>
+			<groupId>io.github.macster110</groupId>
 			<artifactId>jpambinaries</artifactId>
-			<version>0.0.3</version>
+			<version>0.0.48</version>
 		</dependency>
 
 		<!--jpam project - Deep learning java library -->
 		<dependency>
-			<groupId>org.jamdev</groupId>
+			<groupId>io.github.macster110</groupId>
 			<artifactId>jdl4pam</artifactId>
-			<version>0.0.8</version>
+			<version>0.0.99f</version>
 		</dependency>
-
-
+		
+		
+		<!-- https://mvnrepository.com/artifact/com.jujutsu.tsne/tsne -->
+		<dependency>
+		    <groupId>com.github.lejon.T-SNE-Java</groupId>
+		    <artifactId>tsne</artifactId>
+		    <version>v2.6.4</version>
+		</dependency>
+	
 		<!-- https://mvnrepository.com/artifact/com.github.afester.javafx/FranzXaver -->
 		<dependency>
 			<groupId>com.github.afester.javafx</groupId>
@@ -254,7 +212,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
 				<configuration>
-					<release>14</release>
+					<release>21</release>
 				</configuration>
 			</plugin>
 			<plugin>

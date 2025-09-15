@@ -8,8 +8,6 @@ import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.layout.utilsFX.DynamicSettingsPane;
 import com.jamdev.maven.aipam.layout.utilsFX.SettingsPane;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -19,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * General settings pane for the program
@@ -117,10 +116,9 @@ public class GeneralSettingsPane extends DynamicSettingsPane<AIPamParams> {
 
 	@Override
 	public Node getIcon() {
-		FontAwesomeIconView iconView = new FontAwesomeIconView(FontAwesomeIcon.GEARS); 
-		iconView.setGlyphSize(AIPamView.iconSize);
-		iconView.setFill(Color.WHITE);
-		return iconView;
+		 FontIcon iconView = new FontIcon("fa-gears");
+		 iconView.setIconSize(33);
+		 return iconView;
 	}
 
 	@Override

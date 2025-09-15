@@ -7,12 +7,6 @@ import java.util.ArrayList;
 import com.jamdev.maven.aipam.layout.UserPrompts.UserPrompt;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 
-import de.jensd.fx.glyphs.GlyphIcons;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import de.jensd.fx.glyphs.materialdesignicons.utils.MaterialDesignIconFactory;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -33,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * 
@@ -87,12 +82,12 @@ public class MasterControlPane {
 //		Label labelHome = new Label("Controls");
 //		labelHome.setPadding(new Insets(5,5,5,5));
 //		labelHome.getStyleClass().add("label-title1");
-//		AIPamView.setButtonIcon(labelHome, FontAwesomeIcon.HOME); 
+//		AIPamView.setButtonIcon(labelHome, new FontIcon("fa-home")); 
 		
 		
 		browseButton = new Button("Browse..."); 
 		browseButton.getStyleClass().add("fluent-menu-button");
-		AIPamView.setButtonIcon(browseButton, FontAwesomeIcon.FOLDER_OPEN_ALT); 
+		AIPamView.setButtonIcon(browseButton, "fa-folder-open"); 
 		browseButton.prefWidthProperty().bind(holder.widthProperty());
 		browseButton.setTooltip(new Tooltip(
 				"Open a folder of clips"));
@@ -107,7 +102,7 @@ public class MasterControlPane {
 		
 		importClipsButton = new Button("Import Clips"); 
 		importClipsButton.getStyleClass().add("fluent-menu-button");
-		AIPamView.setButtonIcon(importClipsButton, FontAwesomeIcon.TH); 
+		AIPamView.setButtonIcon(importClipsButton, "fa-th"); 
 		importClipsButton.prefWidthProperty().bind(holder.widthProperty());
 		importClipsButton.setTooltip(new Tooltip(
 				"Start importing clips"));
@@ -152,45 +147,14 @@ public class MasterControlPane {
 	/**
 	 * 
 	 * Create a Glyph icon which can be used as graphics for various controls. 
-	 * @param icon - the icon to add
+	 * @param iconCode - the icon code to add
 	 * @param size - the size of the icon in font size.
 	 * @return the icon in a form to add to a control. 
 	 */
-	public static Text createPamGlyph(FontAwesomeIcon icon, int size){
-		Text text2 = FontAwesomeIconFactory.get().createIcon(icon); 
-		FontAwesomeIconView iconViewImport = new FontAwesomeIconView(icon); 
-
-		//text2.getStyleClass().add("glyph-icon");
-		//text2.setStyle(String.format("-fx-font-family: %s; -fx-font-size: %dpt;", icon.fontFamily(), size));
-		return iconViewImport;
-	}
-	
-	/**
-	 * Create a standard Glyph from any Icon library. 
-	 * @param icon - the icon,
-	 * @return the icon glyph as a Text node. 
-	 */
-	public static Text createPamGlyph(GlyphIcons icon){
-		Text text2 = null; 
-		if (icon instanceof FontAwesomeIcon){
-			return text2 = FontAwesomeIconFactory.get().createIcon(icon); 
-		}
-		if (icon instanceof MaterialDesignIcon){
-			return text2 = MaterialDesignIconFactory.get().createIcon(icon); 
-		}
-//		if (icon instanceof MaterialIcon){
-//			return text2 = MaterialIconFactory.get().createIcon(icon); 
-//		}
-//		if (icon instanceof OctIcon){
-//			return text2 = OctIconFactory.get().createIcon(icon); 
-//		}
-//		if (icon instanceof Icons525){
-//			return text2 = Icon525Factory.get().createIcon(icon); 
-//		}
-//		if (icon instanceof WeatherIcon){
-//			return text2 = WeatherIconFactory.get().createIcon(icon); 
-//		}
-		return text2; 
+	public static Text createPamGlyph(String iconCode, int size){
+		FontIcon iconView = new FontIcon(iconCode);
+		iconView.setIconSize(size);
+		return iconView;
 	}
 	
   

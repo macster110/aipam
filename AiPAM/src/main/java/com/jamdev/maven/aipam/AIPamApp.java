@@ -33,8 +33,8 @@ public class AIPamApp extends Application {
     	//create the controller. 
         AiPamController aiPamController = new AiPamController(); 
 
-        //enable loading of svg images. 
-        SvgImageLoaderFactory.install(new AISVGDimensionProvider());
+//        //enable loading of svg images. 
+//        SvgImageLoaderFactory.install(new AISVGDimensionProvider());
     	
         StackPane root = new StackPane();
         

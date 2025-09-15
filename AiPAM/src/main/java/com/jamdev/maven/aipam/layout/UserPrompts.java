@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import com.jamdev.maven.aipam.AiPamController;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -15,8 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * Figures out if user prompts are needed and provides the view with appropriate user promt
@@ -206,18 +203,15 @@ public class UserPrompts {
 	 * @return import again message. 
 	 */
 	public Pane nothingImportedYet() {
-		FontAwesomeIconView iconViewSettings = new FontAwesomeIconView(FontAwesomeIcon.FOLDER_OPEN_ALT); 
-		iconViewSettings.setGlyphSize(iconSize);
-		iconViewSettings.setGlyphStyle("-fx-fill: TEXT_USER_PROMPT"); 
-		
-		FontAwesomeIconView iconViewClips = new FontAwesomeIconView(FontAwesomeIcon.TH); 
-		iconViewClips.setGlyphSize(iconSize);
-		iconViewClips.setGlyphStyle("-fx-fill: TEXT_USER_PROMPT"); 
-		
-		FontAwesomeIconView audioFile = new FontAwesomeIconView(FontAwesomeIcon.FILE_AUDIO_ALT); 
-		audioFile.setGlyphSize(iconSize);
-		audioFile.setGlyphStyle("-fx-fill: TEXT_USER_PROMPT"); 
-		
+		FontIcon iconViewSettings = new FontIcon("fa-folder-open");
+		iconViewSettings.setIconSize(iconSize);
+
+		FontIcon iconViewClips = new FontIcon("fa-th");
+		iconViewClips.setIconSize(iconSize);
+
+		FontIcon audioFile = new FontIcon("fa-file-audio-o");
+		audioFile.setIconSize(iconSize);
+
 		Pane pane1=iconLabelPane(iconViewSettings, "No clips imported yet: select", "");
 		Pane pane2=iconLabelPane(iconViewClips, "and then ", " to import."); 
 		Pane pane3=iconLabelPane(audioFile, " Use ", "Audio for settings"); 
@@ -264,11 +258,10 @@ public class UserPrompts {
 		hBox.setSpacing(5);
 		hBox.setAlignment(Pos.CENTER_LEFT);
 
-		FontAwesomeIconView iconViewSettings = new FontAwesomeIconView(FontAwesomeIcon.TH); 
-		iconViewSettings.setGlyphSize(iconSize);
-		iconViewSettings.setGlyphStyle("-fx-fill: TEXT_USER_PROMPT"); 
+		 FontIcon iconViewSettings2 = new FontIcon("fa-th");
+		 iconViewSettings2.setIconSize(iconSize);
 		
-		return iconLabelPane(iconViewSettings, 
+		return iconLabelPane(iconViewSettings2, 
 				 "Need to reimport clips: Press ", "Import Clips to start import" ); 
 	}
 

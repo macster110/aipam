@@ -27,7 +27,8 @@ import com.jujutsu.utils.TSneUtils;
 @SuppressWarnings("deprecation")
 public class TSNEClipClustererYK  implements ClusteringAlgorithm {
 	/**
-	 * The perplexity 
+	 * The perplexity utsu
+	 * 
 	 */
 	private int perplexity = 30 ;
 	
