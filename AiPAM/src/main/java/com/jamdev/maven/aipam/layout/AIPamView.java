@@ -27,6 +27,7 @@ import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -653,8 +654,9 @@ public class AIPamView extends BorderPane {
 	}
 
 
-	public Image getSpectrogramIcon() {
-		return getIcon("Audio.svg"); 
+	public Node getSpectrogramIcon() {
+		return AnimatedSpectrogramIcon.getIcon();
+		//return getIcon("Audio.svg"); 
 	}
 
 	public Image getClusterIcon(int size) {
@@ -720,7 +722,7 @@ public class AIPamView extends BorderPane {
 			 this.notificationPane.show("");		
 			}
 		else {
-			System.out.println("Hide notification: ");
+			//System.out.println("Hide notification: ");
 			this.notificationPane.hide();
 		}
 
@@ -822,9 +824,11 @@ public class AIPamView extends BorderPane {
 		//TEMP hack needs to go into CSS FILE. 
 		switch (thetype) {
 		case AITheme.JMETRO_DARK_THEME:
+		case AITheme.TRANSIT_DARK_THEME:
 			 notificationPane.getStyleClass().add(NotificationPane.STYLE_CLASS_DARK);
 			break;
 		case AITheme.JMETRO_LIGHT_THEME:
+		case AITheme.TRANSIT_LIGHT_THEME:
 			//notificationPane.getStyleClass().clear();
 			break;
 		}

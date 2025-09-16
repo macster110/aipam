@@ -405,7 +405,7 @@ public class PAMClipManager {
 						}
 					}
 
-					System.out.println("nextClipPageTask: Start next page task: files to load: " + filesToLoad.size()); 
+					//System.out.println("nextClipPageTask: Start next page task: files to load: " + filesToLoad.size()); 
 					ArrayList<ClipWave> waveClips; 
 					int count = 0;
 					for (String file: filesToLoad) {
@@ -420,14 +420,14 @@ public class PAMClipManager {
 							for (PAMClip pamClip : currentClips) {
 								if (pamClip.getTimeMillis() == waveClip.getTimeMillis()) {
 									pamClip.setAudioData(waveClip);
-									System.out.println("nextClipPageTask: Spectrogram data: "); 
+									//System.out.println("nextClipPageTask: Spectrogram data: "); 
 									count++; 
 									break; 
 								}
 							}
 						}
 					}
-					System.out.println("nextClipPageTask: Start next page task: no. spec added: " + count); 
+					//System.out.println("nextClipPageTask: Start next page task: no. spec added: " + count); 
 					return 1; 
 				}
 				catch (Exception e) {

@@ -1,0 +1,62 @@
+<!-- Spectrogram icon (24x24) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="title spectDesc" role="img">
+  <title id="title">Spectrogram icon</title>
+  <desc id="spectDesc">Stylised spectrogram heatmap with time axis and frequency axis</desc>
+
+  <!-- background rounded frame -->
+  <rect x="1" y="1" width="22" height="22" rx="3" ry="3" fill="none" stroke="currentColor" stroke-opacity="0.12" />
+
+  <!-- axes (thin) -->
+  <line x1="3" y1="20" x2="21" y2="20" stroke="currentColor" stroke-opacity="0.18" stroke-width="0.8"/>
+  <line x1="3" y1="4"  x2="3"  y2="20" stroke="currentColor" stroke-opacity="0.18" stroke-width="0.8"/>
+
+  <!-- heatmap cells: 6 columns (time) × 5 rows (freq) -->
+  <!-- colors chosen to indicate intensity: cool (low) -> warm (high) -->
+  <!-- grid origin at x=4, y=4, grid size 16×14, cellW ≈ 2.5, cellH ≈ 2.6 -->
+  <g transform="translate(4,4)">
+    <!-- column 1 (earlier time) -->
+    <rect x="0"   y="10.5" width="2.6" height="2.6" rx="0.4" fill="#0d3b66"/>
+    <rect x="0"   y="7.9"  width="2.6" height="2.6" rx="0.4" fill="#154b7a"/>
+    <rect x="0"   y="5.3"  width="2.6" height="2.6" rx="0.4" fill="#1d5b8e"/>
+    <rect x="0"   y="2.7"  width="2.6" height="2.6" rx="0.4" fill="#2b79ab"/>
+    <rect x="0"   y="0.1"  width="2.6" height="2.6" rx="0.4" fill="#3aa0d6"/>
+
+    <!-- column 2 -->
+    <rect x="3.2" y="10.5" width="2.6" height="2.6" rx="0.4" fill="#123a62"/>
+    <rect x="3.2" y="7.9"  width="2.6" height="2.6" rx="0.4" fill="#21608a"/>
+    <rect x="3.2" y="5.3"  width="2.6" height="2.6" rx="0.4" fill="#2a77a3"/>
+    <rect x="3.2" y="2.7"  width="2.6" height="2.6" rx="0.4" fill="#3b93c4"/>
+    <rect x="3.2" y="0.1"  width="2.6" height="2.6" rx="0.4" fill="#5fb7e6"/>
+
+    <!-- column 3 -->
+    <rect x="6.4" y="10.5" width="2.6" height="2.6" rx="0.4" fill="#18507a"/>
+    <rect x="6.4" y="7.9"  width="2.6" height="2.6" rx="0.4" fill="#2a6f9a"/>
+    <rect x="6.4" y="5.3"  width="2.6" height="2.6" rx="0.4" fill="#3d8db9"/>
+    <rect x="6.4" y="2.7"  width="2.6" height="2.6" rx="0.4" fill="#66b0e0"/>
+    <rect x="6.4" y="0.1"  width="2.6" height="2.6" rx="0.4" fill="#9fe1ff"/>
+
+    <!-- column 4 -->
+    <rect x="9.6" y="10.5" width="2.6" height="2.6" rx="0.4" fill="#22608f"/>
+    <rect x="9.6" y="7.9"  width="2.6" height="2.6" rx="0.4" fill="#3a88b0"/>
+    <rect x="9.6" y="5.3"  width="2.6" height="2.6" rx="0.4" fill="#66b5d7"/>
+    <rect x="9.6" y="2.7"  width="2.6" height="2.6" rx="0.4" fill="#9fd8ef"/>
+    <rect x="9.6" y="0.1"  width="2.6" height="2.6" rx="0.4" fill="#ffd48a"/>
+
+    <!-- column 5 -->
+    <rect x="12.8" y="10.5" width="2.6" height="2.6" rx="0.4" fill="#2e6f9f"/>
+    <rect x="12.8" y="7.9"  width="2.6" height="2.6" rx="0.4" fill="#58a3c6"/>
+    <rect x="12.8" y="5.3"  width="2.6" height="2.6" rx="0.4" fill="#90d1ea"/>
+    <rect x="12.8" y="2.7"  width="2.6" height="2.6" rx="0.4" fill="#ffd08a"/>
+    <rect x="12.8" y="0.1"  width="2.6" height="2.6" rx="0.4" fill="#ff8a4b"/>
+
+    <!-- column 6 (later time) -->
+    <rect x="16.0" y="10.5" width="2.6" height="2.6" rx="0.4" fill="#3b7fb2"/>
+    <rect x="16.0" y="7.9"  width="2.6" height="2.6" rx="0.4" fill="#8fc5e9"/>
+    <rect x="16.0" y="5.3"  width="2.6" height="2.6" rx="0.4" fill="#ffd78a"/>
+    <rect x="16.0" y="2.7"  width="2.6" height="2.6" rx="0.4" fill="#ffb36a"/>
+    <rect x="16.0" y="0.1"  width="2.6" height="2.6" rx="0.4" fill="#ff6b3a"/>
+  </g>
+
+  <!-- little waveform marker to hint audio -->
+  <path d="M5.5 16.5 C7 14.5, 9 17, 11 15.2 C13 13.6, 15 17.2, 18.5 15.6" fill="none" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.5"/>
+</svg>

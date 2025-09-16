@@ -194,5 +194,11 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 	public PAMClip getPamClip() {
 		return clip;
 	}
+	
+	public void freeMemory() {
+		this.clip=null;
+		this.imageCanvas =null;
+		this.spectrogramImage =  null;
+	}
 
 }

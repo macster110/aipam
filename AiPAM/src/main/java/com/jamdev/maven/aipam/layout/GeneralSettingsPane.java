@@ -117,7 +117,8 @@ public class GeneralSettingsPane extends DynamicSettingsPane<AIPamParams> {
 	@Override
 	public Node getIcon() {
 		 FontIcon iconView = new FontIcon("fa-gears");
-		 iconView.setIconSize(33);
+		 iconView.setIconSize(AIPamView.iconSize);
+		 iconView.setIconColor(Color.WHITE);
 		 return iconView;
 	}
 

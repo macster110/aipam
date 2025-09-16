@@ -324,11 +324,11 @@ public class FFTSettingsPane extends DynamicSettingsPane<AIPamParams> {
 
 	@Override
 	public Node getIcon() {
-		ImageView icon = new ImageView(aiPamView.getSpectrogramIcon()); 
-		ColorAdjust colorAdjust = new ColorAdjust();
-		colorAdjust.setBrightness(1);
-		icon.setEffect(colorAdjust);
-		return icon;
+//		ImageView icon = new ImageView(aiPamView.getSpectrogramIcon()); 
+//		ColorAdjust colorAdjust = new ColorAdjust();
+//		colorAdjust.setBrightness(1);
+//		icon.setEffect(colorAdjust);
+		return aiPamView.getSpectrogramIcon();
 	}
 
 	@Override

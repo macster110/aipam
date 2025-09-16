@@ -146,7 +146,7 @@ public class StandardAudioImporter implements AudioImporter {
 		AudioFormat format = wavFile.getAudioFileFormat().getFormat(); 
 
 		long dateTime = datetimeParser.getTimeFromFile(audioFile);
-		System.err.println("Imported date time: " + dateTime);
+		System.err.println("Imported date time: " + dateTime + " decimatorSr: " + decimatorSr);
 
 		int channels = format.getChannels(); 
 

@@ -65,13 +65,19 @@ public class AIPamApp extends Application {
     
         root.getChildren().add(sensorView);
         
-//        root.getStylesheets().add(darkStyle);
-        primaryStage.setScene(new Scene(root, 1000, 750));
+        Scene scene = new Scene(root, 1000, 750);
+        scene.setRoot(root);
+        
+
         
         //need to apply theme after stage to get it to work with new version of JMetro
-        sensorView.getTheme().applyTheme(AITheme.JMETRO_DARK_THEME, root);
-        
+        primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Apply theme after the stage is shown to avoid Prism texture errors
+        javafx.application.Platform.runLater(() -> {
+            sensorView.getTheme().applyTheme(AITheme.JMETRO_DARK_THEME, root);
+        });
     }
 
 }

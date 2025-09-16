@@ -46,7 +46,7 @@ public class UserPrompts {
 	/**
 	 * Spectrogram 
 	 */
-	private ImageView specImage;;
+	private Node specImage;;
 
 
 	private int iconSize = 12; 
@@ -63,7 +63,7 @@ public class UserPrompts {
 		aiPamContol=aiPamView.getAIControl();
 		
 		clusterImage = UtilsFX.whitenImage(new ImageView(aiPamView.getClusterIcon())); //create icon so not reloading it every time. 
-		specImage = UtilsFX.whitenImage(new ImageView(aiPamView.getSpectrogramIcon())); //create icon so not reloading it every time. 
+		specImage = aiPamView.getSpectrogramIcon(); //create icon so not reloading it every time. 
 	}
 	
 	

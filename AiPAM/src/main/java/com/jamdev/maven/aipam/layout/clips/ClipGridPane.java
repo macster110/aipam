@@ -114,6 +114,15 @@ public class ClipGridPane extends BorderPane {
 	 */
 	public void clearSpecImages() {
 		tilePane.getChildren().clear(); 
+		
+		if (currentPamClips!=null) {
+		for (int i=0; i<currentPamClips.size(); i++) {
+			currentPamClips.get(i).freeMemory();
+		}
+
+		currentPamClips.clear();
+		}
+		System.gc();
 	}
 
 

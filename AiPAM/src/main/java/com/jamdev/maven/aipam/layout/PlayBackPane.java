@@ -179,6 +179,7 @@ public class PlayBackPane extends DynamicSettingsPane<AIPamParams> {
 	public Node getIcon() {
 		FontIcon iconView = new FontIcon("fa-play");
 		iconView.setIconSize(AIPamView.iconSize);
+		iconView.setIconColor(Color.WHITE);
 		return iconView;
 	}
 
