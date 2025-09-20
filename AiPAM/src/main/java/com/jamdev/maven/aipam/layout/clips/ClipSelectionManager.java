@@ -71,8 +71,9 @@ public class ClipSelectionManager {
 	 * @param pamClipPane - the currently selected PamClipPane. 
 	 */
 	public void selectClip(PamClipPane pamClipPane) {
+		System.out.println("Select clip: " + pamClipPane.getPamClip().getGridID());
 		 stopClipAutoPlay();
-		repaintAllClips(); 
+		clearSelectedClips(); 
 		highlightSelectClip(pamClipPane); 
 		pamClipPane.getAudioPlay().playClipAudio();
 	
@@ -109,10 +110,10 @@ public class ClipSelectionManager {
 	/**
 	 * Clear all currently selected clips. 
 	 */
-	private void repaintAllClips() {
+	public void clearSelectedClips() {
 		for (PamClipPane pamClipPane: selectedClips) {
 			pamClipPane.setStyle("-fx-border-color: transparent; -fx-border-width: 3px;");
-			pamClipPane.getAudioPlay().stopClipAudio();
+			if (pamClipPane.getAudioPlay()!=null) pamClipPane.getAudioPlay().stopClipAudio();
 		}
 		selectedClips.clear();
 	}

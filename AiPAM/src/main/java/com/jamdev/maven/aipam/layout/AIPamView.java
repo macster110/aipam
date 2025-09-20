@@ -314,23 +314,23 @@ public class AIPamView extends BorderPane {
 		
 		StackPane stackPane = new StackPane(); 
 		stackPane.getChildren().add(clipPane); 
-		stackPane.setOnMouseMoved((event)->{
-			if (aiPamContol.getPamClipManager().hasPrevClips()) {
-				prevButton.setVisible(true); 
-				buttonAnimation(event,  prevButton,  ttPrev, false);
-			}
-			else {
-				prevButton.setVisible(false); 
-			}
-			
-			if (aiPamContol.getPamClipManager().hasNextClips()) {
-				nextButton.setVisible(true); 
-				buttonAnimation(event,  nextButton,  ttNext, true);
-			}
-			else {
-				nextButton.setVisible(false); 
-			}
-		});
+//		stackPane.setOnMouseMoved((event)->{
+//			if (aiPamContol.getPamClipManager().hasPrevClips()) {
+//				prevButton.setVisible(true); 
+//				buttonAnimation(event,  prevButton,  ttPrev, false);
+//			}
+//			else {
+//				prevButton.setVisible(false); 
+//			}
+//			
+//			if (aiPamContol.getPamClipManager().hasNextClips()) {
+//				nextButton.setVisible(true); 
+//				buttonAnimation(event,  nextButton,  ttNext, true);
+//			}
+//			else {
+//				nextButton.setVisible(false); 
+//			}
+//		});
 
 		stackPane.getChildren().addAll(prevButton, nextButton); 
 		
@@ -484,12 +484,12 @@ public class AIPamView extends BorderPane {
 			break; 
 		case AiPamController.CANCEL_CLUSTERING_ALGORITHM:
 			showProgressPane(false); 
-			clusterGraphPane.update(aiPamContol.getPAMClips()); 
+			//clusterGraphPane.update(aiPamContol.getPAMClips()); 
 			checkSettings();
 			break; 
 		case AiPamController.END_CLUSTERING_ALGORITHM:
 			showProgressPane(false); 
-			clusterGraphPane.update(aiPamContol.getPAMClips()); 
+			//clusterGraphPane.update(aiPamContol.getPAMClips()); 
 			clipPane.layoutClips(); //layout the clips. 
 			checkSettings();
 			break; 

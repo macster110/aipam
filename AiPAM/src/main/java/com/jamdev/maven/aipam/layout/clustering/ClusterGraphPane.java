@@ -90,6 +90,8 @@ public class ClusterGraphPane extends BorderPane {
 	@SuppressWarnings("rawtypes")
 	public void update(ArrayList<PAMClip> pamClips) {
 		
+		System.out.println("clustering.ClusterGraphPane: updating cluster graph with "+pamClips.size()+" clips");
+		
 		scatterChart.getData().clear();
 		
         XYChart.Series series = new XYChart.Series();
@@ -98,56 +100,56 @@ public class ClusterGraphPane extends BorderPane {
         //might try to cluster without any clips
         if (pamClips==null) return; 
         
-		for (int i=0; i<pamClips.size(); i++) {
-			
-			if (pamClips.get(i).getClusterPoint()==null) {
-				System.err.println("clustering.ClusterGraphPane: The clip has a null cluster point");
-				continue; 
-			}
-			
-			@SuppressWarnings("unchecked")
-			XYChart.Data dataPoint = new XYChart.Data(pamClips.get(i).getClusterPoint()[0],
-					 pamClips.get(i).getClusterPoint()[1]);
-			
-			FeatureExtraction featureExtraction=null; 
-			if (aiPamView.getAIParams().showFeatures) {
-				featureExtraction=aiPamView.getAIControl().getFeatureExtractionManager().getCurrentFeatureExtractor(); 
-			}
-			
-			image = new PamClipPane(pamClips.get(i), 30, 30, aiPamView.getAIParams().spectrogramParams, aiPamView.getCurrentColourArray(), featureExtraction); 
-			image.setSelectionManager(aiPamView.getClipSelectionManager());
-//			image = new SpectrogramImage(pamClips.get(i).getSpectrogram(), 
-//        			aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
-        	//toolTip.setGraphic(new ImageView(image.getSpecImage(100, 100)));
-			
-////			ImageView imageView = new ImageView(image.getSpecImage(30, 30));
-//		    BorderPane imageViewWrapper = new BorderPane(image); //need a wrapper for border effects. 
-//		    imageViewWrapper.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
+//		for (int i=0; i<pamClips.size(); i++) {
+//			
+//			if (pamClips.get(i).getClusterPoint()==null) {
+//				System.err.println("clustering.ClusterGraphPane: The clip has a null cluster point");
+//				continue; 
+//			}
+//			
+//			@SuppressWarnings("unchecked")
+//			XYChart.Data dataPoint = new XYChart.Data(pamClips.get(i).getClusterPoint()[0],
+//					 pamClips.get(i).getClusterPoint()[1]);
+//			
+//			FeatureExtraction featureExtraction=null; 
+//			if (aiPamView.getAIParams().showFeatures) {
+//				featureExtraction=aiPamView.getAIControl().getFeatureExtractionManager().getCurrentFeatureExtractor(); 
+//			}
+//			
+//			image = new PamClipPane(pamClips.get(i), 30, 30, aiPamView.getAIParams().spectrogramParams, aiPamView.getCurrentColourArray(), featureExtraction); 
+//			image.setSelectionManager(aiPamView.getClipSelectionManager());
+////			image = new SpectrogramImage(pamClips.get(i).getSpectrogram(), 
+////        			aiPamView.getCurrentColourArray(), aiPamView.getAIParams().colourLims); 
+//        	//toolTip.setGraphic(new ImageView(image.getSpecImage(100, 100)));
+//			
+//////			ImageView imageView = new ImageView(image.getSpecImage(30, 30));
+////		    BorderPane imageViewWrapper = new BorderPane(image); //need a wrapper for border effects. 
+////		    imageViewWrapper.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
+////
+////		    imageViewWrapper.setOnMouseClicked((event)->{
+////				//reset last clicks to transparent. 
+////				if (lastClicked!=null) lastClicked.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
+////
+////				//set new one to have highlighted border
+////				imageViewWrapper.setStyle("-fx-border-color: ACCENT_COLOR; -fx-border-width: 2px;");
+////
+////				//brinf to front
+////				imageViewWrapper.toFront();
+////							    
+////				//set as last clicked,. 
+////				lastClicked=imageViewWrapper; 
+////				
+////			});
 //
-//		    imageViewWrapper.setOnMouseClicked((event)->{
-//				//reset last clicks to transparent. 
-//				if (lastClicked!=null) lastClicked.setStyle("-fx-border-color: transparent; -fx-border-width: 2px;");
-//
-//				//set new one to have highlighted border
-//				imageViewWrapper.setStyle("-fx-border-color: ACCENT_COLOR; -fx-border-width: 2px;");
-//
-//				//brinf to front
-//				imageViewWrapper.toFront();
-//							    
-//				//set as last clicked,. 
-//				lastClicked=imageViewWrapper; 
-//				
-//			});
-
-			dataPoint.setNode(image);
-						
-			series.getData().add(dataPoint); 
-			
-//			dataPoint.getNode().setOnMouseClicked((event)->{
-//				PopOver popOver = new PopOver(); 
-//			});
-			 
-		}
+//			dataPoint.setNode(image);
+//						
+//			series.getData().add(dataPoint); 
+//			
+////			dataPoint.getNode().setOnMouseClicked((event)->{
+////				PopOver popOver = new PopOver(); 
+////			});
+//			 
+//		}
         scatterChart.getData().add(series);
         
 //        Tooltip toolTip; 

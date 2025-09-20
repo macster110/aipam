@@ -151,6 +151,12 @@ public class PAMClip implements Comparable<PAMClip> {
 		}
 		return spectrogramClip;
 	}
+	
+	
+	public ClipSpectrogram getSpectrogram() {
+		return spectrogramClip; 
+	}
+
 
 
 	/**
@@ -250,6 +256,15 @@ public class PAMClip implements Comparable<PAMClip> {
 	public double getClipLength() {
 		return clipWave.getLengthInSeconds(); 
 	}
+	
+	/**
+	 * Get the clip wave object. This holds the raw data of the clip. 
+	 * @return the clip wave object. 
+	 */
+	public ClipWave getClipWave() {
+		return clipWave;
+	}
+
 
 
 	/**

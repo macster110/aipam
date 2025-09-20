@@ -77,7 +77,7 @@ public class StandardAudioImporter implements AudioImporter {
 				
 				audioMothChunks = AudioMothTFile.loadTFile(audioFile);
 
-				System.out.println("Load AudioMothTFile: N: " + audioMothChunks.size()); 
+				//System.out.println("Load AudioMothTFile: N: " + audioMothChunks.size()); 
 
 				waves = new ArrayList<ClipWave>();
 				for (AudioMothTData audioMothTData : audioMothChunks) {
@@ -146,7 +146,7 @@ public class StandardAudioImporter implements AudioImporter {
 		AudioFormat format = wavFile.getAudioFileFormat().getFormat(); 
 
 		long dateTime = datetimeParser.getTimeFromFile(audioFile);
-		System.err.println("Imported date time: " + dateTime + " decimatorSr: " + decimatorSr);
+		//System.err.println("Imported date time: " + dateTime + " decimatorSr: " + decimatorSr);
 
 		int channels = format.getChannels(); 
 
@@ -193,14 +193,18 @@ public class StandardAudioImporter implements AudioImporter {
 			data = new byte[inputStream.available()];
 			inputStream.read(data);	  
 			//		}
-
+			
+			
 			if (channels==1) {
 				//no need to do anything else. 
-				data=WavFile.trim( format, data,  maxSamples); 
 			}
 			else {
 				//extract single channel data 
 				data = WavFile.getSingleChannelByte(format, data,  channel); 
+			}
+			
+			if (data.length/format.getFrameSize()>maxSamples) {
+				//trim the data if it is too long. 
 				data= WavFile.trim( format, data,  maxSamples); 
 			}
 

@@ -9,6 +9,7 @@ import java.util.List;
 import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.utils.AiPamUtils;
 
+import ai.djl.util.Utils;
 import javafx.concurrent.Task;
 
 
@@ -175,7 +176,11 @@ public class PAMClipManager {
 					for (int i=0; i<pamClips.size(); i++) {
 						System.out.println("Filename: " + pamClips.get(i).getClipName() + " ID: " +  pamClips.get(i).getGridID()); 
 					}
-
+					
+					//now set the clip IDs so they are in order of time
+					for (int i=0; i<pamClips.size(); i++) {
+						pamClips.get(i).setGridID(i);
+					}
 					currentClips=pamClips; 
 
 					//make sure this is reset. 
@@ -212,6 +217,7 @@ public class PAMClipManager {
 		if (currentPageClips == null || currentClips.size()<=params.maxPageClips) {
 
 			int size = Math.min(currentClips.size(), params.maxPageClips);
+			
 			newClipsIds = new int[size];
 			//the clips are in chronological order. 
 			for (int i=0; i<size; i++) {
@@ -222,7 +228,7 @@ public class PAMClipManager {
 		}
 
 		//TODO - need to search for the min and max time index 0f the clips because they may have been moved out of order by
-		//a clustering algorithm? - safer thing tyo do anyways. 
+		//a clustering algorithm? - safer thing to do anyways. 
 		else {
 			newClipsIds = new int[params.maxPageClips];
 			//so move forward from the last clip and save the IDs - remember the clips are in chronological order. 
@@ -257,7 +263,7 @@ public class PAMClipManager {
 				//it's equal to the length of array, already. 
 				newClipsIds = Arrays.copyOf(newClipsIds, i);
 			}
-			//System.out.println("New page IDs: i " + i + " ii: " + ii + " len: " + newClipsIds.length); 
+			System.out.println("PamClipManager: New page IDs: i " + i + " ii: " + ii + " len: " + newClipsIds.length); 
 		}
 		this.currentPageClips = newClipsIds;
 		//very import as search function assume a sorted array
@@ -384,11 +390,24 @@ public class PAMClipManager {
 						}
 					});
 
-
+//					System.out.println("PamClipManager: nextClipPageTask: Start next page task: WIPE CLIPS: " + currentClips.size() + "  page clips: " + currentPageClips.length); ;
+//					for (int i=0; i<currentPageClips.length ; i++) {
+//						System.out.print(currentPageClips[i] + " ");
+//					}
+					
+					System.out.println("PamClipManager: nextClipPageTask: Start next page task: WIPE CLIPS: " + currentClips.size() + "  page clips: " + currentPageClips.length); ;
+					for (int i=0; i<currentPageClips.length ; i++) {
+						System.out.print(currentClips.get(i).getGridID() + " ");
+					}
+					
+					
 					//must wipe audio data from all clips before loading a new page or the whole page thing is pointless. 
 					for (PAMClip pamClip : currentClips) {
-						pamClip.setAudioData(null);
+						pamClip.clearAudioData();
 					}
+					
+					System.out.println("PamClipManager: no. clips with spectrgram: " + getNClipsWithImage() + " with audio " + getNClipsWithAudio()); ;
+
 
 
 					ArrayList<String> filesToLoad = new ArrayList<String>(); 
@@ -405,29 +424,39 @@ public class PAMClipManager {
 						}
 					}
 
-					//System.out.println("nextClipPageTask: Start next page task: files to load: " + filesToLoad.size()); 
+					System.out.println("PAMClipManager: nextClipPageTask: Start next page task: files to load: " + filesToLoad.size()); 
 					ArrayList<ClipWave> waveClips; 
 					int count = 0;
-					for (String file: filesToLoad) {
+					String file; 
+					for (int i=0; i<filesToLoad.size(); i++) {
+						file = filesToLoad.get(i);
 						waveClips = audioImporter.importAudio(new File(file), params, standAudiListener, true);
-						//TODO - ISSUE here - think it's to do with the TIMEMILLIS COMPARISON
-						System.out.println("-----------------------"); 
-						System.out.println("nextClipPageTask: New wav data: " + waveClips.get(0).getSampleAmplitudes().length + 
-								"  First sample: " +  waveClips.get(0).getSampleAmplitudes()[0] + 
-								"  TimeMillis: " + waveClips.get(0).getTimeMillis()); 
-						//now need to update the information in the PAMClip. 
+////						//TODO - ISSUE here - think it's to do with the TIMEMILLIS COMPARISON
+//						System.out.println("-----------------------"); 
+//						System.out.println("PAMClipManager: nextClipPageTask: New wav data: " + i + "  " + waveClips.get(0).getSampleAmplitudes().length + 
+//								"  First sample: " +  waveClips.get(0).getSampleAmplitudes()[0] + 
+//								"  TimeMillis: " + waveClips.get(0).getTimeMillis() + " " + filesToLoad.get(i)); 
+//						
+						
+						//now need to update the information in the PAMClip. Note that there may be multiple clips in a file so need to match by time.
+						boolean found = false;
 						for (ClipWave waveClip: waveClips) {
+							found=false;
 							for (PAMClip pamClip : currentClips) {
-								if (pamClip.getTimeMillis() == waveClip.getTimeMillis()) {
+								//it's important to compare the filename here too just incase there are clips with the same time in different files
+								if (pamClip.getTimeMillis() == waveClip.getTimeMillis() && pamClip.getFileName().equals(waveClip.getFileName())) {
 									pamClip.setAudioData(waveClip);
-									//System.out.println("nextClipPageTask: Spectrogram data: "); 
+									//System.out.println("nextClipPageTask: Spectrogram data: " + pamClip.getGridID()); 
 									count++; 
+									found= true;
 									break; 
 								}
 							}
+							if (!found) System.out.println("PAMClipManager: nextClipPageTask: unable to find clips for time: " + i + " " + waveClip.getTimeMillis() + " file: " + waveClip.getFileName());
 						}
 					}
-					//System.out.println("nextClipPageTask: Start next page task: no. spec added: " + count); 
+					System.out.println("PAMClipManager: nextClipPageTask: Start next page task: no. audio added: " + getNClipsWithAudio() + "  count: " + count); 
+
 					return 1; 
 				}
 				catch (Exception e) {
@@ -513,6 +542,27 @@ public class PAMClipManager {
 
 		return true; 
 	}
+	
+	public int getNClipsWithImage() {
+		int count=0;
+		for (int i=0; i<currentClips.size(); i++) {
+			if (currentClips.get(i).getSpectrogram()!=null) {
+				count++;
+			}
+		}
+		return count; 
+	}
+	
+	public int getNClipsWithAudio() {
+		int count=0;
+		for (int i=0; i<currentClips.size(); i++) {
+			if (currentClips.get(i).getClipWave().getSampleAmplitudes()!=null) {
+				count++;
+			}
+		}
+		return count; 
+	}
+	
 
 
 }

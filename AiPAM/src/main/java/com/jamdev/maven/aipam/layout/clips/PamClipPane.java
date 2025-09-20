@@ -15,6 +15,8 @@ import com.jamdev.maven.aipam.utils.ClipSpectrogram;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -71,6 +73,9 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 	 */
 	private FeatureExtraction featureExtraction; 
 	
+	// Listeners that must be removed to prevent memory leaks
+	private ChangeListener<Object> annotationListener; // Listener for annotation property changes
+	private ChangeListener<String> colourListener;     // Listener for colour property changes
 
 	/**
 	 * Constructor for the clip pane. 
@@ -80,7 +85,6 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 		this.clip=clip; 
 		this.featureExtraction  = featureExtraction; 
 		//create the pane 
-		
 		this.getChildren().add(imageCanvas = new Canvas(width, height)); 
 
 		//clip features
@@ -97,19 +101,24 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 		if (clip.annotationProperty().get()!=null) {
 			colourProperty.setValue(((SimpleAnnotation) clip.annotationProperty().get()).colorProperty.get());
 		}
-		//when there is a new annotation bind the overlay colour to it so it changes with the colour property
-		clip.annotationProperty().addListener((obsval, oldVal, newVal)->{
+		// Store and add annotation listener
+		// This listener binds the colour property to the annotation's colour property when the annotation changes.
+		// If not removed, it will keep a reference to this PamClipPane and cause a memory leak.
+		annotationListener = (obsval, oldVal, newVal) -> {
 			colourProperty.unbind();
 			if (newVal!=null) {
 				colourProperty.bind(((SimpleAnnotation) newVal).colorProperty());
 			}
 			else colourProperty.set(UtilsFX.toRGBCode(Color.TRANSPARENT)); 
-		});
-
-		//when the colour property changes changed the back ground
-		colourProperty.addListener((obsval, oldVal, newVal)->{
+		};
+		clip.annotationProperty().addListener(annotationListener);
+		// Store and add colour property listener
+		// This listener updates the overlay colour when the colour property changes.
+		// If not removed, it will keep a reference to this PamClipPane and cause a memory leak.
+		colourListener = (obsval, oldVal, newVal) -> {
 			setOverlayColour(); 
-		});
+		};
+		colourProperty.addListener(colourListener);
 
 		Tooltip tooltip = new Tooltip(
 				new File(clip.getFileName()).getName() +"\n"
@@ -196,9 +205,19 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 	}
 	
 	public void freeMemory() {
-		this.clip=null;
+		// Remove listeners to break reference cycles and prevent memory leaks
+		if (annotationListener != null) {
+			clip.annotationProperty().removeListener(annotationListener); // Remove annotation listener
+			annotationListener = null;
+		}
+		if (colourListener != null) {
+			colourProperty.removeListener(colourListener); // Remove colour property listener
+			colourListener = null;
+		}
+		//this.clip=null;
 		this.imageCanvas =null;
 		this.spectrogramImage =  null;
+		this.clipSelectionManager = null;
 	}
 
 }

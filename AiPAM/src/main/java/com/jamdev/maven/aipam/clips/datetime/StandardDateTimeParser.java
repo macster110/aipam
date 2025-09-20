@@ -123,7 +123,7 @@ public class StandardDateTimeParser implements DateTimeParser {
 		if (lastNum < 0) return 0;
 
 		String numbers = fileName.substring(firstNum, lastNum+1);
-		System.out.println(numbers);
+		//System.out.println(numbers);
 
 
 		//Default time stamps

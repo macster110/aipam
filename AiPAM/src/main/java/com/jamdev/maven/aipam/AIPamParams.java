@@ -50,7 +50,7 @@ public class AIPamParams implements Cloneable  {
 	/**
 	 * The maximum number of clips per page. 
 	 */
-	public int maxPageClips = 2000; 
+	public int maxPageClips = 1000; 
 	
 	/**
 	 * Paramters for the datetime

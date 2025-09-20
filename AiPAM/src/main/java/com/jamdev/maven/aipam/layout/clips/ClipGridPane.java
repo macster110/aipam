@@ -113,16 +113,20 @@ public class ClipGridPane extends BorderPane {
 	 * Clear all spectrogram images. 
 	 */
 	public void clearSpecImages() {
-		tilePane.getChildren().clear(); 
-		
-		if (currentPamClips!=null) {
-		for (int i=0; i<currentPamClips.size(); i++) {
-			currentPamClips.get(i).freeMemory();
-		}
+	    // Clear all selected clips to prevent memory leaks
+	    if (aiPamView != null && aiPamView.getClipSelectionManager() != null) {
+	        aiPamView.getClipSelectionManager().clearSelectedClips();
+	    }
+	    tilePane.getChildren().clear(); 
+	    
+	    if (currentPamClips!=null) {
+	        for (int i=0; i<currentPamClips.size(); i++) {
+	            currentPamClips.get(i).freeMemory();
+	        }
 
-		currentPamClips.clear();
-		}
-		System.gc();
+	        currentPamClips.clear();
+	    }
+	    System.gc();
 	}
 
 
@@ -153,9 +157,7 @@ public class ClipGridPane extends BorderPane {
 		else {
 			 width = (int) (DEFUALT_CLIP_PIXEL_LEN*pamClip.getClipLength()/medianLen);
 		}
-		
-		System.out.println("Width: " + width); 
-		
+				
 		return new int[] {Math.min(MAX_CLIP_PIXEL_LEN, width), 100};
 	}
 	
@@ -168,6 +170,8 @@ public class ClipGridPane extends BorderPane {
 	 * @return the 
 	 */
 	public Task<Integer> generateSpecImagesTask(ArrayList<PAMClip> pamClips) {
+		
+		//System.out.println("ClipGridPane: Generating spec images for " + pamClips.size() + " clips");
 
 		if (pamClips==null) return null; 
 
@@ -187,7 +191,9 @@ public class ClipGridPane extends BorderPane {
 
 		gridSize = ClusterSnapGrid.calcGridSize(nClips);
 		//
-		currentPamClips= new ArrayList<PamClipPane>(); 
+		
+		if (currentPamClips!=null) currentPamClips.clear();
+		currentPamClips = new ArrayList<PamClipPane>(); 
 
 		Task<Integer> task = new Task<Integer>() {
 
@@ -195,6 +201,11 @@ public class ClipGridPane extends BorderPane {
 				//progress is in intermediate mode. 
 				try {
 					this.updateTitle("Generating Clip Images");
+					
+//					UtilsFX.runAndWait(() -> {
+//					tilePane.getChildren().clear();
+//					});
+
 
 					double memoryMB ;
 					for (int i=0; i<pamClips.size(); i++) {
@@ -202,7 +213,10 @@ public class ClipGridPane extends BorderPane {
 
 						//clips which have no pane are not shown. 
 						if (pamClips.get(i).getSpectrogram(aiPamView.getAIParams().spectrogramParams.fftLength, 
-								aiPamView.getAIParams().spectrogramParams.fftLength)==null) continue;
+								aiPamView.getAIParams().spectrogramParams.fftLength)==null) {
+							//this indicates that there is no spectrgram data - e.g. if the clip is not on the page. 
+							continue;
+						}
 
 						int[] clipSize = getClipsSize(pamClips.get(i), pamClips.size()); 
 
@@ -213,8 +227,9 @@ public class ClipGridPane extends BorderPane {
 								featureExtraction=aiPamView.getAIControl().getFeatureExtractionManager().getCurrentFeatureExtractor(); 
 							}
 
-							final PamClipPane pamClipPane = new PamClipPane(pamClips.get(ii), clipSize[0], clipSize[1], 
+							PamClipPane pamClipPane = new PamClipPane(pamClips.get(ii), clipSize[0], clipSize[1], 
 									aiPamView.getAIParams().spectrogramParams,  aiPamView.getCurrentColourArray(), featureExtraction);
+							
 							pamClipPane.setSelectionManager(aiPamView.getClipSelectionManager()); 
 							//add child on the fx pane
 							//tilePane.getChildren().add(pamClipPane); 
@@ -224,12 +239,13 @@ public class ClipGridPane extends BorderPane {
 
 						});
 
-
 						this.updateProgress(i, pamClips.size());
 
 						memoryMB = Runtime.getRuntime().totalMemory()/1000./1000.; 
 						this.updateMessage(String.format("Generating image %d of %d | Memory usage: %.2f MB",i,  pamClips.size(), memoryMB));
 					}
+					
+					System.out.println("ClipGridPane: Finished generating " + currentPamClips.size() + " clip panes");
 
 					updateProgress(-1, pamClips.size());
 					memoryMB = Runtime.getRuntime().totalMemory()/1000./1000.; 
@@ -263,7 +279,7 @@ public class ClipGridPane extends BorderPane {
 	 */
 	@SuppressWarnings("unchecked")
 	public void layoutClips(){
-		System.out.println("ClipGridPane: Layout clips: "); 
+		System.out.println("ClipGridPane: Layout clips: " + currentPamClips.size() + " clips to layout"); 
 		//make sure that all the clips are cleared
 		tilePane.getChildren().clear();
 		//tilePane.setTileAlignment(Pos.CENTER_LEFT);
