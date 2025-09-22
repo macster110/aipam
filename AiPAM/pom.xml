@@ -235,16 +235,6 @@
 				<version>3.11.0</version>
 				<configuration>
 					<release>17</release>
-					<excludes>
-						<exclude>**/clustering/**</exclude>
-						<exclude>**/featureExtraction/**</exclude>
-						<exclude>**/layout/TSNEClusterPane.java</exclude>
-						<exclude>**/layout/clustering/**</exclude>
-						<exclude>**/AiPamController.java</exclude>
-						<exclude>**/SettingsImportExport.java</exclude>
-						<exclude>**/layout/UserPrompts.java</exclude>
-						<exclude>**/layout/clips/ClipGridPane.java</exclude>
-					</excludes>
 				</configuration>
 			</plugin>
 			
@@ -252,7 +242,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.1.2</version>
+				<version>3.0.0-M8</version>
 				<configuration>
 					<skipTests>false</skipTests>
 				</configuration>
