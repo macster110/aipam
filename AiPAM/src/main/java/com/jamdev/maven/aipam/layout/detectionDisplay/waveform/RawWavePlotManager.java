@@ -36,7 +36,7 @@ public class RawWavePlotManager {
 	/**
 	 * The maximum samples per pixel. Below this raw data is just stored. 
 	 */
-	private static final double SAMPLES_PER_PIXEL_CUTOFF = 1.5;
+	private static final double SAMPLES_PER_PIXEL_CUTOFF = 10;
 
 	/**
 	 * The current detection
@@ -145,30 +145,24 @@ public class RawWavePlotManager {
 
 		}
 		else {
-			//System.out.println("MINMAX PIXEL");
-
-			//save only the minimum and maximum value for the plot pixel. 
 			//the amplitude limits 
-			double minX = Double.POSITIVE_INFINITY; 
-			double maxX= Double.NEGATIVE_INFINITY; 
-
-			//System.out.println("RAW DATA LEN: " + rawData.length + " millisPerpixel: " + plotSegment.getScrollingPLot2DSegmenter().getMillisePerPixel()); 
+			double minX = Double.MAX_VALUE; 
+			double maxX= -Double.MAX_VALUE; 
 
 			//now bin the
-			//int count = 0; 
-			double lastSample = 0;
+			int count = 0; 
 			for (int i=0; i<rawData.length; i++) {
-
+				
+				
 				//had to do this because the count>samples pixel ignores the cumulative remainder and this does not work well. 
 				//TODO - does this need fixed in PG?
 				if (((int) Math.floor(i/samplesPerPixel))>(drawPixel-drawStart)) {
 
 
 					//				if (count>=samplesPerPixel) {	//FIXME - issue here with rounding...
-					//time to add the data.
 					if (drawPixel>=0 && drawPixel<plotSegment.getData().length) {
 						//add the previous pixel to the plot segment. 
-						//System.out.println("minX: " + minX + " maxX: " + maxX); 
+
 						//it's possible the same pixel will drawn on more than once. in this case must ensure that values are added if current value <max or >min . 
 						if (Float.isNaN(plotSegment.getData()[drawPixel][0]) || plotSegment.getData()[drawPixel][0]>minX) {
 							plotSegment.getData()[drawPixel][0] = (float) minX;
@@ -176,23 +170,26 @@ public class RawWavePlotManager {
 						if (Float.isNaN(plotSegment.getData()[drawPixel][1]) || plotSegment.getData()[drawPixel][1]<maxX) {
 							plotSegment.getData()[drawPixel][1] = (float) maxX;
 						}
-						plotSegment.getColor()[drawPixel] = color; 
+						if (plotSegment.getColor()[drawPixel]!=null) {
+							plotSegment.getColor()[drawPixel] = color;//blend((Color) plotSegment.getColor()[drawPixel], color); 
+						}
+						else {
+							plotSegment.getColor()[drawPixel] = color; 
+						}
 					}
 
 					//move to the next pixel and reset min max
-					minX = Double.POSITIVE_INFINITY; 
-					maxX= Double.NEGATIVE_INFINITY; 
+					minX = Double.MAX_VALUE; 
+					maxX= -Double.MAX_VALUE; 
 					drawPixel++; 
 
-					//count = 0; 
+					count = 0; 
 				}
 
 				if (rawData[i]>maxX ) maxX = rawData[i]; 
 				if (rawData[i]<minX ) minX = rawData[i]; 
 
-				//ystem.out.println("Count: " + count + "  drawPixel: " + drawPixel + " plotSegment.getData().length: " +  plotSegment.getData().length ); 
-
-				//count++; 	
+				count++; 	
 			}
 
 			if (drawPixel>=0 && drawPixel<plotSegment.getData().length) {
@@ -205,12 +202,13 @@ public class RawWavePlotManager {
 				if (Float.isNaN(plotSegment.getData()[drawPixel][1]) || plotSegment.getData()[drawPixel][1]<maxX) {
 					plotSegment.getData()[drawPixel][1] = (float) maxX;
 				}
-				plotSegment.getColor()[drawPixel] = color; 
+				if (plotSegment.getColor()[drawPixel]!=null) {
+					plotSegment.getColor()[drawPixel] = color;//blend((Color) plotSegment.getColor()[drawPixel], color); 
+				}
+				else {
+					plotSegment.getColor()[drawPixel] = color; 
+				}
 			}
-
-
-			//			System.out.println("Last draw pixel: " 
-			//					+ " drawPixel: " + drawPixel + " millis drawn: " + 1000.*(drawPixel-drawStart)*samplesPerPixel/400.0);
 		}
 	}
 
@@ -339,6 +337,7 @@ public class RawWavePlotManager {
 						for (double j =x1; j<x2; j++) {
 							g.strokeLine(j, y1, j, y2);
 						}
+			
 					}
 				}
 			}

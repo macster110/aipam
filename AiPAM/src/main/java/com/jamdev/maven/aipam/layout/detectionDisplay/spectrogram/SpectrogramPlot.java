@@ -14,20 +14,25 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class SpectrogramPlot extends TimeDisplayPlot {
 
-	@Override
-	public void addData(PlotProjector projector, PAMDataUnit dataUit, int channelBitMap) {
-		// TODO Auto-generated method stub
-		
-	}
+    private final SpectrogramImageSegmenter segmenter = new SpectrogramImageSegmenter();
 
-	@Override
-	public void drawData(GraphicsContext g, PlotProjector projector, int channelMap) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+    @Override
+    public void addData(PlotProjector projector, PAMDataUnit dataUit, int channelBitMap) {
+        // Delegate to the segmenter
+        //segmenter.addData(dataUit, projector);
+    }
 
+    @Override
+    public void drawData(GraphicsContext g, PlotProjector projector, int channelMap) {
+        // Draw the visible spectrogram using the segmenter
+        double startTimeMillis = projector.getXAxis().getMinVal();
+        double endTimeMillis = projector.getXAxis().getMaxVal();
+        double scaleMillisPerPixel = (endTimeMillis - startTimeMillis) / g.getCanvas().getWidth();
+        segmenter.draw(g, projector, startTimeMillis, endTimeMillis, scaleMillisPerPixel);
+    }
 
-	
-
+    public void reset() {
+        segmenter.clear();
+        reDraw();
+    }
 }

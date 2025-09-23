@@ -14,7 +14,7 @@
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<javafx.version>24</javafx.version>
+		<javafx.version>21</javafx.version>
 		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
 

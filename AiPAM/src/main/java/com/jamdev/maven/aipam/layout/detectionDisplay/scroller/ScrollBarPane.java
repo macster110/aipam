@@ -534,7 +534,7 @@ public class ScrollBarPane extends BorderPane {
 	 * Set the value in the text box
 	 * @param visAmount - the visible amount
 	 */
-	private void setTextBoxValue(double visAmount) {
+	public void setTextBoxValue(double visAmount) {
 		if (isShowMillis()){
 			textBox.setText(String.format("%.2fms", visAmount)); 
 		}

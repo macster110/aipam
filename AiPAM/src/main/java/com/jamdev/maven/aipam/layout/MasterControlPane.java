@@ -112,6 +112,7 @@ public class MasterControlPane {
 		});
 
 		menuItems.add(new StandardPaneMenuItem(importClipsButton, importClipsButton.getText()));
+		
 //		clusterButton = new Button("Cluster Clips"); 
 //		clusterButton.getStyleClass().add("fluent-menu-button");
 //		ImageView icon = UtilsFX.whitenImage(new ImageView(aiPamView.getClusterIcon())); 

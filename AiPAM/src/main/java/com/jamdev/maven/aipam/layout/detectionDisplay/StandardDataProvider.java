@@ -87,6 +87,7 @@ public class StandardDataProvider implements DataProvider {
 	}
 
 	private void addAudioData(short[][] audioData, float samplerate, double startTime, long uid) {
+		if (audioData[0]==null) return;
 		PAMDataUnit dataUnit = new AcousticDataUnit(audioData, samplerate, startTime, uid); 
 		for (int i=0; i<this.getDataProviderListeners().size(); i++) {
 			this.getDataProviderListeners().get(i).newAudioData(dataUnit);
@@ -96,7 +97,7 @@ public class StandardDataProvider implements DataProvider {
 	@Override
 	public void requestData(double start, double end) {
 
-		//System.out.println("Request data between: start: " + start + " end: " +  end + " Total Millis: " + (end-start) ); 
+		System.out.println("Request data between: start: " + start + " end: " +  end + " Total Millis: " + (end-start) ); 
 
 		//the sample rate
 		double sampleStart = sampleRate*((start - startTime)/1000.);
@@ -111,11 +112,13 @@ public class StandardDataProvider implements DataProvider {
 //		//System.out.println("SampleStart: " + sampleStart + " sampleEnd: " +sampleEnd + "   " + audioData[0].length + " start millis: " +start);
 //		sampleStart = Math.max(modStart*AUDIO_CHUNK_LEN, 0);
 //		sampleEnd = Math.min(modEnd*AUDIO_CHUNK_LEN, audioData[0].length-1);
-//
-//		if (sampleStart==sampleEnd) {
-//			System.err.println("StandardDataProvider: Requested data is less than 1 sample"); 
-//			return; 
-//		}
+		
+		//System.out.println("modStart: " + modStart + " modEnd: " + modEnd + " sampleStart: " + sampleStart + " sampleEnd: " + sampleEnd);
+		
+		if (sampleStart==sampleEnd) {
+			System.err.println("StandardDataProvider: Requested data is less than 1 sample"); 
+			return; 
+		}
 
 		short[][] wavedata ;
 		int sampleStartChnk; 
@@ -124,6 +127,7 @@ public class StandardDataProvider implements DataProvider {
 		double startTimeChnk; 
 		for (int j = modStart; j<modEnd ; j++) {
 			
+			
 			wavedata = new short[audioData.length][]; 
 			
 			sampleStartChnk = (int) (j*AUDIO_CHUNK_LEN);
@@ -131,10 +135,18 @@ public class StandardDataProvider implements DataProvider {
 
 
 			short[] audioDataChunk;
+			int len = -1; 
 			//fastest way to copy arrays. Copy each channel. 
 			for (int i=0; i<audioData.length; i++) {
-				audioDataChunk = new short[sampleEndChnk-sampleStartChnk]; 
-				System.arraycopy(audioData[i], sampleStartChnk, audioDataChunk, 0, sampleEndChnk-sampleStartChnk);
+				len = sampleEndChnk-sampleStartChnk;
+				if (sampleStartChnk+len>audioData[i].length) {
+					len = audioData[i].length - sampleStartChnk; 
+				}
+				if (len<=0) {
+					continue;
+				}
+				audioDataChunk = new short[len]; 
+				System.arraycopy(audioData[i], sampleStartChnk, audioDataChunk, 0, len);
 				wavedata[i] = audioDataChunk;
 			}
 

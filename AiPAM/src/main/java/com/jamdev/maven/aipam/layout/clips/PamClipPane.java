@@ -2,7 +2,6 @@ package com.jamdev.maven.aipam.layout.clips;
 
 import java.io.File;
 
-import com.jamdev.maven.aipam.AIPamParams;
 import com.jamdev.maven.aipam.annotation.SimpleAnnotation;
 import com.jamdev.maven.aipam.clips.AudioPlay;
 import com.jamdev.maven.aipam.clips.PAMClip;
@@ -11,12 +10,10 @@ import com.jamdev.maven.aipam.featureExtraction.FeatureExtraction;
 import com.jamdev.maven.aipam.layout.ColourArray;
 import com.jamdev.maven.aipam.layout.featureExtraction.FeaturePane;
 import com.jamdev.maven.aipam.layout.utilsFX.UtilsFX;
-import com.jamdev.maven.aipam.utils.ClipSpectrogram;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -86,6 +83,7 @@ public class PamClipPane extends StackPane implements Comparable<PamClipPane> {
 		this.featureExtraction  = featureExtraction; 
 		//create the pane 
 		this.getChildren().add(imageCanvas = new Canvas(width, height)); 
+		imageCanvas.getGraphicsContext2D().setImageSmoothing(false);
 
 		//clip features
 		generateSpecImage(params.fftLength, params.fftHop, colourArray, params.colourLims); 

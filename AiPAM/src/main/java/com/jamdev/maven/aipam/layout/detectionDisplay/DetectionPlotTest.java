@@ -35,11 +35,13 @@ public class DetectionPlotTest extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		
 		
-		String filename = "/Users/au671271/Google Drive/SoundSort_dev/Right_whale_test/Clips_200Hz/20180426_001457_015.wav";
+		String filename = "/Users/jdjm/Dropbox/SoundSort_dev/Right_whale_test/Clips_200Hz/20180426_001457_015.wav";
 		
 		StandardAudioImporter audioImporter = new StandardAudioImporter(); 
 		
 		ClipWave wavFile = audioImporter.initWaveWithInputStream(new File(filename), 0, 10000, 8000, true); 
+		double audioLenS = wavFile.getLengthInSeconds(); 
+		double axisLenS = audioLenS+2; // add bit of extra time to test blank space if no audio.
 
 		StandardDataProvider dataProvider = new StandardDataProvider(new short[][]{wavFile.getSampleAmplitudes()}, wavFile.getSampleRate(), 0); 
 		
@@ -52,6 +54,9 @@ public class DetectionPlotTest extends Application {
 		DetectionPlotScrollBar scrollBarPane = new DetectionPlotScrollBar(); 
 		scrollBarPane.setMinVal(dataProvider.getDataLimits().getMinLimit());
 		scrollBarPane.setMaxVal(dataProvider.getDataLimits().getMaxLimit());
+		
+		scrollBarPane.setMinVal(0);
+		scrollBarPane.setMaxVal(axisLenS*1000); // add bit of extra time to test blank space if no audio. 
 		scrollBarPane.setPrefHeight(70.0);
 		
 		VBox mainPane = new VBox(); 
@@ -73,11 +78,18 @@ public class DetectionPlotTest extends Application {
 		//the scroll bar pane.
 		scrollBarPane.addDetectionPlot(waveformPlot);
 		scrollBarPane.addDetectionPlot(spectrogramPlot);
-
+		
 		//waveformPlot.prefHeightProperty().bind(scene.heightProperty());
 		//waveformPlot.maxHeightProperty().bind(scene.heightProperty());
 		
-		waveformPlot.updateAxis(new double[] {0, 1000.}, new double[] {-1, 1}, null);
+		waveformPlot.updateAxis(new double[] {0, axisLenS*1000}, new double[] {-1, 1}, null);
+		
+		scrollBarPane.setVisibleAmount((audioLenS/4 )*1000);
+		
+		
+		scrollBarPane.setTextBoxValue(scrollBarPane.getVisibleAmount());
+		waveformPlot.reDraw();
+
 
 		//apply JMetro theme
 		new JMetro(Style.LIGHT).setScene(root.getScene());
