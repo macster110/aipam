@@ -5,7 +5,7 @@
 
 	<groupId>com.jamdev.maven</groupId>
 	<artifactId>aipam</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.01</version>
 	<packaging>jar</packaging>
 
 	<name>MavenJTest</name>
@@ -16,6 +16,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<javafx.version>21</javafx.version>
 		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
+		<jpackage.maven.plugin.version>1.4.0</jpackage.maven.plugin.version>
+		<mainClass>com.jamdev.maven.aipam.AIPamApp</mainClass>
 	</properties>
 
 
@@ -230,24 +235,83 @@
 
 	<build>
 		<plugins>
+			<!-- Maven Compiler Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.11.0</version>
 				<configuration>
-					<release>21</release>
+					<release>17</release>
 				</configuration>
 			</plugin>
+			
+			<!-- Maven Surefire Plugin for running tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M8</version>
+				<configuration>
+					<skipTests>false</skipTests>
+				</configuration>
+			</plugin>
+			
+			<!-- JavaFX Maven Plugin -->
 			<plugin>
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
-				<version>0.0.4</version>
-				<!-- <configuration> -->
-				<!-- <mainClass>AIPamApp</mainClass> -->
-				<!-- </configuration> -->
+				<version>${javafx.maven.plugin.version}</version>
+				<configuration>
+					<mainClass>${mainClass}</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<id>default-cli</id>
+						<configuration>
+							<mainClass>${mainClass}</mainClass>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- JPackage Maven Plugin for creating native installers -->
+			<plugin>
+				<groupId>org.panteleyev</groupId>
+				<artifactId>jpackage-maven-plugin</artifactId>
+				<version>${jpackage.maven.plugin.version}</version>
+				<configuration>
+					<name>AiPAM</name>
+					<appVersion>${project.version}</appVersion>
+					<vendor>JAMDev</vendor>
+					<destination>target/dist</destination>
+					<mainClass>${mainClass}</mainClass>
+					<mainJar>${project.artifactId}-${project.version}.jar</mainJar>
+					<javaOptions>
+						<option>-Dfile.encoding=UTF-8</option>
+					</javaOptions>
+					<icon>src/main/resources/Cluster_sml.png</icon>
+					<linuxShortcut>true</linuxShortcut>
+					<linuxMenuGroup>Audio</linuxMenuGroup>
+					<winDirChooser>true</winDirChooser>
+					<winMenu>true</winMenu>
+					<winShortcut>true</winShortcut>
+					<input>${project.build.directory}</input>
+				</configuration>
+				<executions>
+					<execution>
+						<id>win</id>
+						<configuration>
+							<type>EXE</type>
+						</configuration>
+					</execution>
+					<execution>
+						<id>mac</id>
+						<configuration>
+							<type>DMG</type>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
-		<!-- <finalName>dl4j-quickstart</finalName> -->
 	</build>
 
 </project>
