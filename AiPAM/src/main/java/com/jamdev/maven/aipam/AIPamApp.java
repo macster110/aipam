@@ -76,7 +76,7 @@ public class AIPamApp extends Application {
 
         // Apply theme after the stage is shown to avoid Prism texture errors
         javafx.application.Platform.runLater(() -> {
-            sensorView.getTheme().applyTheme(AITheme.JMETRO_DARK_THEME, root);
+            sensorView.getTheme().applyTheme(AITheme.TRANSIT_DARK_THEME, root);
         });
     }
 

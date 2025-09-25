@@ -265,7 +265,7 @@ public class AIPamView extends BorderPane {
 
 		//apply the theme
 		theme = new AITheme();
-		setTheme(AITheme.JMETRO_DARK_THEME); 
+		setTheme(AITheme.TRANSIT_DARK_THEME); 
 //		theme.applyTheme(AITheme.JMETRO_DARK_THEME, root);
 	}
 	

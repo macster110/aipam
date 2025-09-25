@@ -48,6 +48,8 @@ public class ProgressBarPane extends BorderPane {
 	public ProgressBarPane(AIPamView aiPamView) {
 		this.setCenter(createProgressPane()); 
 		this.setPadding(new Insets(5,5,5,5));
+		this.setStyle("-fx-background-color: BACKGROUND_MENU");
+
 	}
 
 	/**
@@ -57,7 +59,8 @@ public class ProgressBarPane extends BorderPane {
 	private Pane createProgressPane() {
 		
 		progressTitle = new Label(); 
-		progressTitle.getStyleClass().add("label-title1");
+		//progressTitle.getStyleClass().add("label-title1");
+	
 
 		progressBar = new ProgressBar(); 
 		cancelButton = new Button("Cancel");
@@ -72,6 +75,8 @@ public class ProgressBarPane extends BorderPane {
 
 		VBox holder = new VBox(); 
 		holder.setSpacing(5);
+		holder.setStyle("-fx-background-color: BACKGROUND_MENU");
+
 		
 		holder.getChildren().addAll(progressTitle, progressHolder, progressLabel); 
 		

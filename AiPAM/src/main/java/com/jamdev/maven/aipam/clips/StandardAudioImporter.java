@@ -68,9 +68,12 @@ public class StandardAudioImporter implements AudioImporter {
 	public ArrayList<ClipWave> importAudio(File audioFile, AIPamParams aiPamParams, AudioImporterListener audioImporterListener, boolean saveWave) {
 
 		ArrayList<ClipWave> waves = null; 
+		
+//		System.out.println("StandardAudioImporter: Is AudioMoth? file: " + AudioMothTFile.isAudioMothTFile(audioFile));
 
+		boolean isAudioMoth = AudioMothTFile.isAudioMothTFile(audioFile); 
 		//now lets figure out what type of file we have. 
-		if (AudioMothTFile.isAudioMothTFile(audioFile)) {
+		if (isAudioMoth) {
 			//is this an AudioMoth trigger file?
 			ArrayList<AudioMothTData> audioMothChunks;
 			try {

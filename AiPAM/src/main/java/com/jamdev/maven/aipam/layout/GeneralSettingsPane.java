@@ -50,12 +50,12 @@ public class GeneralSettingsPane extends DynamicSettingsPane<AIPamParams> {
 		RadioButton radioButtonLight = new RadioButton("Light"); 
 		radioButtonLight.setToggleGroup(group);
 		radioButtonLight.setOnAction((action)->{
-			aiPamView.setTheme(AITheme.JMETRO_LIGHT_THEME); 
+			aiPamView.setTheme(AITheme.TRANSIT_LIGHT_THEME); 
 		});
 		RadioButton radioButtonDark = new RadioButton("Dark"); 
 		radioButtonDark.setToggleGroup(group);
 		radioButtonDark.setOnAction((action)->{
-			aiPamView.setTheme(AITheme.JMETRO_DARK_THEME); 
+			aiPamView.setTheme(AITheme.TRANSIT_DARK_THEME); 
 		});
 		radioButtonDark.setSelected(true);
 		
